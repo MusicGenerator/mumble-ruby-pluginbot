@@ -4,7 +4,8 @@ class Youtube < Plugin
         @bot = init
         @downloadfolder = "../music/download/"
         @songlist = Queue.new
-        @globalsonglist = Hash.new
+        @keylist = Array.new
+        @titlelist = Hash.new
     end
 
     def help(help)
@@ -48,58 +49,78 @@ class Youtube < Plugin
         end
         
         if message.split[0] == 'yts'
-            search = ""
-            message.split[1..-1].each do |keyword|
-                search += search + "+" + keyword
+            search = message[4..-1]
+            search.gsub!(" ", "+") 
+            search = "" if search == nil
+            songs = find_youtube_song(search)
+            @keylist[msg.actor] = songs
+            out = "<table><tr><td><b>Index</b></td><td>Title</td></tr>"
+            index = 0
+            @keylist[msg.actor].each do |id , title|
+                out += "<tr><td><b>#{index}</b></td><td>#{title}</td></tr>"
+                index += 1
             end
-            puts search[1..-1]
-            songs = find_youtube_song(search[1..-1])
-            out = "<table>"
-            songs.each do |song, index| 
-                out += "<tr><td><b>#{index}</b></td><td>#{song}</td></tr>"
-            end
-            out += "</table>"
+            out +="</table>"
             @bot[:cli].text_user(msg.actor, out)    
         end
 
         if message.split[0] == 'yta'
-            link = "https://www.youtube.com/watch?v="+message.split[1].to_s
-            workingdownload = Thread.new {
-                #local variables for this thread!
-                actor = msg.actor
-                @bot[:cli].text_user(actor, "inspecting link: " + link + "...")
-                get_song link
-                if ( @songlist.size > 0 ) then
-                    @bot[:mpd].update("download") 
-                    @bot[:cli].text_user(actor, "Waiting for database update complete...")
-                    
-                    #Caution! following command needs patched ruby-mpd!
-                    @bot[:mpd].idle("update")
-                    # find this lines in ruby-mpd/plugins/information.rb (actual 47-49)
-                    # def idle(*masks)
-                    #  send_command(:idle, *masks)
-                    # end
-                    # and uncomment it there, then build gem new.
-                        
-                    @bot[:cli].text_user(actor, "Update done.")
-                    while @songlist.size > 0 
-                        song = @songlist.pop
-                        @bot[:cli].text_user(actor, song)
-                        @bot[:mpd].add("download/"+song)
-                        sleep 0.5
-                    end
+            begin
+                link = []
+                if message.split[1] != "all"
+                    downloadid = @keylist[msg.actor][message.split[1].to_i]
+                    @bot[:cli].text_user(msg.actor, "adding #{downloadid[1]}")    
+                    link << "https://www.youtube.com/watch?v="+downloadid[0]
                 else
-                    @bot[:cli].text_user(actor, "The link contains nothing interesting for me.")
+                    out = ""
+                    @keylist[msg.actor].each do |downloadid|
+                        out += "adding #{downloadid[1]}<br />"
+                        link << "https://www.youtube.com/watch?v="+downloadid[0]
+                    end
+                    @bot[:cli].text_user(msg.actor, out)    
                 end
-            }
+                workingdownload = Thread.new {
+                    #local variables for this thread!
+                    actor = msg.actor
+                    @bot[:cli].text_user(actor, "start fetching.")    
+                    link.each { |l| get_song l}
+                    if ( @songlist.size > 0 ) then
+                        @bot[:mpd].update("download") 
+                        @bot[:cli].text_user(actor, "Waiting for database update complete...")
+
+                        #Caution! following command needs patched ruby-mpd!
+                        @bot[:mpd].idle("update")
+                        # find this lines in ruby-mpd/plugins/information.rb (actual 47-49)
+                        # def idle(*masks)
+                        #  send_command(:idle, *masks)
+                        # end
+                        # and uncomment it there, then build gem new.
+
+                        @bot[:cli].text_user(actor, "Update done.")
+                        out = "<b>Added:</b><br />"
+                        while @songlist.size > 0 
+                            song = @songlist.pop
+                            out += song + "<br />"
+                            @bot[:mpd].add("download/"+song)
+                        end
+                        @bot[:cli].text_user(actor, out)
+                    else
+                        @bot[:cli].text_user(actor, "The link contains nothing interesting for me.")
+                    end
+                }
+            rescue
+                @bot[:cli].text_user(msg.actor, "[error](youtube-plugin)- index number is out of bounds!")    
+            end
         end
     end
 
     def find_youtube_song song
-        songlist = Hash.new
+        songlist = []
         songs = `/usr/local/bin/youtube-dl --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
-        songlist = Hash[*songs.split(/\n/)]
-        @globalsonglist = @globalsonglist.merge(songlist)
+        temp = songs.split(/\n/)
+        while (temp.length >= 2 )
+            songlist << [temp.pop , temp.pop]
+        end
         return songlist
     end
 
