@@ -5,8 +5,9 @@ class Null < Plugin
         #nothing to init
     end
     
-    def help(help)
+    def help(h)
         #no help for nothing!
+        h
     end
    
     def handle_chat(msg, message)

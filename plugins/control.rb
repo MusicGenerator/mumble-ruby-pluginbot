@@ -4,15 +4,16 @@ class Control < Plugin
         @bot = init
     end
 
-    def help(help)
-        help += "<b>#{cc}ch</b> Bot jump in your channel.<br />"
-        help += "<b>#{cc}debug</b> Probe command.<br />"
-        help += "<b>#{cc}gotobed</b> Bot sleeps in less then 1 second :).<br />"
-        help += "<b>#{cc}wakeup</b> Bot is under adrenalin again.<br />"
-        help += "<b>#{cc}follow</b> Bot will follow you.<br />"
-        help += "<b>#{cc}unfollow</b> Bot transforms from a dog into a lazy cat :).<br />"
-        help += "<b>#{cc}stick</b> Jail Bot into channel.<br />"
-        help += "<b>#{cc}unstick</b> Free Bot.<br />"
+    def help(h)
+        h += "<hr><span style='color:red;'>Plugin CONTROL</span><br />"
+        h += "<b>#{@bot[:controlstring]}ch</b> Bot jump in your channel.<br />"
+        h += "<b>#{@bot[:controlstring]}debug</b> Probe command.<br />"
+        h += "<b>#{@bot[:controlstring]}gotobed</b> Bot sleeps in less then 1 second :).<br />"
+        h += "<b>#{@bot[:controlstring]}wakeup</b> Bot is under adrenalin again.<br />"
+        h += "<b>#{@bot[:controlstring]}follow</b> Bot will follow you.<br />"
+        h += "<b>#{@bot[:controlstring]}unfollow</b> Bot transforms from a dog into a lazy cat :).<br />"
+        h += "<b>#{@bot[:controlstring]}stick</b> Jail Bot into channel.<br />"
+        h += "<b>#{@bot[:controlstring]}unstick</b> Free Bot.<br />"
     end
 
     def handle_chat(msg, message)

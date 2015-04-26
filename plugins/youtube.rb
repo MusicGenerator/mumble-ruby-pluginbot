@@ -5,13 +5,13 @@ class Youtube < Plugin
         @downloadfolder = "../music/download/"
         @songlist = Queue.new
         @keylist = Array.new
-        @titlelist = Hash.new
     end
 
-    def help(help)
-        help += "<b>#{cc}http-link</b> will try to get some music from link.<br />"
-        help += "<b>#{cc}yts keywords</b> will search on youtube for keywords"
-        help += "<b>#{cc}yta</b> testing (not fix usage)"
+    def help(h)
+        h += "<hr><span style='color:red;'>Plugin YOUTUBE</span><br />"
+        h += "<b>#{@bot[:controlstring]}http-link</b> will try to get some music from link.<br />"
+        h += "<b>#{@bot[:controlstring]}yts keywords</b> will search on youtube for keywords.<br />"
+        h += "<b>#{@bot[:controlstring]}yta <i>number</i> </b> get song in yts list.<br />"
     end
 
     def handle_chat(msg, message)

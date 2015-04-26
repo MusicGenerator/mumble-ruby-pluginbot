@@ -38,6 +38,7 @@ class MumbleMPD
             require f 
             puts "Plugin #{f} geladen."
         end
+        @plugin = Array.new
 
         @settings = Hash.new()
         #Initialize default values
@@ -225,7 +226,7 @@ class MumbleMPD
         init = @settings.clone
         init[:mpd] = @mpd
         init[:cli] = @cli
-        @plugin = Array.new
+        puts "initplugins"
         Plugin.plugins.each do |plugin_class|
             @plugin << plugin_class.new
         end
@@ -378,7 +379,8 @@ class MumbleMPD
         help ="<br />"    # start with empty help
         # the help command should be the last command in this function
         cc = @settings[:controlstring]
-                
+        
+        help = "<br /><span style='color:red;'><b>Internal commands</b></span><br />"
         help += "<b>superpassword+restart</b> will restart the bot.<br />"
         if msg.message == @superpassword+"restart"
             @settings = @configured_settings.clone
@@ -536,6 +538,9 @@ class MumbleMPD
 
                 help += "<b>#{cc}help</b> Get this list :).<br />"
                 if message == 'help'
+                    @plugin.each do |plugin|
+                        help = plugin.help(help.to_s)
+                    end
                     @cli.text_user(msg.actor, help)
                 end
            end
@@ -560,6 +565,7 @@ puts "pluginbot is starting..."
 client = MumbleMPD.new
 while true == true
     client.init_settings
+    puts "start"
     client.mumble_start    
     sleep 3
     while client.run == true
