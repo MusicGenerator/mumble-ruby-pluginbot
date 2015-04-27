@@ -30,6 +30,7 @@ class Mpd < Plugin
         h += "<b>#{@bot[:controlstring]}where song</b> find song by name and display matches.<br />"
         h += "<b>#{@bot[:controlstring]}queue</b> Display actual queue.<br />"
         h += "<b>#{@bot[:controlstring]}stats</b> Display player stats.<br />"
+        h += "<b>#{@bot[:controlstring]}shuffle</b> Shuffle play queue.<br />"
         h += "<b>#{@bot[:controlstring]}file</b> Display filename.<br />"
         h += "<b>#{@bot[:controlstring]}v++++</b> turns volume 20% up.<br />"
         h += "<b>#{@bot[:controlstring]}v-</b> turns volume 5% down.<br />"
@@ -38,6 +39,9 @@ class Mpd < Plugin
     end
 
     def handle_chat(msg,message)
+        if message == 'helpmpd'
+            @bot[:cli].text_user(msg.actor, help(""))
+        end
         if message.match(/^seek [+-]?[0-9]{1,3}$/)
             seekto = message.match(/^seek ([+-]?[0-9]{1,3})$/)[1]
             @bot[:mpd].seek seekto
@@ -199,6 +203,11 @@ class Mpd < Plugin
             end
         end
 
+        if message == 'shuffle'
+            @bot[:mpd].shuffle
+            @bot[:cli].text_user(msg.actor, "Shuffle, shuffle and get a new order. :)")
+        end
+
         if message == 'v'
             volume = @bot[:mpd].volume
             @bot[:cli].text_user(msg.actor, "Current volume is #{volume}%.")
@@ -220,6 +229,16 @@ class Mpd < Plugin
             if volume < 0
                 @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Volume can't be set to &lt; 0.")
                 volume = 0
+            end
+            @bot[:mpd].volume = volume
+        end
+
+        if message.match(/^v[+]+$/)
+            multi = message.match(/^v([+]+)$/)[1].scan(/\+/).length
+            volume = ((@bot[:mpd].volume).to_i + 5 * multi)
+            if volume > 100
+                @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Volume can't be set to &gt; 100.")
+                volume = 100
             end
             @bot[:mpd].volume = volume
         end
