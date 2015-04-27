@@ -82,8 +82,11 @@ class Youtube < Plugin
                 workingdownload = Thread.new {
                     #local variables for this thread!
                     actor = msg.actor
-                    @bot[:cli].text_user(actor, "start fetching.")    
-                    link.each { |l| get_song l}
+                    @bot[:cli].text_user(actor, "do #{link.length.to_s} time(s)...")    
+                    link.each do |l| 
+                        @bot[:cli].text_user(actor, "fetch and convert")
+                        get_song l
+                    end
                     if ( @songlist.size > 0 ) then
                         @bot[:mpd].update("download") 
                         @bot[:cli].text_user(actor, "Waiting for database update complete...")
@@ -128,12 +131,13 @@ class Youtube < Plugin
         if ( site.include? "www.youtube.com/" ) || ( site.include? "www.youtu.be/" ) || ( site.include? "m.youtube.com/" ) then
             site.gsub!(/<\/?[^>]*>/, '')
             site.gsub!("&amp;", "&")
-            filename = `/usr/local/bin/youtube-dl --get-filename -r 2.5M -i -o \"#{@downloadfoler}%(title)s\" "#{site}"`
+            filename = `/usr/local/bin/youtube-dl --get-filename --restrict-filenames -r 2.5M -i -o \"#{@downloadfoler}%(title)s\" "#{site}"`
             system ("/usr/local/bin/youtube-dl --restrict-filenames -r 2.5M -i -o \"#{@downloadfolder}%(title)s.%(ext)s\" \"#{site}\" ")
             filename.split("\n").each do |name|
                 system ("if [ ! -e \"#{@downloadfolder}#{name}.mp3\" ]; then ffmpeg -i \"#{@downloadfolder}#{name}.mp4\" -q:a 0 -map a -metadata title=\"#{name}\" \"#{@downloadfolder}#{name}.mp3\" -y; fi")
                 system ("if [ ! -e \"#{@downloadfolder}#{name}.jpg\" ]; then ffmpeg -i \"#{@downloadfolder}#{name}.mp4\" -s qvga -filter:v select=\"eq(n\\,250)\" -vframes 1 \"#{@downloadfolder}#{name}.jpg\" -y; fi")
-                @songlist << name.split("/")[-1] + ".mp3"
+                @songlist << name.split("/")[-1] + ".mp3" 
+                
             end
         end
     end
