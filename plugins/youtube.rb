@@ -2,7 +2,8 @@ class Youtube < Plugin
 
     def init(init)
         @bot = init
-        @downloadfolder = "../music/download/"
+        @downloadfolder = "../music/download/"                          # will move into config soon
+        @tempdownloadfolder = "./temp/download/"                        # will move into config soon
         @songlist = Queue.new
         @keylist = Array.new
     end
@@ -40,7 +41,6 @@ class Youtube < Plugin
                         song = @songlist.pop
                         @bot[:cli].text_user(actor, song)
                         @bot[:mpd].add("download/"+song)
-                        sleep 0.5
                     end
                 else
                     @bot[:cli].text_user(actor, "The link contains nothing interesting for me.")
@@ -50,18 +50,28 @@ class Youtube < Plugin
         
         if message.split[0] == 'yts'
             search = message[4..-1]
-            search.gsub!(" ", "+") 
-            search = "" if search == nil
-            songs = find_youtube_song(search)
-            @keylist[msg.actor] = songs
-            out = "<table><tr><td><b>Index</b></td><td>Title</td></tr>"
-            index = 0
-            @keylist[msg.actor].each do |id , title|
-                out += "<tr><td><b>#{index}</b></td><td>#{title}</td></tr>"
-                index += 1
+            if !(( search == nil ) || ( search == "" ))
+                @bot[:cli].text_user(msg.actor, "searching, please be patient...")    
+                workingsearch = Thread.new {
+                    search.gsub!(" ", "+")
+                    songs = find_youtube_song(search)
+                    @keylist[msg.actor] = songs
+                    index = 0
+                    out = ""
+                    @keylist[msg.actor].each do |id , title|
+                        if ( ( index % 30 ) == 0 )
+                            @bot[:cli].text_user(msg.actor, out + "</table>") if index != 0   
+                            out = "<table><tr><td><b>Index</b></td><td>Title</td></tr>"
+                        end
+                        out += "<tr><td><b>#{index}</b></td><td>#{title}</td></tr>"
+                        index += 1
+                    end
+                    out +="</table>"
+                    @bot[:cli].text_user(msg.actor, out)    
+                }
+            else    
+                @bot[:cli].text_user(msg.actor, "won't search for nothing!")    
             end
-            out +="</table>"
-            @bot[:cli].text_user(msg.actor, out)    
         end
 
         if message.split[0] == 'yta'
@@ -103,8 +113,12 @@ class Youtube < Plugin
                         out = "<b>Added:</b><br />"
                         while @songlist.size > 0 
                             song = @songlist.pop
-                            out += song + "<br />"
-                            @bot[:mpd].add("download/"+song)
+                            begin
+                                @bot[:mpd].add("download/"+song)
+                                out += song + "<br />"
+                            rescue
+                                out += "fixme: " + song + " not found!<br />"
+                            end
                         end
                         @bot[:cli].text_user(actor, out)
                     else
@@ -131,13 +145,12 @@ class Youtube < Plugin
         if ( site.include? "www.youtube.com/" ) || ( site.include? "www.youtu.be/" ) || ( site.include? "m.youtube.com/" ) then
             site.gsub!(/<\/?[^>]*>/, '')
             site.gsub!("&amp;", "&")
-            filename = `/usr/local/bin/youtube-dl --get-filename --restrict-filenames -r 2.5M -i -o \"#{@downloadfoler}%(title)s\" "#{site}"`
-            system ("/usr/local/bin/youtube-dl --restrict-filenames -r 2.5M -i -o \"#{@downloadfolder}%(title)s.%(ext)s\" \"#{site}\" ")
+            filename = `/usr/local/bin/youtube-dl --get-filename --restrict-filenames -r 2.5M -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
+            system (" /usr/local/bin/youtube-dl --restrict-filenames -r 2.5M --write-thumbnail -x --audio-format m4a -o \"#{@tempdownloadfolder}%(title)s.%(ext)s\" \"#{site}\" ")     #get icon
             filename.split("\n").each do |name|
-                system ("if [ ! -e \"#{@downloadfolder}#{name}.mp3\" ]; then ffmpeg -i \"#{@downloadfolder}#{name}.mp4\" -q:a 0 -map a -metadata title=\"#{name}\" \"#{@downloadfolder}#{name}.mp3\" -y; fi")
-                system ("if [ ! -e \"#{@downloadfolder}#{name}.jpg\" ]; then ffmpeg -i \"#{@downloadfolder}#{name}.mp4\" -s qvga -filter:v select=\"eq(n\\,250)\" -vframes 1 \"#{@downloadfolder}#{name}.jpg\" -y; fi")
-                @songlist << name.split("/")[-1] + ".mp3" 
-                
+                system ("convert \"#{@tempdownloadfolder}#{name}.jpg\" -resize 320x240 \"#{@downloadfolder}#{name}.jpg\" ")
+                system ("if [ ! -e \"#{@downloadfolder}#{name}.m4a\" ]; then ffmpeg -i \"#{@tempdownloadfolder}#{name}.m4a\" -acodec copy -metadata title=\"#{name}\" \"#{@downloadfolder}#{name}.m4a\" -y; fi") 
+                @songlist << name.split("/")[-1] + ".m4a" 
             end
         end
     end
