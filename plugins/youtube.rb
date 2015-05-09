@@ -2,10 +2,22 @@ class Youtube < Plugin
 
     def init(init)
         @bot = init
-        @downloadfolder = "../music/download/"                          # will move into config soon
-        @tempdownloadfolder = "./temp/download/"                        # will move into config soon
-        @songlist = Queue.new
-        @keylist = Array.new
+        if ( @bot[:mpd] != nil ) && ( @bot[:youtube] == nil )
+            @downloadfolder = "../music/download/"                          # will move into config soon
+            @tempdownloadfolder = "./temp/download/"                        # will move into config soon
+            @songlist = Queue.new
+            @keylist = Array.new
+            @bot[:youtube] = self
+        end
+        return @bot
+    end
+
+    def name
+        if ( @bot[:mpd] == nil ) || ( @bot[:youtube] == nil)
+            "false"
+        else    
+            self.class.name
+        end
     end
 
     def help(h)
@@ -28,13 +40,17 @@ class Youtube < Plugin
                     @bot[:mpd].update("download") 
                     @bot[:cli].text_user(actor, "Waiting for database update complete...")
                     
-                    #Caution! following command needs patched ruby-mpd!
-                    @bot[:mpd].idle("update")
-                    # find this lines in ruby-mpd/plugins/information.rb (actual 47-49)
-                    # def idle(*masks)
-                    #  send_command(:idle, *masks)
-                    # end
-                    # and uncomment it there, then build gem new.
+                    begin
+                        #Caution! following command needs patched ruby-mpd!
+                        @bot[:mpd].idle("update")
+                        # find this lines in ruby-mpd/plugins/information.rb (actual 47-49)
+                        # def idle(*masks)
+                        #  send_command(:idle, *masks)
+                        # end
+                        # and uncomment it there, then build gem new.
+                    rescue
+                        sleep 10
+                    end
                         
                     @bot[:cli].text_user(actor, "Update done.")
                     while @songlist.size > 0 
@@ -146,7 +162,7 @@ class Youtube < Plugin
             site.gsub!(/<\/?[^>]*>/, '')
             site.gsub!("&amp;", "&")
             filename = `/usr/local/bin/youtube-dl --get-filename --restrict-filenames -r 2.5M -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
-            system (" /usr/local/bin/youtube-dl --restrict-filenames -r 2.5M --write-thumbnail -x --audio-format m4a -o \"#{@tempdownloadfolder}%(title)s.%(ext)s\" \"#{site}\" ")     #get icon
+            system ("/usr/local/bin/youtube-dl --restrict-filenames -r 2.5M --write-thumbnail -x --audio-format m4a -o \"#{@tempdownloadfolder}%(title)s.%(ext)s\" \"#{site}\" ")     #get icon
             filename.split("\n").each do |name|
                 system ("convert \"#{@tempdownloadfolder}#{name}.jpg\" -resize 320x240 \"#{@downloadfolder}#{name}.jpg\" ")
                 system ("if [ ! -e \"#{@downloadfolder}#{name}.m4a\" ]; then ffmpeg -i \"#{@tempdownloadfolder}#{name}.m4a\" -acodec copy -metadata title=\"#{name}\" \"#{@downloadfolder}#{name}.m4a\" -y; fi") 

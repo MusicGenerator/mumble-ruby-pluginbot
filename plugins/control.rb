@@ -2,6 +2,18 @@ class Control < Plugin
 
     def init(init)
         @bot = init
+        if @bot[:mpd] != nil
+            @bot[:control] = self
+        end
+        return @bot
+    end
+    
+    def name
+        if @bot[:mpd] == nil
+            "false"
+        else    
+            self.class.name
+        end
     end
 
     def help(h)
@@ -33,7 +45,7 @@ class Control < Plugin
         end
 
         if message == 'gotobed'
-            @bot[:cli].join_channel(@init[:mumbleserver_targetchannel])
+            @bot[:cli].join_channel(@bot[:mumbleserver_targetchannel])
             @bot[:mpd].pause = true
             @bot[:cli].me.deafen true
             begin
@@ -57,7 +69,7 @@ class Control < Plugin
                         Thread.kill(@following)
                         @alreadyfollowing = false
                     rescue TypeError
-                        if @init[:debug]
+                        if @bot[:debug]
                             puts "#{$!}"
                         end
                     end
@@ -70,11 +82,13 @@ class Control < Plugin
                 @following = Thread.new {
                     begin
                         while @follow == true do
-                            @bot[:cli].join_channel(@bot[:cli].users[currentuser].channel_id) if (@bot[:cli].me.current_channel != @bot[:cli].users[currentuser].channel_id)
+                            if (@bot[:cli].me.current_channel != @bot[:cli].users[currentuser].channel_id)
+                                @bot[:cli].join_channel(@bot[:cli].users[currentuser].channel_id) 
+                            end
                             sleep 0.5
                         end
                     rescue
-                        if @init[:debug]
+                        if @bot[:debug]
                             puts "#{$!}"
                         end
                         @alreadyfollowing = false
@@ -94,7 +108,7 @@ class Control < Plugin
                     Thread.kill(@following)
                     @alreadyfollowing = false
                 rescue TypeError
-                    if @init[:debug]
+                    if @bot[:debug]
                         puts "#{$!}"
                     end
                     @bot[:cli].text_user(msg.actor, "#{@controlstring}follow hasn't been executed yet.")
@@ -110,7 +124,7 @@ class Control < Plugin
                     Thread.kill(@sticked)
                     @alreadysticky = false
                 rescue TypeError
-                    if @init[:debug]
+                    if @bot[:debug]
                         puts "#{$!}"
                     end
                 end
@@ -130,9 +144,9 @@ class Control < Plugin
                             sleep(1)
                         rescue
                             @alreadysticky = false
-                            @bot[:cli].join_channel(@init[:mumbleserver_targetchannel])
+                            @bot[:cli].join_channel(@bot[:mumbleserver_targetchannel])
                             Thread.kill(@sticked)
-                            if @init[:debug]
+                            if @bot[:debug]
                                 puts "#{$!}"
                             end
                         end
@@ -151,7 +165,7 @@ class Control < Plugin
                 begin
                     Thread.kill(@sticked)
                 rescue TypeError
-                    if @init[:debug]
+                    if @bot[:debug]
                         puts "#{$!}"
                     end
                 end

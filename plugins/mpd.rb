@@ -4,6 +4,184 @@ class Mpd < Plugin
     
     def init(init)
         @bot = init
+        #init default template
+        @template_if_comment_enabled = "<b>Artist: </b>%s<br />"\
+                            + "<b>Title: </b>%s<br />" \
+                            + "<b>Album: </b>%s<br /><br />" \
+                            + "<b>Write %shelp to me, to get a list of my commands!</b>"
+        @template_if_comment_disabled = "<b>Artist: </b>DISABLED<br />"\
+                            + "<b>Title: </b>DISABLED<br />" \
+                            + "<b>Album: </b>DISABLED<br /><br />" \
+                            + "<b>Write %shelp to me, to get a list of my commands!</b>"
+
+
+        if ( @bot[:messages] != nil ) && ( @bot[:mpd] == nil ) then
+            @bot[:mpd] = MPD.new @bot[:mpd_host], @bot[:mpd_port].to_i
+
+            @bot[:mpd].on :volume do |volume|
+                @bot[:messages].sendmessage("Volume was set to: #{volume}%." , 0x01)
+            end
+
+            @bot[:mpd].on :error do |error|
+                @bot[:cli].text_channel(@bot[:cli].me.current_channel, "<span style='color:red;font-weight:bold;>An error occured: #{error}.</span>") 
+            end
+
+            @bot[:mpd].on :updating_db do |jobid|
+                @bot[:cli].text_channel(@bot[:cli].me.current_channel, "I am running a database update just now ... new songs :)<br />My job id is: #{jobid}.") if (@bot[:chan_notify] & 0x02) != 0
+            end
+
+            @bot[:mpd].on :random do |random|
+                if random
+                    random = "On"
+                else
+                    random = "Off"
+                end
+                @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Random mode is now: #{random}.") if (@bot[:chan_notify] & 0x04) != 0
+            end
+
+            @bot[:mpd].on :state  do |state|
+                if @bot[:chan_notify] & 0x80 != 0 then
+                    @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Music paused.") if  state == :pause 
+                    @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Music stopped.") if state == :stop  
+                    @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Music start playing.") if state == :play 
+                end
+            end
+
+            @bot[:mpd].on :single do |single|
+                if single
+                    single = "On"
+                else
+                    single = "Off"
+                end
+                @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Single mode is now: #{single}.") if (@bot[:chan_notify] & 0x08) != 0
+            end
+
+            @bot[:mpd].on :consume do |consume|
+                if consume
+                    consume = "On"
+                else
+                    consume = "Off"
+                end
+
+                @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Consume mode is now: #{consume}.") if (@bot[:chan_notify] & 0x10) != 0
+            end
+
+            @bot[:mpd].on :xfade do |xfade|
+                if xfade.to_i == 0
+                    xfade = "Off"
+                    @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Crossfade is now: #{xfade}.") if (@bot[:chan_notify] & 0x20) != 0
+                else
+                    @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Crossfade time (in seconds) is now: #{xfade}.") if (@bot[:chan_notify] & 0x20) != 0 
+                end
+            end
+
+            @bot[:mpd].on :repeat do |repeat|
+                if repeat
+                    repeat = "On"
+                else
+                    repeat = "Off"
+                end
+                @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Repeat mode is now: #{repeat}.") if (@bot[:chan_notify] & 0x40) != 0
+            end
+
+            @bot[:mpd].on :song do |current|
+                if not current.nil? #Would crash if playlist was empty.
+                    if @bot[:use_comment_for_status_display] == true && @bot[:set_comment_available] == true
+                        begin
+                            if File.exist?("../music/download/"+current.title.to_s+".jpg")
+                                image = @bot[:cli].get_imgmsg("../music/download/"+current.title+".jpg")
+                            else
+                                image = @bot[:logo]
+                            end
+                            output = "<br />" + @template_if_comment_enabled % [current.artist, current.title, current.album,@bot[:controlstring]]
+                            @bot[:cli].set_comment(image+output)
+                        rescue NoMethodError
+                            if @bot[:debug]
+                                puts "#{$!}"
+                            end
+                        end
+                    else
+                        #if current.artist.nil? && current.title.nil? && current.album.nil?
+                        #    @bot[:cli].text_channel(@bot[:cli].me.current_channel, "#{current.file}") if @bot[:chan_notify] && 0x80
+                        #else
+                        #    @bot[:cli].text_channel(@bot[:cli].me.current_channel, "#{current.artist} - #{current.title} (#{current.album})") if (@bot[:chan_notify] && 0x80) != 0
+                        #end
+                    end
+                end
+            end
+
+            @bot[:cli].player.stream_named_pipe(@bot[:mpd_fifopath]) 
+            @bot[:mpd].connect true #without true bot does not @bot[:cli].text_channel messages other than for !status
+            
+            main = Thread.new do
+                mpd =@bot[:mpd]
+                while (true == true)
+                    sleep 1
+                    current = mpd.current_song if mpd.connected?
+                    if not current.nil? #Would crash if playlist was empty.
+                        lastcurrent = current if lastcurrent.nil? 
+                        if lastcurrent.title != current.title 
+                            if @bot[:use_comment_for_status_display] == true && @bot[:set_comment_available] == true
+                                begin
+                                    if File.exist?("../music/download/"+current.title.to_s+".jpg")
+                                        image = @bot[:cli].get_imgmsg("../music/download/"+current.title+".jpg")
+                                    else
+                                        image = @bot[:logo]
+                                    end
+                                    output = "<br />" + @template_if_comment_enabled % [current.artist, current.title, current.album,@bot[:controlstring]]
+                                    @bot[:cli].set_comment(image+"<br />#{output}")
+                                    
+                                rescue NoMethodError
+                                    if @bot[:debug]
+                                        puts "#{$!}"
+                                    end
+                                end
+                            else
+                                if current.artist.nil? && current.title.nil? && current.album.nil?
+                                    @bot[:cli].text_channel(@bot[:cli].me.current_channel, "#{current.file}") if @bot[:chan_notify] && 0x80
+                                else
+                                    @bot[:cli].text_channel(@bot[:cli].me.current_channel, "#{current.artist} - #{current.title} (#{current.album})") if (@bot[:chan_notify] && 0x80) != 0
+                                end
+                            end
+                            lastcurrent = current
+                            puts "[displayinfo] update" if @bot[:debug]
+                        end
+                    end
+                end
+            end
+
+        end
+
+        @bot[:cli].on_user_state do |msg|
+            msg_target = @bot[:cli].users[msg.session]
+            if msg_target.user_id.nil?
+                msg_userid = -1
+                sender_is_registered = false
+            else
+                msg_userid = msg_target.user_id
+                sender_is_registered = true
+            end
+            if @bot[:cli].me.current_channel != nil          
+                #msg.actor = session_id of user who did something on someone, if self done, both is the same.
+                #msg.session = session_id of the target
+                if @bot[:cli].me.current_channel.channel_id == msg_target.channel_id
+                    if (@bot[:stop_on_unregistered_users] == true && sender_is_registered == false)
+                        @mpd.stop
+                        @bot[:cli].text_channel(@bot[:cli].me.current_channel, "<span style='color:red;'>An unregistered user currently joined or is acting in our channel. I stopped the music.</span>")
+                    end
+                end
+            end
+        end
+
+        return @bot
+    end
+    
+    def name
+        if @bot[:messages] == nil
+            "false"
+        else
+            self.class.name
+        end
     end
 
     def help(h)
@@ -36,6 +214,8 @@ class Mpd < Plugin
         h += "<b>#{@bot[:controlstring]}v-</b> turns volume 5% down.<br />"
         h += "<b>#{@bot[:controlstring]}v <i>value</i></b> Set playback volume to value.<br />"
         h += "<b>#{@bot[:controlstring]}v</b> Info about current playback volume.<br />"
+        h += "<b>#{@bot[:controlstring]}displayinfo</b> Toggles Infodisplay from comment to message and back.<br />"
+        
     end
 
     def handle_chat(msg,message)
@@ -125,6 +305,7 @@ class Mpd < Plugin
         end
 
         if message == 'queue'
+            puts "queue!"
             text_out ="<br/>"
             @bot[:mpd].queue.each do |song|
                 text_out += "#{song.title}<br/>" 
@@ -242,5 +423,27 @@ class Mpd < Plugin
             end
             @bot[:mpd].volume = volume
         end
+
+        if message == 'displayinfo'
+            begin
+                if @bot[:use_comment_for_status_display] == true
+                    @bot[:use_comment_for_status_display] = false
+                    @bot[:cli].text_user(msg.actor, "Output is now \"Channel\"")
+                    @bot[:cli].set_comment(@template_if_comment_disabled % [@controlstring])
+                else
+                    @bot[:use_comment_for_status_display] = true
+                    @bot[:cli].text_user(msg.actor, "Output is now \"Comment\"")
+                    @bot[:cli].set_comment(@template_if_comment_enabled)
+                end
+            rescue NoMethodError
+                if @bot[:debug]
+                    puts "#{$!}"
+                end
+            end
+        end
+
+        
+        
+        
     end
 end
