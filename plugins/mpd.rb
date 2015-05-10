@@ -225,7 +225,7 @@ class Mpd < Plugin
         if message.match(/^seek [+-]?[0-9]{1,3}$/)
             seekto = message.match(/^seek ([+-]?[0-9]{1,3})$/)[1]
             @bot[:mpd].seek seekto
-            status = @bot[mpd].status
+            status = @bot[:mpd].status
 
             #Code from http://stackoverflow.com/questions/19595840/rails-get-the-time-difference-in-hours-minutes-and-seconds
             now_mm, now_ss = status[:time][0].divmod(60) #Minutes and seconds of current time within the song.
@@ -236,7 +236,7 @@ class Mpd < Plugin
             now = "%02d:%02d:%02d" % [now_hh, now_mm, now_ss]
             total = "%02d:%02d:%02d" % [total_hh, total_mm, total_ss]
 
-            @bot[cli].text_channel(@bot[:cli].me.current_channel, "Seeked to position #{now}/#{total}.")
+            @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Seeked to position #{now}/#{total}.")
         end
 
         if message.match(/^crossfade [0-9]{1,3}$/)
@@ -441,9 +441,6 @@ class Mpd < Plugin
                 end
             end
         end
-
-        
-        
-        
+ 
     end
 end
