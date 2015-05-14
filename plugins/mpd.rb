@@ -166,7 +166,7 @@ class Mpd < Plugin
                 #msg.session = session_id of the target
                 if @bot[:cli].me.current_channel.channel_id == msg_target.channel_id
                     if (@bot[:stop_on_unregistered_users] == true && sender_is_registered == false)
-                        @mpd.stop
+                        @bot[:mpd].stop
                         @bot[:cli].text_channel(@bot[:cli].me.current_channel, "<span style='color:red;'>An unregistered user currently joined or is acting in our channel. I stopped the music.</span>")
                     end
                 end
@@ -285,14 +285,16 @@ class Mpd < Plugin
             out = ""
             @bot[:mpd].songs.each do |song|
                 if block >= 50
-                    @bot[:cli].text_user(msg.actor, out)
+                    #@bot[:cli].text_user(msg.actor, out)
+                    @bot[:messages].text(msg.actor, out)
                     out = ""
                     block = 0
                 end
                 out += "<br/>" + song.file
                 block += 1
             end
-            @bot[:cli].text_user(msg.actor, out)    
+            @bot[:messages].text(msg.actor, out)
+            #@bot[:cli].text_user(msg.actor, out)    
         end
 
         if message == 'stats'

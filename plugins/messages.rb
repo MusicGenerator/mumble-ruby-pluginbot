@@ -10,13 +10,29 @@ class Messages < Plugin
     Cstate =       0x80 #send message when state changes
 
     def init(init)
-        @priv_notify = {}
         @bot = init
-        @bot[:messages] = self
+        if @bot[:messages] == nil
+            @priv_notify = {}
+            @bot[:messages] = self
+            @mqueue = Queue.new
+            @uqueue = Queue.new
+            @lastmessage = Time.now
+            @messagecount = 0
+            domessages = Thread.new {
+                while true == true 
+                    if ( @messagecount < 10 ) && ( @mqueue.length > 0 ) 
+                        @bot[:cli].text_user(@uqueue.pop,@mqueue.pop) 
+                        @messagecount += 1 if ( ( Time.now - @lastmessage ) < 10 )
+                        @lastmessage = Time.now
+                    end
+                    @messagecount = 0 if ( Time.now - @lastmessage ) > 11
+                    sleep (0.1)
+                end
+            }
+        end
         return @bot
-        #nothing to init
     end
-    
+
     def name
         if @bot[:messages] != nil
             "messages"
@@ -24,16 +40,15 @@ class Messages < Plugin
             self.class.name
         end
     end
-    
+
     def help(h)
         h += "<hr><span style='color:red;'>Plugin MESSAGES</span><br />"
         h += "<b>#{@bot[:controlstring]}+ #(<i>Hashtag</i>)</b> add a notification.<br />"
         h += "<b>#{@bot[:controlstring]}- #(<i>Hashtag</i>)</b> remove a notification.<br />"
         h += "You can choose one or more of this:<br />"
         h += "volume, random, update, single, xfade, consume, repeat, state<br />"
-
     end
-   
+
     def handle_chat(msg, message)
         @priv_notify[msg.actor] = 0 if @priv_notify[msg.actor].nil?
         if message[2] == '#'
@@ -88,5 +103,10 @@ class Messages < Plugin
                 end
             end
         end
+    end
+    
+    def text (user, message)
+        @mqueue << message
+        @uqueue << user
     end
 end
