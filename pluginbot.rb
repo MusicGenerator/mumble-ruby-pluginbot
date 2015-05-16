@@ -317,11 +317,25 @@ class MumbleMPD
                     end
                 end
 
-                help += "<b>#{cc}help</b> Get this list :).<br />"
-                if message == 'help'
-                    @plugin.each do |plugin|
-                        help = plugin.help(help.to_s)
+                help += "<b>#{cc}help <i>pluginname</i></b> Get help for plugin.<br />"
+                if message.split[0] == 'help'
+                    if message.split[1]=='all'
+                        @plugin.each do |plugin|
+                            help = plugin.help(help.to_s)
+                        end
                     end
+                    if message.split[1]!=nil
+                        @plugin.each do |plugin|
+                          help = plugin.help('') if plugin.name == message.split[1]
+                        end
+                    else
+                        help += "<span style='color:red;'>Loaded plugins:<br /><b>"
+                        @plugin.each do |plugin|
+                            help += plugin.name + "<br />"
+                        end
+                        help += "</b></span>"
+                    end
+                    
                     @cli.text_user(msg.actor, help)
                 end
            end

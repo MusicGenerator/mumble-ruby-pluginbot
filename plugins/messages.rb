@@ -35,7 +35,7 @@ class Messages < Plugin
 
     def name
         if @bot[:messages] != nil
-            "messages"
+            "Messages"
         else
             self.class.name
         end
