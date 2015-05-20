@@ -31,7 +31,7 @@ class Control < Plugin
     def handle_chat(msg, message)
 
         if message == 'ch'
-            channeluserisin = msg_sender.channel_id
+            channeluserisin = @bot[:cli].users[msg.actor].channel_id
             if @bot[:cli].me.current_channel.channel_id.to_i == channeluserisin.to_i
                 @bot[:cli].text_user(msg.actor, "Hey superbrain, I am already in your channel :)")
             else
