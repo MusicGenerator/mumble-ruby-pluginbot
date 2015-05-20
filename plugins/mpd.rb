@@ -241,7 +241,7 @@ class Mpd < Plugin
 
         if message.match(/^crossfade [0-9]{1,3}$/)
             secs = message.match(/^crossfade ([0-9]{1,3})$/)[1].to_i
-            @bot[mpd].crossfade = secs
+            @bot[:mpd].crossfade = secs
         end
 
         @bot[:mpd].next if message == 'next'
