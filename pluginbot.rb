@@ -37,14 +37,14 @@ class MumbleMPD
 
         #Read config file if available 
         begin
-            require_relative 'superbot_conf.rb'
+            require_relative 'pluginbot_conf.rb'
             ext_config()
         rescue
             puts "Config could not be loaded! Using default configuration."
         end
 
         OptionParser.new do |opts|
-            opts.banner = "Usage: superbot_2.rb [options]"
+            opts.banner = "Usage: pluginbot.rb [options]"
 
             opts.on("--mumblehost=", "IP or Hostname of mumbleserver") do |v|
                 @settings[:mumbleserver_host] = v
