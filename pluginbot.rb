@@ -46,6 +46,21 @@ class MumbleMPD
         OptionParser.new do |opts|
             opts.banner = "Usage: superbot_2.rb [options]"
 
+            opts.on("--config=", "(Relative) path and filename to config") do |v|
+                if File.exist? v
+                    require_relative v
+                    begin
+                        require_relative v
+                        ext_config()
+                    rescue
+                        puts "Your config could not be loaded!"
+                    end
+                else
+                    puts "Config path- and/or filename is wrong!"
+                    puts "Config not loaded!"
+                end
+            end
+            
             opts.on("--mumblehost=", "IP or Hostname of mumbleserver") do |v|
                 @settings[:mumbleserver_host] = v
             end
