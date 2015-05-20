@@ -53,7 +53,7 @@ class MumbleMPD
                             + "<b>Write %shelp to me, to get a list of my commands!"
         #Read config file if available 
         begin
-            require_relative 'superbot_conf.rb'
+            require_relative 'pluginbot_conf.rb'
             ext_config()
         rescue
             puts "Config could not be loaded! Using default configuration."
