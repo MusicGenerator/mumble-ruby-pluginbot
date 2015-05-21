@@ -5,15 +5,10 @@ class Mpd < Plugin
     def init(init)
         @bot = init
         #init default template
-        @template_if_comment_enabled = "<b>Artist: </b>%s<br />"\
-                            + "<b>Title: </b>%s<br />" \
-                            + "<b>Album: </b>%s<br /><br />" \
-                            + "<b>Write %shelp to me, to get a list of my commands!</b>"
-        @template_if_comment_disabled = "<b>Artist: </b>DISABLED<br />"\
-                            + "<b>Title: </b>DISABLED<br />" \
-                            + "<b>Album: </b>DISABLED<br /><br />" \
-                            + "<b>Write %shelp to me, to get a list of my commands!</b>"
-
+        @template_if_comment_enabled = @bot[:mpd_template_comment_enabled]
+        @template_if_comment_disabled = @bot[:mpd_template_comment_disabled]
+        @template_if_comment_enabled = "<b>Artist: </b>%s<br /><b>Title: </b>%s<br /><b>Album: </b>%s<br /><br /><b>Write %shelp to me, to get a list of my commands!</b>" if @template_if_comment_enabled == nil
+        @template_if_comment_disabled = "<b>Artist: </b>DISABLED<br /><b>Title: </b>DISABLED<br /><b>Album: </b>DISABLED<br /><br /><b>Write %shelp to me, to get a list of my commands!</b>" if @template_if_comment_disabled == nil
 
         if ( @bot[:messages] != nil ) && ( @bot[:mpd] == nil ) then
             @bot[:mpd] = MPD.new @bot[:mpd_host], @bot[:mpd_port].to_i

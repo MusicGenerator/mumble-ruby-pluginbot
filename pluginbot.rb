@@ -135,7 +135,7 @@ class MumbleMPD
         begin
             Thread.kill(@duckthread)
         rescue
-            puts "[killduckthread] can't kill because #{$1}" if @settings[:debug]
+            puts "[killduckthread] can't kill because #{$!}" if @settings[:debug]
         end
         
         #Start duckthread

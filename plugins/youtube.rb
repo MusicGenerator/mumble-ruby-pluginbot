@@ -3,8 +3,13 @@ class Youtube < Plugin
     def init(init)
         @bot = init
         if ( @bot[:mpd] != nil ) && ( @bot[:youtube] == nil )
-            @downloadfolder = "../music/download/"                          # will move into config soon
-            @tempdownloadfolder = "./temp/download/"                        # will move into config soon
+            begin
+                @youtubefolder = @bot[:mpd_musicfolder] + @bot[:youtube_downloadsubdir]
+                @tempyoutubefolder = @bot[:main_tempdir] + @bot[:youtube_tempsubdir]
+            rescue
+                puts "Error: Youtube-Plugin doesn't found settings for mpd music directory and/or your preferred temporary download directory"
+                puts "See pluginbot_conf.rb"
+            end
             @songlist = Queue.new
             @keylist = Array.new
             @bot[:youtube] = self
@@ -162,10 +167,10 @@ class Youtube < Plugin
             site.gsub!(/<\/?[^>]*>/, '')
             site.gsub!("&amp;", "&")
             filename = `/usr/local/bin/youtube-dl --get-filename --restrict-filenames -r 2.5M -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
-            system ("/usr/local/bin/youtube-dl --restrict-filenames -r 2.5M --write-thumbnail -x --audio-format m4a -o \"#{@tempdownloadfolder}%(title)s.%(ext)s\" \"#{site}\" ")     #get icon
+            system ("/usr/local/bin/youtube-dl --restrict-filenames -r 2.5M --write-thumbnail -x --audio-format m4a -o \"#{@tempyoutubefolder}%(title)s.%(ext)s\" \"#{site}\" ")     #get icon
             filename.split("\n").each do |name|
-                system ("convert \"#{@tempdownloadfolder}#{name}.jpg\" -resize 320x240 \"#{@downloadfolder}#{name}.jpg\" ")
-                system ("if [ ! -e \"#{@downloadfolder}#{name}.m4a\" ]; then ffmpeg -i \"#{@tempdownloadfolder}#{name}.m4a\" -acodec copy -metadata title=\"#{name}\" \"#{@downloadfolder}#{name}.m4a\" -y; fi") 
+                system ("convert \"#{@tempyoutubefolder}#{name}.jpg\" -resize 320x240 \"#{@youtubefolder}#{name}.jpg\" ")
+                system ("if [ ! -e \"#{@youtubefolder}#{name}.m4a\" ]; then ffmpeg -i \"#{@tempyoutubefolder}#{name}.m4a\" -acodec copy -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.m4a\" -y; fi") 
                 @songlist << name.split("/")[-1] + ".m4a" 
             end
         end

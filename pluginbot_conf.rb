@@ -1,6 +1,7 @@
 def ext_config()
 	puts "Config loaded!"
     @settings = {   version: 2.0, 
+                    main_tempdir: "./temp",
                     ducking: false, 
                     chan_notify: 0x0000, 
                     controlstring: ".", 
@@ -40,19 +41,30 @@ iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAG
 	#@settings[:use_comment_for_status_display] =    true                   #Whether to use comment to display song info; false = send to channel, true = comment.
 	
 
-	#This template must always contain one %s string.
-	@template_if_comment_disabled = "<b>Artist: </b>DISABLED<br />"\
-					+ "<b>Title: </b>DISABLED<br />" \
-					+ "<b>Album: </b>DISABLED<br /><br />" \
-					+ "<b>Write %shelp to me, to get a list of my commands!"
-                    
-                    
-	#This template must always contain four %s strings.
-	@template_if_comment_enabled = "<b>Artist: </b>%s<br />"\
-					+ "<b>Title: </b>%s<br />" \
-					+ "<b>Album: </b>%s<br /><br />" \
-					+ "<b>Write %shelp to me, to get a list of my commands!</b>"
-   
+
+
+    #Settings for plugins:
+    
+    #
+    # Youtube-Plugin:
+    @settings[:youtube_downloadsubdir] = "download/"
+    @settings[:youtube_tempsubdir] = "youtubeplugin/"
+    #@settings[:mpd_musicfolder] has also to be set to correct folder!
+    
+    # Mpd-Plugin:
+    @settings[:mpd_musicfolder] = "../music/" # is in current version not used by Mpd-Plugin itself but by other plugins!
+    #This template must always contain one %s string.
+    @settings[:mpd_template_comment_disabled] = "<b>Artist: </b>DISABLED<br />"\
+                                              + "<b>Title: </b>DISABLED<br />" \
+                                              + "<b>Album: </b>DISABLED<br /><br />" \
+                                              + "<b>Write %shelp to me, to get a list of my commands!"
+    #This template must always contain four %s strings.
+    @settings[:mpd_template_comment_enabled] = "<b>Artist: </b>%s<br />"\
+                                             + "<b>Title: </b>%s<br />" \
+                                             + "<b>Album: </b>%s<br /><br />" \
+                                             + "<b>Write %shelp to me, to get a list of my commands!</b>"
+
+                                             
     #Set default mumble server
     #@settings[:mumbleserver_host] = "127.0.0.1"
     #@settings[:mumbleserver_port] = "64739"
