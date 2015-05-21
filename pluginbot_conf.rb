@@ -1,7 +1,7 @@
 def ext_config()
 	puts "Config loaded!"
     @settings = {   version: 2.0, 
-                    main_tempdir: "./temp",
+                    main_tempdir: "./temp/",
                     ducking: false, 
                     chan_notify: 0x0000, 
                     controlstring: ".", 
