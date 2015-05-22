@@ -42,7 +42,7 @@ class Youtube < Plugin
                 @bot[:cli].text_user(actor, "inspecting link: " + link + "...")
                 get_song link
                 if ( @songlist.size > 0 ) then
-                    @bot[:mpd].update("download") 
+                    @bot[:mpd].update(@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
                     @bot[:cli].text_user(actor, "Waiting for database update complete...")
                     
                     begin
@@ -119,7 +119,7 @@ class Youtube < Plugin
                         get_song l
                     end
                     if ( @songlist.size > 0 ) then
-                        @bot[:mpd].update("download") 
+                        @bot[:mpd].update(@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
                         @bot[:cli].text_user(actor, "Waiting for database update complete...")
 
                         #Caution! following command needs patched ruby-mpd!
