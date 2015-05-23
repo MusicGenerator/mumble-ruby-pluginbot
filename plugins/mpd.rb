@@ -219,7 +219,12 @@ class Mpd < Plugin
         end
         if message.match(/^seek [+-]?[0-9]{1,3}$/)
             seekto = message.match(/^seek ([+-]?[0-9]{1,3})$/)[1]
-            @bot[:mpd].seek seekto
+            begin
+                @bot[:mpd].seek seekto
+            rescue
+                # mpd is old and knows no seek commands
+                puts "[mpd-plugin] [error] seek without success, maybe mpd version < 0.17 installed"
+            end
             status = @bot[:mpd].status
 
             #Code from http://stackoverflow.com/questions/19595840/rails-get-the-time-difference-in-hours-minutes-and-seconds
@@ -231,7 +236,7 @@ class Mpd < Plugin
             now = "%02d:%02d:%02d" % [now_hh, now_mm, now_ss]
             total = "%02d:%02d:%02d" % [total_hh, total_mm, total_ss]
 
-            @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Seeked to position #{now}/#{total}.")
+            @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Now on position #{now}/#{total}.")
         end
 
         if message.match(/^crossfade [0-9]{1,3}$/)
