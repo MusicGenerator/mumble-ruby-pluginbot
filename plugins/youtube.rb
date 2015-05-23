@@ -54,6 +54,7 @@ class Youtube < Plugin
                         # end
                         # and uncomment it there, then build gem new.
                     rescue
+                        puts "[youtube-plugin] [info] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds." if @bot[:debug]
                         sleep 10
                     end
                         
@@ -121,15 +122,19 @@ class Youtube < Plugin
                     if ( @songlist.size > 0 ) then
                         @bot[:mpd].update(@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
                         @bot[:cli].text_user(actor, "Waiting for database update complete...")
-
-                        #Caution! following command needs patched ruby-mpd!
-                        @bot[:mpd].idle("update")
-                        # find this lines in ruby-mpd/plugins/information.rb (actual 47-49)
-                        # def idle(*masks)
-                        #  send_command(:idle, *masks)
-                        # end
-                        # and uncomment it there, then build gem new.
-
+                        
+                        begin
+                            #Caution! following command needs patched ruby-mpd!
+                            @bot[:mpd].idle("update")
+                            # find this lines in ruby-mpd/plugins/information.rb (actual 47-49)
+                            # def idle(*masks)
+                            #  send_command(:idle, *masks)
+                            # end
+                            # and uncomment it there, then build gem new.
+                        rescue
+                            puts "[youtube-plugin] [info] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds." if @bot[:debug]
+                            sleep 10
+                        end
                         @bot[:cli].text_user(actor, "Update done.")
                         out = "<b>Added:</b><br />"
                         while @songlist.size > 0 
