@@ -37,8 +37,6 @@ class Radiostream < Plugin
             else
                 @bot[:messages].text(msg.actor, "not a .pls file link.")
             end
-        else
-            @bot[:messages].text(msg.actor, "parameter must be a html link!")
         end
     end
     
