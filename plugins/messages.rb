@@ -42,7 +42,7 @@ class Messages < Plugin
     end
 
     def help(h)
-        h += "<hr><span style='color:red;'>Plugin MESSAGES</span><br />"
+        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
         h += "<b>#{@bot[:controlstring]}+ #(<i>Hashtag</i>)</b> add a notification.<br />"
         h += "<b>#{@bot[:controlstring]}- #(<i>Hashtag</i>)</b> remove a notification.<br />"
         h += "You can choose one or more of this:<br />"

@@ -17,7 +17,7 @@ class Control < Plugin
     end
 
     def help(h)
-        h += "<hr><span style='color:red;'>Plugin CONTROL</span><br />"
+        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
         h += "<b>#{@bot[:controlstring]}ch</b> Bot jump in your channel.<br />"
         h += "<b>#{@bot[:controlstring]}debug</b> Probe command.<br />"
         h += "<b>#{@bot[:controlstring]}gotobed</b> Bot sleeps in less then 1 second :).<br />"

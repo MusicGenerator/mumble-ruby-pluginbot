@@ -180,7 +180,7 @@ class Mpd < Plugin
     end
 
     def help(h)
-        h += "<hr><span style='color:red;'>Plugin MPD</span><br />"
+        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
         h += "<b>#{@bot[:controlstring]}settings</b> display current settings.<br />"
         h += "<b>#{@bot[:controlstring]}seek <i>value</i>|<i>+/-value</i></b> Seek to an absolute position (in seconds). Use +value or -value to seek relative to the current position.<br />"
         h += "<b>#{@bot[:controlstring]}crossfade <i>value</i></b> Set Crossfade to value seconds, 0 to disable this.<br />"

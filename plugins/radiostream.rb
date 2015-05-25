@@ -18,7 +18,7 @@ class Radiostream < Plugin
     end
     
     def help(h)
-        h += "<hr><span style='color:red;'>Plugin Radiostream</span><br />"
+        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
         h += "<b>#{@bot[:controlstring]}radiostream http-link</b> will try to get some music from icecast/shoutcast.<br />"
         h += "   this version does only understand .pls link files"
     end
