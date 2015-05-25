@@ -341,7 +341,7 @@ class MumbleMPD
                     end
                     if message.split[1]!=nil
                         @plugin.each do |plugin|
-                          help = plugin.help('') if plugin.name == message.split[1]
+                          help = plugin.help('') if plugin.name.upcase == message.split[1].upcase
                         end
                     else
                         help += "<span style='color:red;'>Loaded plugins:<br /><b>"
