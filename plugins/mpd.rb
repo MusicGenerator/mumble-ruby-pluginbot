@@ -435,11 +435,6 @@ class Mpd < Plugin
             @bot[:cli].text_user(msg.actor, "running database update.")
         end
         
-        if message == 'radio'
-            @bot[:cli].text_user(msg.actor, "testbetrieb")
-            @bot[:mpd].add("https://r4---sn-apfxnu-ao1l.googlevideo.com/videoplayback?id=296646004c63f9eb&itag=141&source=youtube&requiressl=yes&ms=au&mv=m&mm=31&gcr=at&pl=21&ratebypass=yes&mime=audio/mp4&gir=yes&clen=9794805&lmt=1429780463670565&dur=307.199&signature=3BDA558A65F1C368A4F0890DD52645A286FBBAC0.0AA88186A29ED30B4D35E14EFFAD1EC0D8EE0A42&mt=1432458848&upn=XdoPFy8zPPw&key=dg_yt0&sver=3&fexp=9406671,9407877,9408142,9408369,9408595,9408710,9413503,9414626,9414737,9415304,948124,952612&ip=90.146.183.218&ipbits=0&expire=1432480491&sparams=ip,ipbits,expire,id,itag,source,requiressl,ms,mv,mm,gcr,pl,ratebypass,mime,gir,clen,lmt,dur")
-        end
-
         if message == 'displayinfo'
             begin
                 if @bot[:use_comment_for_status_display] == true
