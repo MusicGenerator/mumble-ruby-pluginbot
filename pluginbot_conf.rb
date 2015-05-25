@@ -47,12 +47,14 @@ iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADNkKWqAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAG
     
     #
     # Youtube-Plugin:
-    @settings[:youtube_downloadsubdir] = "download/"
-    @settings[:youtube_tempsubdir] = "youtubeplugin/"
-    #@settings[:mpd_musicfolder] has also to be set to correct folder!
+    @settings[:youtube_downloadsubdir] = "download/"                        # should be a subdir of mpd music folder
+    @settings[:youtube_tempsubdir] = "youtubeplugin/"                       # is an temporary dir witch should not be a subdir of mpd!
+    #@settings[:mpd_musicfolder] has also to be set to correct folder!      
+    @settings[:youtube_stream] = nil #(don't stream)
     
     # Mpd-Plugin:
-    @settings[:mpd_musicfolder] = "../music/" # is in current version not used by Mpd-Plugin itself but by other plugins!
+    @settings[:mpd_musicfolder] = "../music/"                               # is in current version not used by Mpd-Plugin itself but by other plugins!
+                                                                            # must be the mpd music folder!
     #This template must always contain one %s string.
     @settings[:mpd_template_comment_disabled] = "<b>Artist: </b>DISABLED<br />"\
                                               + "<b>Title: </b>DISABLED<br />" \

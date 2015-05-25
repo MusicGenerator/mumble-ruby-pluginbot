@@ -62,10 +62,10 @@ class Youtube < Plugin
                     while @songlist.size > 0 
                         song = @songlist.pop
                         @bot[:cli].text_user(actor, song)
-                        @bot[:mpd].add("download/"+song)
+                        @bot[:mpd].add(@bot[:youtube_downloadsubdir]+song)
                     end
                 else
-                    @bot[:cli].text_user(actor, "The link contains nothing interesting for me.")
+                    @bot[:cli].text_user(actor, "The link contains nothing interesting for me.") if @bot[:youtube_stream] == nil
                 end
             }
         end
@@ -73,9 +73,10 @@ class Youtube < Plugin
         if message.split[0] == 'yts'
             search = message[4..-1]
             if !(( search == nil ) || ( search == "" ))
-                @bot[:cli].text_user(msg.actor, "searching, please be patient...")    
                 workingsearch = Thread.new {
                     search.gsub!(" ", "+")
+                    search.gsub!(/"/, "")
+                    @bot[:cli].text_user(msg.actor, "searching for #{search}, please be patient...")    
                     songs = find_youtube_song(search)
                     @keylist[msg.actor] = songs
                     index = 0
@@ -140,7 +141,7 @@ class Youtube < Plugin
                         while @songlist.size > 0 
                             song = @songlist.pop
                             begin
-                                @bot[:mpd].add("download/"+song)
+                                @bot[:mpd].add(@bot[:youtube_downloadsubdir]+song)
                                 out += song + "<br />"
                             rescue
                                 out += "fixme: " + song + " not found!<br />"
@@ -148,7 +149,7 @@ class Youtube < Plugin
                         end
                         @bot[:cli].text_user(actor, out)
                     else
-                        @bot[:cli].text_user(actor, "The link contains nothing interesting for me.")
+                        @bot[:cli].text_user(actor, "The link contains nothing interesting for me.") if @bot[:youtube_stream] == nil
                     end
                 }
             rescue
@@ -171,12 +172,20 @@ class Youtube < Plugin
         if ( site.include? "www.youtube.com/" ) || ( site.include? "www.youtu.be/" ) || ( site.include? "m.youtube.com/" ) then
             site.gsub!(/<\/?[^>]*>/, '')
             site.gsub!("&amp;", "&")
-            filename = `/usr/local/bin/youtube-dl --get-filename --restrict-filenames -r 2.5M -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
-            system ("/usr/local/bin/youtube-dl --restrict-filenames -r 2.5M --write-thumbnail -x --audio-format m4a -o \"#{@tempyoutubefolder}%(title)s.%(ext)s\" \"#{site}\" ")     #get icon
-            filename.split("\n").each do |name|
-                system ("convert \"#{@tempyoutubefolder}#{name}.jpg\" -resize 320x240 \"#{@youtubefolder}#{name}.jpg\" ")
-                system ("if [ ! -e \"#{@youtubefolder}#{name}.m4a\" ]; then ffmpeg -i \"#{@tempyoutubefolder}#{name}.m4a\" -acodec copy -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.m4a\" -y; fi") 
-                @songlist << name.split("/")[-1] + ".m4a" 
+            if @bot[:youtube_stream] == nil
+                filename = `/usr/local/bin/youtube-dl --get-filename --restrict-filenames -r 2.5M -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
+                system ("/usr/local/bin/youtube-dl --restrict-filenames -r 2.5M --write-thumbnail -x --audio-format m4a -o \"#{@tempyoutubefolder}%(title)s.%(ext)s\" \"#{site}\" ")     #get icon
+                filename.split("\n").each do |name|
+                    system ("convert \"#{@tempyoutubefolder}#{name}.jpg\" -resize 320x240 \"#{@youtubefolder}#{name}.jpg\" ")
+                    system ("if [ ! -e \"#{@youtubefolder}#{name}.m4a\" ]; then ffmpeg -i \"#{@tempyoutubefolder}#{name}.m4a\" -acodec copy -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.m4a\" -y; fi") 
+                    @songlist << name.split("/")[-1] + ".m4a" 
+                end
+            else
+                streams = `youtube-dl -g "#{site}"`
+                streams.each_line do |line|
+                    line.chop!
+                    @bot[:mpd].add line if line.include? "mime=audio/mp4"
+                end
             end
         end
     end
