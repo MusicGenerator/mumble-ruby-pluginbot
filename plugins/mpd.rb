@@ -218,6 +218,7 @@ class Mpd < Plugin
         if message == 'helpmpd'
             @bot[:cli].text_user(msg.actor, help(""))
         end
+        
         if message.match(/^seek [+-]?[0-9]{1,3}$/)
             seekto = message.match(/^seek ([+-]?[0-9]{1,3})$/)[1]
             begin

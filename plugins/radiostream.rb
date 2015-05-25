@@ -27,17 +27,35 @@ class Radiostream < Plugin
         if message.start_with? "radiostream <a href=" 
             link = msg.message[msg.message.index('>') + 1 .. -1]
             link = link[0..link.index('<')-1]
-            file = `wget -O - "#{link}"`
-            if file[0..9] == "[playlist]"
-                file.each_line do |line|
-                    if line.start_with? ("File1=")
-                        @bot[:mpd].add(line[6..-1].strip)
+            @bot[:messages].text(msg.actor, add_link(link, ""))
+        end
+    end
+    
+    def add_link(link, added)
+        file = `curl -L --max-time 1 "#{link}" `
+        if file[0..9] == "[playlist]"
+            # seems to be an .pls link
+            file.each_line do |line|
+                if line.start_with? ("File1=")
+                    @bot[:mpd].add(line[6..-1].strip)
+                    added += line[6..-1].strip + "<br>"
+                end
+            end
+        else
+            file.each_line do |line|
+                # check if it is a m3u playlistlinkfile
+                if ( line.start_with? "http://" ) || ( line.start_with? "https://")
+                    puts added
+                    if line.include? ".pls"
+                        add_link line, added 
+                    else
+                        @bot[:mpd].add(line.strip)
+                        added += line.strip + "<br>"
                     end
                 end
-            else
-                @bot[:messages].text(msg.actor, "not a .pls file link.")
             end
         end
+        return added
     end
     
 end
