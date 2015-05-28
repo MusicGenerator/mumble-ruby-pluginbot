@@ -210,153 +210,136 @@ class MumbleMPD
     end
     
     def handle_text_message(msg)
-        if msg.actor.nil?
-            ##next #Ignore text messages from the server
-            return
-        end
-    
-        #Some of the next two information we may need later...
-        msg_sender = @cli.users[msg.actor]
-        
-        #This is hacky because mumble uses -1 for user_id of unregistered users,
-        # while mumble-ruby seems to just omit the value for unregistered users.
-        # With this hacky thing commands from SuperUser are also being ignored.
-        if msg_sender.user_id.nil?
-            msg_userid = -1
-            sender_is_registered = false
-        else
-            msg_userid = msg_sender.user_id
-            sender_is_registered = true
-        end
-
-        # generating help message.
-        # each command adds his own help
-        help ="<br />"    # start with empty help
-        # the help command should be the last command in this function
-        cc = @settings[:controlstring]
-        
-        help = "<br /><span style='color:red;'><b>Internal commands</b></span><br />"
-        help += "<b>superpassword+restart</b> will restart the bot.<br />"
-        if msg.message == @superpassword+"restart"
-            @settings = @configured_settings.clone
-            @cli.text_channel(@cli.me.current_channel,@superanswer);
-            @run = false
-            @cli.disconnect
-        end
-
-        help += "<b>superpassword+reset</b> will reset variables to start values.<br />"
-        if msg.message == @superpassword+"reset"
-            @settings = @configured_settings.clone
-            @cli.text_channel(@cli.me.current_channel,@superanswer);
-        end
-
-        if @settings[:listen_to_registered_users_only] == true
-            if sender_is_registered == false
-                if @settings[:debug]
-                    puts "Debug: Not listening because @settings[:listen_to_registered_users_only] is true and sender is unregistered."
-                end
-                #next
-                return
+        if !msg.actor.nil?
+            # else ignore text messages from the server
+            #This is hacky because mumble uses -1 for user_id of unregistered users,
+            # while mumble-ruby seems to just omit the value for unregistered users.
+            # With this hacky thing commands from SuperUser are also being ignored.
+            if @cli.users[msg.actor].user_id.nil?
+                msg_userid = -1
+                sender_is_registered = false
+            else
+                msg_userid = @cli.users[msg.actor].user_id
+                sender_is_registered = true
             end
-        end    
-        
-        #Check whether message is a private one or was sent to the channel.
-        # Private message looks like this:   <Hashie::Mash actor=54 message="#help" session=[119]>
-        # Channel message:                   <Hashie::Mash actor=54 channel_id=[530] message="#help">
-        # Channel messages don't have a session, so skip them
-        if not msg.session
-            if @settings[:listen_to_private_message_only] == true
-                if @settings[:debug]
-                    puts "Debug: Not listening because @settings[:listen_to_private_message_only] is true and message was sent to channel."
-                end
-                #next
-                return
+            # generating help message.
+            # each command adds his own help
+            help ="<br />"    # start with empty help
+            # the help command should be the last command in this function
+            cc = @settings[:controlstring]
+            
+            help = "<br /><span style='color:red;'><b>Internal commands</b></span><br />"
+            help += "<b>superpassword+restart</b> will restart the bot.<br />"
+            if msg.message == @superpassword+"restart"
+                @settings = @configured_settings.clone
+                @cli.text_channel(@cli.me.current_channel,@superanswer);
+                @run = false
+                @cli.disconnect
             end
-        end
-        if @settings[:controllable] == true
-            if msg.message.start_with?("#{@settings[:controlstring]}") && msg.message.length >@settings[:controlstring].length #Check whether we have a command after the controlstring.
-                message = msg.message.split(@settings[:controlstring])[1] #Remove@settings[:controlstring]
-                @plugin.each do |plugin|
-                    plugin.handle_chat(msg, message)
-                end
+
+            help += "<b>superpassword+reset</b> will reset variables to start values.<br />"
+            if msg.message == @superpassword+"reset"
+                @settings = @configured_settings.clone
+                @cli.text_channel(@cli.me.current_channel,@superanswer);
+            end
+            if (sender_is_registered == true) || (@settings[:listen_to_registered_users_only] == false)
+                #Check whether message is a private one or was sent to the channel.
+                # Private message looks like this:   <Hashie::Mash actor=54 message="#help" session=[119]>
+                # Channel message:                   <Hashie::Mash actor=54 channel_id=[530] message="#help">
+                # Channel messages don't have a session, so skip them
+                puts msg.session
+                puts @settings[:listen_to_private_message_only]
+                if ( msg.session ) || ( @settings[:listen_to_private_message_only] != false )
+                    if @settings[:controllable] == true 
+                        if msg.message.start_with?("#{@settings[:controlstring]}") && msg.message.length >@settings[:controlstring].length #Check whether we have a command after the controlstring.
+                            message = msg.message.split(@settings[:controlstring])[1] #Remove@settings[:controlstring]
+                            @plugin.each do |plugin|
+                                plugin.handle_chat(msg, message)
+                            end
+                            
+                            help += "<b>#{cc}settings</b> display current settings.<br />"
+                            if message == 'settings' 
+                                out = "<table>"
+                                @settings.each do |key, value|
+                                    out += "<tr><td>#{key}</td><td>#{value}</td></tr>"
+                                end
+                                out += "</table>"
+                                @cli.text_user(msg.actor, out)    
+                            end
+
+                            help += "<b>#{cc}set <i>variable=value</i></b> Set variable to value.<br />"
+                            if message.split[0] == 'set' 
+                                if !@settings[:need_binding] || @settings[:boundto]==msg_userid
+                                    setting = message.split('=',2)
+                                    @settings[setting[0].split[1].to_sym] = setting[1] if setting[0].split[1] != nil
+                                end
+                            end
+
+                            help += "<b>#{cc}bind</b> Bind Bot to a user. (some functions will only do if bot is bound).<br />"
+                            if message == 'bind'
+                                @settings[:boundto] = msg_userid if @settings[:boundto] == "nobody"
+                            end        
+                            
+                            help += "<b>#{cc}unbind</b> Unbind Bot.<br />"
+                            if message == 'unbind'
+                                @settings[:boundto] = "nobody" if @settings[:boundto] == msg_userid
+                            end
+                            
+                            help += "<b>#{cc}reset</b> Reset variables to default value. Needs binding!<br />"
+                            if message == 'reset' 
+                                @settings = @configured_settings.clone if @settings[:boundto] == msg_userid
+                            end
+                            
+                            help += "<b>#{cc}restart</b> Restart Bot. Needs binding.<br />"
+                            if message == 'restart'
+                                if @settings[:boundto] == msg_userid
+                                    @run=false
+                                    @cli.disconnect
+                                end
+                            end
+
+                            help += "<b>#{cc}ducking</b> toggle voice ducking on/off.<br />"
+                            if message == 'ducking' 
+                               @settings[:ducking] = !@settings[:ducking]
+                               if @settings[:ducking] == false 
+                                    @cli.text_user(msg.actor, "Music ducking is off.")
+                                else
+                                    @cli.text_user(msg.actor, "Music ducking is on.")
+                                end
+                            end
+
+                            help += "<b>#{cc}help <i>pluginname</i></b> Get help for plugin.<br />"
+                            if message.split[0] == 'help'
+                                if message.split[1]=='all'
+                                    @plugin.each do |plugin|
+                                        help = plugin.help(help.to_s)
+                                    end
+                                end
+                                if message.split[1]!=nil
+                                    @plugin.each do |plugin|
+                                      help = plugin.help('') if plugin.name.upcase == message.split[1].upcase
+                                    end
+                                else
+                                    help += "<span style='color:red;'>Loaded plugins:<br /><b>"
+                                    @plugin.each do |plugin|
+                                        help += plugin.name + "<br />"
+                                    end
+                                    help += "</b></span>"
+                                end
+                                
+                                @cli.text_user(msg.actor, help)
+                            end
                 
-                help += "<b>#{cc}settings</b> display current settings.<br />"
-                if message == 'settings' 
-                    out = "<table>"
-                    @settings.each do |key, value|
-                        out += "<tr><td>#{key}</td><td>#{value}</td></tr>"
-                    end
-                    out += "</table>"
-                    @cli.text_user(msg.actor, out)    
-                end
-
-                help += "<b>#{cc}set <i>variable=value</i></b> Set variable to value.<br />"
-                if message.split[0] == 'set' 
-                    if !@settings[:need_binding] || @settings[:boundto]==msg_userid
-                        setting = message.split('=',2)
-                        @settings[setting[0].split[1].to_sym] = setting[1] if setting[0].split[1] != nil
-                    end
-                end
-
-                help += "<b>#{cc}bind</b> Bind Bot to a user. (some functions will only do if bot is bound).<br />"
-                if message == 'bind'
-                    @settings[:boundto] = msg_userid if @settings[:boundto] == "nobody"
-                end        
-                
-                help += "<b>#{cc}unbind</b> Unbind Bot.<br />"
-                if message == 'unbind'
-                    @settings[:boundto] = "nobody" if @settings[:boundto] == msg_userid
-                end
-                
-                help += "<b>#{cc}reset</b> Reset variables to default value. Needs binding!<br />"
-                if message == 'reset' 
-                    @settings = @configured_settings.clone if @settings[:boundto] == msg_userid
-                end
-                
-                help += "<b>#{cc}restart</b> Restart Bot. Needs binding.<br />"
-                if message == 'restart'
-                    if @settings[:boundto] == msg_userid
-                        @run=false
-                        @cli.disconnect
-                    end
-                end
-
-
-                help += "<b>#{cc}ducking</b> toggle voice ducking on/off.<br />"
-                if message == 'ducking' 
-                   @settings[:ducking] = !@settings[:ducking]
-                   if @settings[:ducking] == false 
-                        @cli.text_user(msg.actor, "Music ducking is off.")
-                    else
-                        @cli.text_user(msg.actor, "Music ducking is on.")
-                    end
-                end
-
-                help += "<b>#{cc}help <i>pluginname</i></b> Get help for plugin.<br />"
-                if message.split[0] == 'help'
-                    if message.split[1]=='all'
-                        @plugin.each do |plugin|
-                            help = plugin.help(help.to_s)
                         end
                     end
-                    if message.split[1]!=nil
-                        @plugin.each do |plugin|
-                          help = plugin.help('') if plugin.name.upcase == message.split[1].upcase
-                        end
-                    else
-                        help += "<span style='color:red;'>Loaded plugins:<br /><b>"
-                        @plugin.each do |plugin|
-                            help += plugin.name + "<br />"
-                        end
-                        help += "</b></span>"
-                    end
-                    
-                    @cli.text_user(msg.actor, help)
+                else
+                    puts "Debug: Not listening because @settings[:listen_to_private_message_only] is true and message was sent to channel." if @settings[:debug]
                 end
-           end
+            else
+                puts "Debug: Not listening because @settings[:listen_to_registered_users_only] is true and sender is unregistered." if @settings[:debug]
+            end
         end
     end
-    
  end
 
 puts "pluginbot is starting..." 
