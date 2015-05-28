@@ -212,7 +212,7 @@ class MumbleMPD
     def handle_text_message(msg)
         if !msg.actor.nil?
             # else ignore text messages from the server
-            #This is hacky because mumble uses -1 for user_id of unregistered users,
+            # This is hacky because mumble uses -1 for user_id of unregistered users,
             # while mumble-ruby seems to just omit the value for unregistered users.
             # With this hacky thing commands from SuperUser are also being ignored.
             if @cli.users[msg.actor].user_id.nil?
@@ -222,6 +222,14 @@ class MumbleMPD
                 msg_userid = @cli.users[msg.actor].user_id
                 sender_is_registered = true
             end
+            
+            # check if User is on a blacklist
+            if @settings.has_key?(@cli.users[msg.actor].hash.to_sym)
+                sender_is_registered = false
+                puts "user in blacklist!" if @settings[:debug]
+                #(if on blacklist virtually unregister her/him)
+            end
+
             # generating help message.
             # each command adds his own help
             help ="<br />"    # start with empty help
@@ -247,8 +255,6 @@ class MumbleMPD
                 # Private message looks like this:   <Hashie::Mash actor=54 message="#help" session=[119]>
                 # Channel message:                   <Hashie::Mash actor=54 channel_id=[530] message="#help">
                 # Channel messages don't have a session, so skip them
-                puts msg.session
-                puts @settings[:listen_to_private_message_only]
                 if ( msg.session ) || ( @settings[:listen_to_private_message_only] != false )
                     if @settings[:controllable] == true 
                         if msg.message.start_with?("#{@settings[:controlstring]}") && msg.message.length >@settings[:controlstring].length #Check whether we have a command after the controlstring.
@@ -261,7 +267,7 @@ class MumbleMPD
                             if message == 'settings' 
                                 out = "<table>"
                                 @settings.each do |key, value|
-                                    out += "<tr><td>#{key}</td><td>#{value}</td></tr>"
+                                    out += "<tr><td>#{key}</td><td>#{value}</td></tr>" if key != :logo
                                 end
                                 out += "</table>"
                                 @cli.text_user(msg.actor, out)    
@@ -295,6 +301,17 @@ class MumbleMPD
                                 if @settings[:boundto] == msg_userid
                                     @run=false
                                     @cli.disconnect
+                                end
+                            end
+
+                            help += "<b>#{cc}blacklist <i>username</i></b> Add user to blacklist. Needs binding.<br />"
+                            if message.split(" ")[0] == 'blacklist'
+                                if @settings[:boundto] == msg_userid
+                                    if @cli.find_user(message.split[1..-1].join(" ")) != nil
+                                        @settings[@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym] = message.split[1..-1].join(" ")
+                                    else
+                                        @cli.text_user(msg.actor, "User #{message.split[1..-1].join(" ")} not found.")
+                                    end
                                 end
                             end
 
@@ -336,7 +353,7 @@ class MumbleMPD
                     puts "Debug: Not listening because @settings[:listen_to_private_message_only] is true and message was sent to channel." if @settings[:debug]
                 end
             else
-                puts "Debug: Not listening because @settings[:listen_to_registered_users_only] is true and sender is unregistered." if @settings[:debug]
+                puts "Debug: Not listening because @settings[:listen_to_registered_users_only] is true and sender is unregistered or on a blacklist." if @settings[:debug]
             end
         end
     end
