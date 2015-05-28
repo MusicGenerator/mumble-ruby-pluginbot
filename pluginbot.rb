@@ -119,6 +119,10 @@ class MumbleMPD
         end
     end
     
+    def disconnect
+        @cli.disconnect if @cli.connected?
+    end
+    
     def mumble_start
 
         @cli.connect
@@ -202,7 +206,9 @@ class MumbleMPD
             break if maxcount <= 0 
         end
         puts "maybe not all plugin functional!" if maxcount <= 0
+        
     end
+    
     
     def handle_user_state_changes(msg)
         #msg.actor = session_id of user who did something on someone, if self done, both is the same.
@@ -359,15 +365,20 @@ class MumbleMPD
     end
  end
 
-puts "pluginbot is starting..." 
-client = MumbleMPD.new
 while true == true
+    puts "pluginbot is starting..." 
+    client = MumbleMPD.new
     client.init_settings
     puts "start"
     client.mumble_start    
     sleep 3
-    while client.run == true
-        sleep 0.5
+    begin
+        while client.run == true
+            sleep 0.5
+        end
+    rescue
+        puts "An error occurred: #{$!}"
+        client.disconnect
     end
     sleep 0.5
 end

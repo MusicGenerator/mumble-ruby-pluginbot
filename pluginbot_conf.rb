@@ -5,7 +5,7 @@ def ext_config()
                     ducking: false, 
                     chan_notify: 0x0000, 
                     controlstring: ".", 
-                    debug: false, 
+                    debug: true, 
                     listen_to_private_messsage_only: true, 
                     listen_to_registert_users_only: true, 
                     use_vbr: 1, 
