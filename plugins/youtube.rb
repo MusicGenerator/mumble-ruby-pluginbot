@@ -8,6 +8,7 @@ class Youtube < Plugin
             @songlist = Queue.new
             @keylist = Array.new
             @bot[:youtube] = self
+            @youtubedl = "/usr/local/bin/youtube-dl"
         end
         return @bot
     end
@@ -149,7 +150,7 @@ class Youtube < Plugin
 
     def find_youtube_song song
         songlist = []
-        songs = `/usr/local/bin/youtube-dl --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
+        songs = `#{@youtubedl} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
         temp = songs.split(/\n/)
         while (temp.length >= 2 )
             songlist << [temp.pop , temp.pop]
@@ -161,8 +162,8 @@ class Youtube < Plugin
         if ( site.include? "www.youtube.com/" ) || ( site.include? "www.youtu.be/" ) || ( site.include? "m.youtube.com/" ) then
             site.gsub!(/<\/?[^>]*>/, '')
             site.gsub!("&amp;", "&")
-            filename = `/usr/local/bin/youtube-dl --get-filename --restrict-filenames -r 2.5M -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
-            system ("/usr/local/bin/youtube-dl --restrict-filenames -r 2.5M --write-thumbnail -x --audio-format m4a -o \"#{@tempdownloadfolder}%(title)s.%(ext)s\" \"#{site}\" ")     #get icon
+            filename = `#{@youtubedl} --get-filename --restrict-filenames -r 2.5M -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
+            system ("#{@youtubedl} --restrict-filenames -r 2.5M --write-thumbnail -x --audio-format m4a -o \"#{@tempdownloadfolder}%(title)s.%(ext)s\" \"#{site}\" ")     #get icon
             filename.split("\n").each do |name|
                 system ("convert \"#{@tempdownloadfolder}#{name}.jpg\" -resize 320x240 \"#{@downloadfolder}#{name}.jpg\" ")
                 system ("if [ ! -e \"#{@downloadfolder}#{name}.m4a\" ]; then ffmpeg -i \"#{@tempdownloadfolder}#{name}.m4a\" -acodec copy -metadata title=\"#{name}\" \"#{@downloadfolder}#{name}.m4a\" -y; fi") 
