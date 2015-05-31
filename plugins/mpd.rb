@@ -83,10 +83,14 @@ class Mpd < Plugin
                 if not current.nil? #Would crash if playlist was empty.
                     if @bot[:use_comment_for_status_display] == true && @bot[:set_comment_available] == true
                         begin
-                            if File.exist?("../music/download/"+current.title.to_s+".jpg")
-                                image = @bot[:cli].get_imgmsg("../music/download/"+current.title+".jpg")
+                            if ( @bot[:youtube_downloadsubdir] != nil ) && ( @bot[:mpd_musicfoler] != nil )
+                                if File.exist?(@bot[:mpd_musicfoler]+@bot[:youtube_downloadsubdir]+current.title.to_s+".jpg")
+                                    image = @bot[:cli].get_imgmsg(@bot[:mpd_musicfoler]+@bot[:youtube_downloadsubdir]+current.title+".jpg")
+                                else
+                                    image = @bot[:logo]
+                                end
                             else
-                                image = @bot[:logo]
+                                 image = @bot[:logo]
                             end
                             output = "<br />" + @template_if_comment_enabled % [current.artist, current.title, current.album,@bot[:controlstring]]
                             @bot[:cli].set_comment(image+output)
