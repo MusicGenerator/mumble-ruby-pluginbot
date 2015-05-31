@@ -51,7 +51,8 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     @settings[:youtube_tempsubdir] = "youtubeplugin/"                       # is an temporary dir witch should not be a subdir of mpd!
     #@settings[:mpd_musicfolder] has also to be set to correct folder!      
     @settings[:youtube_stream] = nil #(don't stream)
-    
+    @settings[:youtube_youtubedl] = "/usr/bin/youtube-dl" # Path to the youtube-dl binary.
+
     # Mpd-Plugin:
     @settings[:mpd_musicfolder] = "../music/"                               # is in current version not used by Mpd-Plugin itself but by other plugins!
                                                                             # must be the mpd music folder!

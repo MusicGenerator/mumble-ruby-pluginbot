@@ -160,7 +160,7 @@ class Youtube < Plugin
 
     def find_youtube_song song
         songlist = []
-        songs = `/usr/local/bin/youtube-dl --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
+        songs = `#{@bot[:youtube_youtubedl]} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
         temp = songs.split(/\n/)
         while (temp.length >= 2 )
             songlist << [temp.pop , temp.pop]
@@ -173,8 +173,8 @@ class Youtube < Plugin
             site.gsub!(/<\/?[^>]*>/, '')
             site.gsub!("&amp;", "&")
             if @bot[:youtube_stream] == nil
-                filename = `/usr/local/bin/youtube-dl --get-filename --restrict-filenames -r 2.5M -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
-                system ("/usr/local/bin/youtube-dl --restrict-filenames -r 2.5M --write-thumbnail -x --audio-format m4a -o \"#{@tempyoutubefolder}%(title)s.%(ext)s\" \"#{site}\" ")     #get icon
+                filename = `#{@bot[:youtube_youtubedl]} --get-filename --restrict-filenames -r 2.5M -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
+                system ("#{@bot[:youtube_youtubedl]} --restrict-filenames -r 2.5M --write-thumbnail -x --audio-format m4a -o \"#{@tempyoutubefolder}%(title)s.%(ext)s\" \"#{site}\" ")     #get icon
                 filename.split("\n").each do |name|
                     system ("convert \"#{@tempyoutubefolder}#{name}.jpg\" -resize 320x240 \"#{@youtubefolder}#{name}.jpg\" ")
                     system ("if [ ! -e \"#{@youtubefolder}#{name}.m4a\" ]; then ffmpeg -i \"#{@tempyoutubefolder}#{name}.m4a\" -acodec copy -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.m4a\" -y; fi") 
