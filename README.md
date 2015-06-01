@@ -27,8 +27,9 @@ Each plugin has its own help implemented. To get it, write **.help pluginname** 
 More documentation about the plugins can be found at http://wiki.natenom.com/w/Usage_of_the_plugins_for_Mumble-Ruby-Pluginbot.
 
 ##Pre configured system images
-- There is an image available for the banana-pi
-http://soa.chickenkiller.com/daten/dafoxia_BananaPiPluginbot.zip
-root password: pi
-user name:  botmaster
-user password: botmaster
+###Banana Pi
+[Download the image](http://soa.chickenkiller.com/daten/dafoxia_BananaPiPluginbot.zip)
+
+- root password: pi
+- user name:  botmaster
+- user password: botmaster
