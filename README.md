@@ -6,9 +6,8 @@ mumble-ruby-pluginbot is a Mumble-Ruby based, extensible bot which can play audi
 - Supports client certificates and thus can be registered on a server
 - No need for additional web interfaces to control the bot; everything can be done with text commands on your Mumble server
 - Support for plugins
-- Can search on Youtube
 - Can download music from Youtube or a search on Youtube
-- Supports both CELT and Opus codec
+- Supports both CELT and Opus codec for maximum compatibility even on old Mumble servers
 
 ##Documentation
 * General information about the bot can be found at http://wiki.natenom.com/w/Mumble-Ruby-Pluginbot
