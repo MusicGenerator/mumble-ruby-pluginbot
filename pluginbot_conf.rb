@@ -92,10 +92,11 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     # download the files and this will result in supermega gaps :)
     # So don't use this feature. You have been warned.
     
-    @settings[:youtube_youtubedl] = "/usr/bin/youtube-dl"
+    @settings[:youtube_youtubedl] = "/home/botmaster/src/youtube-dl"
     # Path to the youtube-dl binary. The default value should be fine if
-    # you installed youtube-dl via system packages, but should be changed
-    # if you installed it yourself.
+    # you used the official mumble-ruby-pluginbot tutorial.
+    # If you instead installed youtube-dl via system packages,
+    # change it to "/usr/bin/youtube-dl".
     ###########################
 
 
