@@ -1,9 +1,12 @@
 #!/bin/bash
 
 ### Kill all running mpd instances (of the user botmaster) ... ###
-killall mpd
+Echo "Killing running mpd instances of user \"$LOGNAME\""
+killall mpd > /dev/null 2>&1
 sleep 2
-killall mpd
+killall mpd > /dev/null 2>&1
+
+
 
 
 ### Start needed mpd instances for botmaster ###
@@ -12,28 +15,31 @@ mpd /home/botmaster/mpd1/mpd.conf
 #mpd /home/botmaster/mpd3/mpd.conf
 
 
+
+
 ### Kill running mumble-ruby-pluginbots (of the user botmaster) ###
-killall ruby
+Echo "Killing running ruby scripts of user \"$LOGNAME\""
+killall ruby > /dev/null 2>&1
 sleep 1
-killall ruby
+killall ruby > /dev/null 2>&1
 
 source ~/.rvm/scripts/rvm
 rvm use @bots
 
 
-### Start from here to create cert dirs within this directory. ###
-cd /home/botmaster/src/mumble-ruby-pluginbot 
 
 
 ### Start Mumble-Ruby-Bots - MPD instances must already be running. ###
 # Bot 1
-tmux new-session -d -n bot1 'LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot1_conf.rb'
+tmux new-session -d -n bot1 'LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot1_conf.rb --certdir /home/botmaster/src/certs'
 
 # Bot 2
-#tmux new-session -d -n bot2 'LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot2_conf.rb'
+#tmux new-session -d -n bot2 'LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot2_conf.rb --certdir /home/botmaster/src/certs'
 
 # Bot 3
-#tmux new-session -d -n bot3 'LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot3_conf.rb'
+#tmux new-session -d -n bot3 'LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot3_conf.rb --certdir /home/botmaster/src/certs'
+
+
 
 
 ### Optional: Clear playlist, add music and play it; three lines for every bot ###
