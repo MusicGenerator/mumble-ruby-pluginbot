@@ -294,14 +294,14 @@ class Mpd < Plugin
             @bot[:mpd].songs.each do |song|
                 if block >= 50
                     #@bot[:cli].text_user(msg.actor, out)
-                    @bot[:messages].text(msg.actor, out)
+                    @bot[:messages].text(msg.actor, out.to_s)
                     out = ""
                     block = 0
                 end
-                out += "<br/>" + song.file
+                out += "<br/>" + song.file.to_s
                 block += 1
             end
-            @bot[:messages].text(msg.actor, out)
+            @bot[:messages].text(msg.actor, out.to_s)
             #@bot[:cli].text_user(msg.actor, out)    
         end
 
