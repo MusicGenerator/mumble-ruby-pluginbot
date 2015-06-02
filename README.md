@@ -16,11 +16,11 @@ mumble-ruby-pluginbot is a Mumble-Ruby based, extensible bot which can play audi
 * If the bot is already running on your Mumble server, write **.help** to him.
 
 ##Included plugins
-- **mpd**: A plugin to manipulate a mpd-player
-- **youtube**: A plugin for search, add, and download music
-- **radiostream**: A plugin to add a internet radio for streaming
-- **control**: A plugin to control the bot's behaviour
-- **messages**: A plugin which handle user messaging and bot's message
+- **mpd**: Control the MPD that feeds the bot
+- **youtube**: Search, download and add music
+- **radiostream**: Let the bot play an internet radio stream
+- **control**: Control the bot's behaviour
+- **messages**: Handle the bot's message
 
 Each plugin has its own help implemented. To get it, write **.help pluginname** to the bot, for example **.help youtube**
 
