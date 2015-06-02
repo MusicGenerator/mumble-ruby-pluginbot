@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### Kill all running mpd instances (of the user botmaster) ... ###
-Echo "Killing running mpd instances of user \"$LOGNAME\""
+echo "Killing running mpd instances of user \"$LOGNAME\""
 killall mpd > /dev/null 2>&1
 sleep 2
 killall mpd > /dev/null 2>&1
@@ -18,7 +18,7 @@ mpd /home/botmaster/mpd1/mpd.conf
 
 
 ### Kill running mumble-ruby-pluginbots (of the user botmaster) ###
-Echo "Killing running ruby scripts of user \"$LOGNAME\""
+echo "Killing running ruby scripts of user \"$LOGNAME\""
 killall ruby > /dev/null 2>&1
 sleep 1
 killall ruby > /dev/null 2>&1
