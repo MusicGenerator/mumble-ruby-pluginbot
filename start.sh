@@ -26,8 +26,8 @@ killall ruby > /dev/null 2>&1
 source ~/.rvm/scripts/rvm
 rvm use @bots
 
-
-
+### We need to be in this directory in order to start the bot(s).
+cd /home/botmaster/src/mumble-ruby-pluginbot/
 
 ### Start Mumble-Ruby-Bots - MPD instances must already be running. ###
 # Bot 1
