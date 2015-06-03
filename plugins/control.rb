@@ -5,6 +5,13 @@ class Control < Plugin
         if @bot[:mpd] != nil
             @bot[:control] = self
         end
+        @historysize = 20
+        if @bot[:control_historysize] != nil
+            @historysize =  @bot[:control_historysize]
+        else
+            @historysize = 20
+        end
+        @history = Array.new 
         return @bot
     end
     
@@ -26,9 +33,14 @@ class Control < Plugin
         h += "<b>#{@bot[:controlstring]}unfollow</b> Bot transforms from a dog into a lazy cat :).<br />"
         h += "<b>#{@bot[:controlstring]}stick</b> Jail Bot into channel.<br />"
         h += "<b>#{@bot[:controlstring]}unstick</b> Free Bot.<br />"
+        h += "<b>#{@bot[:controlstring]}history</b> Print last #{@historysize} commanding users with command given"
     end
 
     def handle_chat(msg, message)
+    
+        # Put message in Messagehistory and pop oldes if size exceeds max. historysize.
+        @history << msg                 
+        @history.shift if @history.length > @historysize
 
         if message == 'ch'
             channeluserisin = @bot[:cli].users[msg.actor].channel_id
@@ -44,6 +56,10 @@ class Control < Plugin
             @bot[:cli].text_user(msg.actor, "<span style='color:red;font-size:30px;'>Stay out of here :)</span>")
         end
 
+        if message == 'deaf'
+            @bot[:cli].send_user_state deaf: true
+        end
+        
         if message == 'gotobed'
             @bot[:cli].join_channel(@bot[:mumbleserver_targetchannel])
             @bot[:mpd].pause = true
@@ -170,6 +186,18 @@ class Control < Plugin
                     end
                 end
             end
+        end
+        
+        if message == 'history'
+            history = @history.clone
+            out = "<table><tr><th>Command</th><th>by User</th></tr>"
+            loop do 
+                break if history.empty?
+                histmessage = history.shift
+                out += "<tr><td>#{histmessage.message}</td><td>#{@bot[:cli].users[histmessage.actor].name}</td></tr>"
+            end
+            out += "</table>"
+            @bot[:cli].text_user(msg.actor, out)
         end
     end
 end
