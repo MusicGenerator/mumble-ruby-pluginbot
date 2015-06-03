@@ -109,6 +109,14 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     # Set this to the same path that you set in your mpd config
     # file in the variable music_directory.
 
+    ###########################
+    # Control plugin: #########
+    ###########################
+    @settings[:control_historysize] = 20
+    # Sets the history size to 20 commands.
+    # This is also the default value when commented out.
+    
+    
     #This template must always contain one %s string.
     @settings[:mpd_template_comment_disabled] = "<b>Artist: </b>DISABLED<br />"\
                                               + "<b>Title: </b>DISABLED<br />" \
