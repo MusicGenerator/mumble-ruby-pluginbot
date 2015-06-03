@@ -55,11 +55,7 @@ class Control < Plugin
         if message == 'debug'
             @bot[:cli].text_user(msg.actor, "<span style='color:red;font-size:30px;'>Stay out of here :)</span>")
         end
-
-        if message == 'deaf'
-            @bot[:cli].send_user_state deaf: true
-        end
-        
+       
         if message == 'gotobed'
             @bot[:cli].join_channel(@bot[:mumbleserver_targetchannel])
             @bot[:mpd].pause = true
