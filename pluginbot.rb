@@ -206,7 +206,6 @@ class MumbleMPD
             break if maxcount <= 0 
         end
         puts "maybe not all plugin functional!" if maxcount <= 0
-        
     end
     
     
@@ -315,6 +314,8 @@ class MumbleMPD
                                 if @settings[:boundto] == msg_userid
                                     if @cli.find_user(message.split[1..-1].join(" ")) != nil
                                         @settings[@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym] = message.split[1..-1].join(" ")
+                                        @cli.text_user(msg.actor, "This ban is active until the bot restarts. To permaban add following line to your configuration:")
+                                        @cli.text_user(msg.actor, "@settings[#{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}] = \"#{message.split[1..-1].join(" ")}\"")
                                     else
                                         @cli.text_user(msg.actor, "User #{message.split[1..-1].join(" ")} not found.")
                                     end
