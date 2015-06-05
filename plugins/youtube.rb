@@ -27,7 +27,7 @@ class Youtube < Plugin
 
     def help(h)
         h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
-        h += "<b>#{@bot[:controlstring]}ytlink</b> will try to get some music from link.<br />"
+        h += "<b>#{@bot[:controlstring]}ytlink <i>url</i></b> will try to get some music from link.<br />"
         h += "<b>#{@bot[:controlstring]}yts keywords</b> will search on youtube for keywords.<br />"
         h += "<b>#{@bot[:controlstring]}yta <i>number</i> </b> get song in yts list.<br />"
     end
