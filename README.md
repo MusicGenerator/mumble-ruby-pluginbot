@@ -32,3 +32,10 @@ More documentation about the plugins can be found at http://wiki.natenom.com/w/U
 - root password: pi
 - user name:  botmaster
 - user password: botmaster
+
+###Raspberry Pi2
+[Download the image](http://soa.chickenkiller.com/daten/dafoxia_raspi2.pluginbot.zip)
+
+- root password: pi
+- user name:  botmaster
+- user password: botmaster
