@@ -27,13 +27,13 @@ class Youtube < Plugin
 
     def help(h)
         h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
-        h += "<b>#{@bot[:controlstring]}http-link</b> will try to get some music from link.<br />"
+        h += "<b>#{@bot[:controlstring]}ytlink</b> will try to get some music from link.<br />"
         h += "<b>#{@bot[:controlstring]}yts keywords</b> will search on youtube for keywords.<br />"
         h += "<b>#{@bot[:controlstring]}yta <i>number</i> </b> get song in yts list.<br />"
     end
 
     def handle_chat(msg, message)
-        if message.start_with?("<a href=") then
+        if message.start_with?("ytlink <a href=") then
             link = msg.message[msg.message.index('>') + 1 .. -1]
             link = link[0..link.index('<')-1]
             workingdownload = Thread.new {
