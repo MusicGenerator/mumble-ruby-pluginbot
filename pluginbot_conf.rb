@@ -98,6 +98,19 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     # If you instead installed youtube-dl via system packages,
     # change it to "/usr/bin/youtube-dl".
     ###########################
+    
+    @settings[:youtube_to_mp3] = nil
+    # If this is set to something other than nil ffmpeg/avconv
+    # will try to convert downloaded audio into mp3 (190kBit)
+    # The default is nil. Downloaded files will be stored at best quality
+    ###########################
+    
+    @settings[:youtube_youtubedl_options] = ""
+    # additional options to youtube-dl 
+    # you can add "-r 2.5M" and the downloadspeed will be limited to 2.5 Mb/s 
+    # "--restrict-filenames" transformes filenames into a safe charset 
+    # by default this is empty, but it is not a bad idea to restrict filenames.
+    ###########################
 
 
     ###########################

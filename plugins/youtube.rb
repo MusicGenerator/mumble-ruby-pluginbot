@@ -10,10 +10,16 @@ class Youtube < Plugin
                 puts "Error: Youtube-Plugin doesn't found settings for mpd music directory and/or your preferred temporary download directory"
                 puts "See pluginbot_conf.rb"
             end
+            begin
+                @ytdloptions = @bot[:youtube_youtubedl_options]
+            rescue
+                @ytdloptions = "" 
+            end
             @songlist = Queue.new
             @keylist = Array.new
             @bot[:youtube] = self
         end
+        @filetypes= ["ogg", "mp3", "mp2", "m4a", "aac", "wav", "ape", "flac"]
         return @bot
     end
 
@@ -40,11 +46,7 @@ class Youtube < Plugin
                 #local variables for this thread!
                 actor = msg.actor
                 @bot[:messages].text(actor, "inspecting link: " + link + "...")
-                if @bot[:youtube_to_mp3] != nil
-                    get_song_mp3 link
-                else
-                    get_song link
-                end
+                get_song link
                 if ( @songlist.size > 0 ) then
                     @bot[:mpd].update(@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
                     @bot[:messages].text(actor, "Waiting for database update complete...")
@@ -122,11 +124,7 @@ class Youtube < Plugin
                     @bot[:messages].text(actor, "do #{link.length.to_s} time(s)...")    
                     link.each do |l| 
                         @bot[:messages].text(actor, "fetch and convert")
-                        if @bot[:youtube_to_mp3] != nil
-                            get_song_mp3 l
-                        else
-                            get_song l
-                        end
+                        get_song l
                     end
                     if ( @songlist.size > 0 ) then
                         @bot[:mpd].update(@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
@@ -181,12 +179,23 @@ class Youtube < Plugin
             site.gsub!(/<\/?[^>]*>/, '')
             site.gsub!("&amp;", "&")
             if @bot[:youtube_stream] == nil
-                filename = `#{@bot[:youtube_youtubedl]} --get-filename --restrict-filenames -r 2.5M -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
-                system ("nice -n20 #{@bot[:youtube_youtubedl]} --restrict-filenames -r 2.5M --write-thumbnail -x --audio-format m4a -o \"#{@tempyoutubefolder}%(title)s.%(ext)s\" \"#{site}\" ")     #get icon
+                filename = `#{@bot[:youtube_youtubedl]} --get-filename #{@ytdloptions} -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
+                output =`nice -n20 #{@bot[:youtube_youtubedl]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@tempyoutubefolder}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
                 filename.split("\n").each do |name|
-                    system ("convert \"#{@tempyoutubefolder}#{name}.jpg\" -resize 320x240 \"#{@youtubefolder}#{name}.jpg\" ")
-                    system ("if [ ! -e \"#{@youtubefolder}#{name}.m4a\" ]; then ffmpeg -i \"#{@tempyoutubefolder}#{name}.m4a\" -acodec copy -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.m4a\" -y; fi") 
-                    @songlist << name.split("/")[-1] + ".m4a" 
+                    @filetypes.each do |ending|
+                        if File.exist?("#{@tempyoutubefolder}#{name}.#{ending}")
+                            system ("convert \"#{@tempyoutubefolder}#{name}.jpg\" -resize 320x240 \"#{@youtubefolder}#{name}.jpg\" ")
+                            if @bot[:youtube_to_mp3] == nil
+                                # Mixin tags without recode on standard
+                                system ("ffmpeg -i \"#{@tempyoutubefolder}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.#{ending}\"") if !File.exist?("#{@youtubefolder}#{name}.#{ending}")
+                                @songlist << name.split("/")[-1] + ".#{ending}"
+                            else
+                                # Mixin tags and recode it to mp3 (vbr 190kBit)
+                                system ("ffmpeg -i \"#{@tempyoutubefolder}#{name}.#{ending}\" -codec:a libmp3lame -qscale:a 2 -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.mp3\"") if !File.exist?("#{@youtubefolder}#{name}.mp3")
+                                @songlist << name.split("/")[-1] + ".mp3"
+                            end
+                        end
+                    end
                 end
             else
                 streams = `youtube-dl -g "#{site}"`
@@ -198,26 +207,4 @@ class Youtube < Plugin
         end
     end
     
-    def get_song_mp3(site)
-        if ( site.include? "www.youtube.com/" ) || ( site.include? "www.youtu.be/" ) || ( site.include? "m.youtube.com/" ) then
-            site.gsub!(/<\/?[^>]*>/, '')
-            site.gsub!("&amp;", "&")
-            if @bot[:youtube_stream] == nil
-                filename = `#{@bot[:youtube_youtubedl]} --get-filename --restrict-filenames -r 2.5M -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
-                system ("nice -n20 #{@bot[:youtube_youtubedl]} --restrict-filenames -r 2.5M --write-thumbnail -x --audio-format mp3 -o \"#{@tempyoutubefolder}%(title)s.%(ext)s\" \"#{site}\" ")     #get icon
-                filename.split("\n").each do |name|
-                    system ("convert \"#{@tempyoutubefolder}#{name}.jpg\" -resize 320x240 \"#{@youtubefolder}#{name}.jpg\" ")
-                    system ("if [ ! -e \"#{@youtubefolder}#{name}.mp3\" ]; then ffmpeg -i \"#{@tempyoutubefolder}#{name}.mp3\" -acodec copy -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.mp3\" -y; fi") 
-                    @songlist << name.split("/")[-1] + ".mp3" 
-                end
-            else
-                streams = `youtube-dl -g "#{site}"`
-                streams.each_line do |line|
-                    line.chop!
-                    @bot[:mpd].add line if line.include? "mime=audio/m4a"
-                end
-            end
-        end
-    end
-
 end
