@@ -166,7 +166,7 @@ class Youtube < Plugin
 
     def find_youtube_song song
         songlist = []
-        songs = `#{@bot[:youtube_youtubedl]} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
+        songs = `nice -n20 #{@bot[:youtube_youtubedl]} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
         temp = songs.split(/\n/)
         while (temp.length >= 2 )
             songlist << [temp.pop , temp.pop]
@@ -184,14 +184,14 @@ class Youtube < Plugin
                 filename.split("\n").each do |name|
                     @filetypes.each do |ending|
                         if File.exist?("#{@tempyoutubefolder}#{name}.#{ending}")
-                            system ("convert \"#{@tempyoutubefolder}#{name}.jpg\" -resize 320x240 \"#{@youtubefolder}#{name}.jpg\" ")
+                            system ("nice -n20 convert \"#{@tempyoutubefolder}#{name}.jpg\" -resize 320x240 \"#{@youtubefolder}#{name}.jpg\" ")
                             if @bot[:youtube_to_mp3] == nil
                                 # Mixin tags without recode on standard
-                                system ("ffmpeg -i \"#{@tempyoutubefolder}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.#{ending}\"") if !File.exist?("#{@youtubefolder}#{name}.#{ending}")
+                                system ("nice -n20 ffmpeg -i \"#{@tempyoutubefolder}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.#{ending}\"") if !File.exist?("#{@youtubefolder}#{name}.#{ending}")
                                 @songlist << name.split("/")[-1] + ".#{ending}"
                             else
                                 # Mixin tags and recode it to mp3 (vbr 190kBit)
-                                system ("ffmpeg -i \"#{@tempyoutubefolder}#{name}.#{ending}\" -codec:a libmp3lame -qscale:a 2 -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.mp3\"") if !File.exist?("#{@youtubefolder}#{name}.mp3")
+                                system ("nice -n20 ffmpeg -i \"#{@tempyoutubefolder}#{name}.#{ending}\" -codec:a libmp3lame -qscale:a 2 -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.mp3\"") if !File.exist?("#{@youtubefolder}#{name}.mp3")
                                 @songlist << name.split("/")[-1] + ".mp3"
                             end
                         end
