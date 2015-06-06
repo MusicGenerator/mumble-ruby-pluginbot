@@ -45,7 +45,7 @@ class Youtube < Plugin
             workingdownload = Thread.new {
                 #local variables for this thread!
                 actor = msg.actor
-                @bot[:messages].text(actor, "inspecting link: " + link + "...")
+                @bot[:messages].text(actor, "Youtube is inspecting link: " + link + "...")
                 get_song link
                 if ( @songlist.size > 0 ) then
                     @bot[:mpd].update(@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
@@ -71,7 +71,7 @@ class Youtube < Plugin
                         @bot[:mpd].add(@bot[:youtube_downloadsubdir]+song)
                     end
                 else
-                    @bot[:messages].text(actor, "The link contains nothing interesting for me.") if @bot[:youtube_stream] == nil
+                    @bot[:messages].text(actor, "Youtube: The link contains nothing interesting.") if @bot[:youtube_stream] == nil
                 end
             }
         end
@@ -155,7 +155,7 @@ class Youtube < Plugin
                         end
                         @bot[:messages].text(actor, out)
                     else
-                        @bot[:messages].text(actor, "The link contains nothing interesting for me.") if @bot[:youtube_stream] == nil
+                        @bot[:messages].text(actor, "Youtube: The link contains nothing interesting.") if @bot[:youtube_stream] == nil
                     end
                 }
             rescue

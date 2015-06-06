@@ -112,6 +112,43 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     # by default this is empty, but it is not a bad idea to restrict filenames.
     ###########################
 
+    ###########################
+    # Soundcloud plugin: ######
+    ###########################
+    @settings[:soundcloud_downloadsubdir] = "downloadedfromsc/"
+    # This is the RELATIVE path where the plugin stores its permanent files.
+    # Note that you also need to set @settings[:mpd_musicfolder] in the next
+    # section of the "Mpd plugin", because the complete path is
+    # built as "@bot[:mpd_musicfolder] + @bot[:soundcloud_downloadsubdir]"
+    # In the default configuration it is: "/home/botmaster/music/downloadedfromsc/"
+
+    @settings[:soundcloud_tempsubdir] = "soundcloudplugin/"
+    # This is the RELATIVE path where the plugin stores its temporary files.
+    # The full path is built as "@bot[:main_tempdir] + @bot[:soundcloud_tempsubdir]"
+    # Therefore this path must NOT be a relative path and must NOT be set to a
+    # subdirectory of the directory where MPD stores its files.
+    # In the default configuration it is: "/home/botmaster/temp/soundcloudplugin/"
+  
+    @settings[:soundcloud_youtubedl] = "/home/botmaster/src/youtube-dl"
+    # Path to the youtube-dl binary. The default value should be fine if
+    # you used the official mumble-ruby-pluginbot tutorial.
+    # If you instead installed youtube-dl via system packages,
+    # change it to "/usr/bin/youtube-dl".
+    ###########################
+    
+    @settings[:soundcloud_to_mp3] = nil
+    # If this is set to something other than nil ffmpeg/avconv
+    # will try to convert downloaded audio into mp3 (190kBit)
+    # The default is nil. Downloaded files will be stored at best quality
+    ###########################
+    
+    @settings[:soundcloud_youtubedl_options] = ""
+    # additional options to youtube-dl 
+    # you can add "-r 2.5M" and the downloadspeed will be limited to 2.5 Mb/s 
+    # "--restrict-filenames" transformes filenames into a safe charset 
+    # by default this is empty, but it is not a bad idea to restrict filenames.
+    ###########################
+    
 
     ###########################
     # Mpd plugin: #############
