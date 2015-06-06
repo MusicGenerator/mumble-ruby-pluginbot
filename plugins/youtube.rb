@@ -33,14 +33,18 @@ class Youtube < Plugin
     end
 
     def handle_chat(msg, message)
-        if message.start_with?("ytlink <a href=") then
+        if message.start_with?("ytlink <a href=") || message.start_with?("<a href=") then
             link = msg.message[msg.message.index('>') + 1 .. -1]
             link = link[0..link.index('<')-1]
             workingdownload = Thread.new {
                 #local variables for this thread!
                 actor = msg.actor
                 @bot[:messages].text(actor, "inspecting link: " + link + "...")
-                get_song link
+                if @bot[:youtube_to_mp3] != nil
+                    get_song_mp3 link
+                else
+                    get_song link
+                end
                 if ( @songlist.size > 0 ) then
                     @bot[:mpd].update(@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
                     @bot[:messages].text(actor, "Waiting for database update complete...")
@@ -118,7 +122,11 @@ class Youtube < Plugin
                     @bot[:messages].text(actor, "do #{link.length.to_s} time(s)...")    
                     link.each do |l| 
                         @bot[:messages].text(actor, "fetch and convert")
-                        get_song l
+                        if @bot[:youtube_to_mp3] != nil
+                            get_song_mp3 l
+                        else
+                            get_song l
+                        end
                     end
                     if ( @songlist.size > 0 ) then
                         @bot[:mpd].update(@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
@@ -206,7 +214,7 @@ class Youtube < Plugin
                 streams = `youtube-dl -g "#{site}"`
                 streams.each_line do |line|
                     line.chop!
-                    @bot[:mpd].add line if line.include? "mime=audio/mp3"
+                    @bot[:mpd].add line if line.include? "mime=audio/m4a"
                 end
             end
         end
