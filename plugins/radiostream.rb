@@ -19,8 +19,8 @@ class Radiostream < Plugin
     
     def help(h)
         h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
-        h += "<b>#{@bot[:controlstring]}radiostream http-link</b> will try to get some music from icecast/shoutcast.<br />"
-        h += "   this version does only understand .pls link files"
+        h += "<b>#{@bot[:controlstring]}radiostream URL</b> - Will try to forward the radio stream.<br />"
+        h += "   This early version does only understand URLs that end with .pls or such that are in fact .pls files."
     end
    
     def handle_chat(msg, message)
