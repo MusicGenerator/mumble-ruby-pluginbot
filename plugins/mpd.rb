@@ -339,14 +339,17 @@ class Mpd < Plugin
         end
 
         if ( message[0,3] == 'add' ) 
-            search = message.gsub("add", "").lstrip
-            text_out = "nothing found/added!"
+            search = (message.gsub("add", "").lstrip).tr('"','')
+            text_out = "search is empty"
             if search != ""
                 text_out ="added:<br/>"
+                count = 0
                 @bot[:mpd].where(any: "#{search}").each do |song|
                     text_out += "add #{song.file}<br/>" 
                     @bot[:mpd].add(song)
+                    count += 1
                 end
+                text_out = "found nothing" if count == 0
             end
             @bot[:cli].text_user(msg.actor, text_out)
         end
