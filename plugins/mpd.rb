@@ -202,6 +202,7 @@ class Mpd < Plugin
         h += "<b>#{@bot[:controlstring]}play</b> - Start playing.<br />"
         h += "<b>#{@bot[:controlstring]}songlist</b> - Print the list of ALL songs in the MPD collection.<br />"
         h += "<b>#{@bot[:controlstring]}playlist <i>id</i></b> - Load the playlist referenced by the id.<br />"
+        h += "<b>#{@bot[:controlstring]}saveplaylist <i>name</i></b> - Save queue into a playlist named 'name'<br />"
         h += "<b>#{@bot[:controlstring]}song</b> - Print some information about the currently played song.<br />"
         h += "<b>#{@bot[:controlstring]}status</b> - Print current status of MPD.<br />"
         h += "<b>#{@bot[:controlstring]}playlists</b> - Print the available playlists from MPD.<br />"
@@ -315,15 +316,31 @@ class Mpd < Plugin
         end
 
         if message == 'queue'
-            text_out ="<br/>"
+            text_out ="<table><th><td>#</td><td>Name</td></th>"
+            songnr = 0
             @bot[:mpd].queue.each do |song|
+                songnr += 1
                 if song.title.to_s.empty?
-                    text_out += "Youtube-Stream<br/>"
+                    text_out += "<tr><td>#{songnr}</td><td>No ID / Stream?</td></tr>"
                 else
-                    text_out += "#{song.title}<br/>" 
+                    text_out += "<tr><td>#{songnr}</td><td>#{song.title}</td></tr>" 
                 end
             end
+            text_out += "</table>"
             @bot[:cli].text_user(msg.actor, text_out)
+        end
+        
+        if message[0,12] == 'saveplaylist'
+            name = message.gsub("saveplaylist", "").lstrip
+            if name != ""
+                puts name
+                playlist = MPD::Playlist.new(@bot[:mpd], name)
+                @bot[:mpd].queue.each do |song|
+                    playlist.add song
+                end
+            else
+              @bot[:cli].text_user(msg.actor, "no playlist name gaven.")
+            end
         end
 
         if ( message[0,5] == 'where' ) 
