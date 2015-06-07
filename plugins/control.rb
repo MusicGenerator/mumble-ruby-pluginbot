@@ -12,6 +12,12 @@ class Control < Plugin
             @historysize = 20
         end
         @history = Array.new 
+        
+        # Register for permission denied messages
+        @bot[:cli].on_permission_denied do |msg|
+            nopermission(msg)
+        end
+        
         return @bot
     end
     
@@ -36,6 +42,19 @@ class Control < Plugin
         h += "<b>#{@bot[:controlstring]}history</b> - Print last #{@historysize} commanding users with command given."
     end
 
+    def nopermission(msg)
+        @follow = false
+        @alreadyfollowing = false
+        begin
+            Thread.kill(@following)
+            @alreadyfollowing = false
+        rescue TypeError
+            if @bot[:debug]
+                puts "#{$!}"
+            end
+        end
+    end
+    
     def handle_chat(msg, message)
     
         # Put message in Messagehistory and pop oldes if size exceeds max. historysize.
