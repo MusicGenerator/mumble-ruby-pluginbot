@@ -173,8 +173,9 @@ class MumbleMPD
             handle_text_message(msg)
         end
 
-        if @settings[:ducking] == true
-            @cli.on_udp_tunnel do |udp|
+        
+        @cli.on_udp_tunnel do |udp|
+            if @settings[:ducking] == true
                 @lastaudio = Time.now
                 @cli.player.volume = 20
                 @duckthread.run if @duckthread.stop?
