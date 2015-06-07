@@ -33,9 +33,7 @@ class Soundcloud < Plugin
 
     def help(h)
         h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
-        h += "<b>#{@bot[:controlstring]}ytlink <i>URL</i></b> - Will try to download the music from the given URL.<br />"
-        h += "<b>#{@bot[:controlstring]}yts keywords</b> - Will search on soundcloud for one or more keywords and print the results to you.<br />"
-        h += "<b>#{@bot[:controlstring]}yta <i>number</i></b> - Let the bot download the given song from the list you got via <i>#{@bot[:controlstring]}yts</i>.<br />Instead of a specific numer, write <b>#{@bot[:controlstring]}yta <i>all</i></b> to let the bot download all found songs."
+        h += "<b>#{@bot[:controlstring]}soundcloud <i>URL</i></b> - Will try to download the music from the given URL."
     end
 
     def handle_chat(msg, message)
