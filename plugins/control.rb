@@ -46,11 +46,11 @@ class Control < Plugin
         @follow = false
         @alreadyfollowing = false
         begin
-            Thread.kill(@following)
+            Thread.kill(@following) if @following != nil
             @alreadyfollowing = false
         rescue TypeError
             if @bot[:debug]
-                puts "#{$!}"
+                puts "[control] no following thread but try to kill. #{$!}"
             end
         end
     end

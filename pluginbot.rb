@@ -146,11 +146,7 @@ class MumbleMPD
         @duckthread = Thread.new do
             while (true == true)
                 while (@cli.player.volume != 100)
-                    if ((Time.now - @lastaudio) < 0.1) then 
-                        @cli.player.volume = 20
-                    else
-                        @cli.player.volume += 2 if @cli.player.volume < 100
-                    end
+                    @cli.player.volume += 2 if @cli.player.volume < 100
                     sleep 0.02
                 end
                 Thread.stop
@@ -174,12 +170,11 @@ class MumbleMPD
         end
 
         @cli.on_udp_tunnel do |udp|
-            @lastaudio = Time.now
-            @cli.player.volume = 20 if @settings[:ducking] == true
-            @duckthread.run if @duckthread.stop?
+            if @settings[:ducking] == true
+                @cli.player.volume = 20 
+                @duckthread.run if @duckthread.stop?
+            end
         end
-
-        @lastaudio = Time.now
 
         @run = true
         @cli.player.stream_named_pipe(@settings[:mpd_fifopath]) 
