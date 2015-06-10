@@ -82,7 +82,7 @@ class Control < Plugin
             else
                 if @muted == true
                     me.mute false 
-                    @muted == false
+                    @muted = false
                 end
             end
         end
