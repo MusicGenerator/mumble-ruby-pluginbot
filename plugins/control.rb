@@ -4,18 +4,26 @@ class Control < Plugin
         @bot = init
         if @bot[:mpd] != nil
             @bot[:control] = self
-        end
-        @historysize = 20
-        if @bot[:control_historysize] != nil
-            @historysize =  @bot[:control_historysize]
-        else
             @historysize = 20
-        end
-        @history = Array.new 
+            @muted = false
+            @bot[:cli].mute false
+            @bot[:control_automute] = false if @bot[:control_automute] == nil
+            if @bot[:control_historysize] != nil
+                @historysize =  @bot[:control_historysize]
+            else
+                @historysize = 20
+            end
+            @history = Array.new 
         
-        # Register for permission denied messages
-        @bot[:cli].on_permission_denied do |msg|
-            nopermission(msg)
+            # Register for permission denied messages
+            @bot[:cli].on_permission_denied do |msg|
+                nopermission(msg)
+            end
+        
+            # Register for user state changes
+            @bot[:cli].on_user_state do |msg|
+                userstate(msg)
+            end
         end
         
         return @bot
@@ -39,7 +47,8 @@ class Control < Plugin
         h += "<b>#{@bot[:controlstring]}unfollow</b> - Bot transforms from a dog into a lazy cat :).<br />"
         h += "<b>#{@bot[:controlstring]}stick</b> - Jail bot into channel.<br />"
         h += "<b>#{@bot[:controlstring]}unstick</b> - Free the bot.<br />"
-        h += "<b>#{@bot[:controlstring]}history</b> - Print last #{@historysize} commanding users with command given."
+        h += "<b>#{@bot[:controlstring]}history</b> - Print last #{@historysize} commanding users with command given.<br />"
+        h += "<b>#{@bot[:controlstring]}automute</b> - Toggles auto muting system."
     end
 
     def nopermission(msg)
@@ -54,10 +63,34 @@ class Control < Plugin
             end
         end
     end
+
+    def userstate(msg)
+        me = @bot[:cli].me
+        # If its not my own or a mute message do
+        if ( msg.user != me ) && ( msg.self_mute == nil ) && ( @bot[:control_automute] == true )
+            user_count = 0
+            me_in = 0
+            me_in = @bot[:cli].me.channel_id
+            # count users in my channel
+            @bot[:cli].users.values.select do |user|
+                user_count += 1 if ( user.channel_id == me_in ) 
+            end
+            # if i'm not alone
+            if ( user_count < 2 )
+                    me.mute true 
+                    @muted = true
+            else
+                if @muted == true
+                    me.mute false 
+                    @muted == false
+                end
+            end
+        end
+    end
     
     def handle_chat(msg, message)
     
-        # Put message in Messagehistory and pop oldes if size exceeds max. historysize.
+        # Put message in Messagehistory and pop old's if size exceeds max. historysize.
         @history << msg                 
         @history.shift if @history.length > @historysize
 
@@ -213,6 +246,16 @@ class Control < Plugin
             end
             out += "</table>"
             @bot[:cli].text_user(msg.actor, out)
+        end
+        
+        if message == 'automute'
+            if @bot[:control_automute] == false
+                @bot[:cli].text_user(msg.actor, "Automute is now activated")
+                @bot[:control_automute] = true    
+            else    
+                @bot[:cli].text_user(msg.actor, "Automute is now deactivated")
+                @bot[:control_automute] = false
+            end
         end
     end
 end
