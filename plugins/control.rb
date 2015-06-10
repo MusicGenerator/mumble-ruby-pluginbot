@@ -75,7 +75,7 @@ class Control < Plugin
             @bot[:cli].users.values.select do |user|
                 user_count += 1 if ( user.channel_id == me_in ) 
             end
-            # if i'm not alone
+            # if i'm alone
             if ( user_count < 2 )
                     me.mute true 
                     @muted = true
