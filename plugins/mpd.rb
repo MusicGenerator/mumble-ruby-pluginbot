@@ -202,6 +202,7 @@ class Mpd < Plugin
         h += "<b>#{@bot[:controlstring]}pp</b> - Toggle pause/play.<br />"
         h += "<b>#{@bot[:controlstring]}stop</b> - Stop playing.<br />"
         h += "<b>#{@bot[:controlstring]}play</b> - Start playing.<br />"
+        h += "<b>#{@bot[:controlstring]}play <i>number</i></b> - Play title on position <i>number</i> in queue.<br />"
         h += "<b>#{@bot[:controlstring]}songlist</b> - Print the list of ALL songs in the MPD collection.<br />"
         h += "<b>#{@bot[:controlstring]}playlist <i>id</i></b> - Load the playlist referenced by the id.<br />"
         h += "<b>#{@bot[:controlstring]}saveplaylist <i>name</i></b> - Save queue into a playlist named 'name'<br />"
@@ -279,6 +280,14 @@ class Mpd < Plugin
             @bot[:cli].text_user(msg.actor, "The playqueue was cleared.")
         end
 
+        if message[0,6] == 'delete'
+            begin
+                @bot[:mpd].delete message.split(/ /)[1]
+            rescue
+                @bot[:cli].text_user(msg.actor, "Sorry, could not delete.")
+            end
+        end
+        
         if message == 'random'
             @bot[:mpd].random = !@bot[:mpd].random?
         end
@@ -301,8 +310,12 @@ class Mpd < Plugin
 
         @bot[:mpd].stop if message == 'stop'
 
-        if message == 'play'
-            @bot[:mpd].play
+        if message[0,4] == 'play'
+            begin
+                @bot[:mpd].play message.split(/ /)[1]
+            rescue
+                @bot[:mpd].play
+            end
             @bot[:cli].me.deafen false
             @bot[:cli].me.mute false
         end
@@ -337,12 +350,12 @@ class Mpd < Plugin
             text_out ="<table><th><td>#</td><td>Name</td></th>"
             songnr = 0
             @bot[:mpd].queue.each do |song|
-                songnr += 1
                 if song.title.to_s.empty?
                     text_out += "<tr><td>#{songnr}</td><td>No ID / Stream?</td></tr>"
                 else
                     text_out += "<tr><td>#{songnr}</td><td>#{song.title}</td></tr>" 
                 end
+                songnr += 1
             end
             text_out += "</table>"
             @bot[:cli].text_user(msg.actor, text_out)
