@@ -15,6 +15,8 @@ class Soundcloud < Plugin
             rescue
                 @ytdloptions = "" 
             end
+            @consoleaddition = "" 
+            @consoleaddition = @bot[:soundcloud_commandlineprefixes] if @bot[:soundcloud_commandlineprefixes] != nil
             @songlist = Queue.new
             @keylist = Array.new
             @bot[:soundcloud] = self
@@ -81,18 +83,18 @@ class Soundcloud < Plugin
             site.gsub!("&amp;", "&")
             puts site
             filename = `#{@bot[:soundcloud_youtubedl]} --get-filename #{@ytdloptions} -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
-            output =`nice -n20 #{@bot[:soundcloud_youtubedl]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@tempsoundcloudfolder}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
+            output =`nice -n20 #{@consoleaddition} #{@bot[:soundcloud_youtubedl]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@tempsoundcloudfolder}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
             filename.split("\n").each do |name|
                 @filetypes.each do |ending|
                     if File.exist?("#{@tempsoundcloudfolder}#{name}.#{ending}")
-                        system ("nice -n20 convert \"#{@tempsoundcloudfolder}#{name}.jpg\" -resize 320x240 \"#{@soundcloudfolder}#{name}.jpg\" ")
+                        system ("nice -n20 #{@consoleaddition} convert \"#{@tempsoundcloudfolder}#{name}.jpg\" -resize 320x240 \"#{@soundcloudfolder}#{name}.jpg\" ")
                         if @bot[:soundcloud_to_mp3] == nil
                             # Mixin tags without recode on standard
-                            system ("nice -n20 ffmpeg -i \"#{@tempsoundcloudfolder}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@soundcloudfolder}#{name}.#{ending}\"") if !File.exist?("#{@soundcloudfolder}#{name}.#{ending}")
+                            system ("nice -n20 #{@consoleaddition} ffmpeg -i \"#{@tempsoundcloudfolder}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@soundcloudfolder}#{name}.#{ending}\"") if !File.exist?("#{@soundcloudfolder}#{name}.#{ending}")
                             @songlist << name.split("/")[-1] + ".#{ending}"
                         else
                             # Mixin tags and recode it to mp3 (vbr 190kBit)
-                            system ("nice -n20 ffmpeg -i \"#{@tempsoundcloudfolder}#{name}.#{ending}\" -codec:a libmp3lame -qscale:a 2 -metadata title=\"#{name}\" \"#{@soundcloudfolder}#{name}.mp3\"") if !File.exist?("#{@soundcloudfolder}#{name}.mp3")
+                            system ("nice -n20 #{@consoleaddition} ffmpeg -i \"#{@tempsoundcloudfolder}#{name}.#{ending}\" -codec:a libmp3lame -qscale:a 2 -metadata title=\"#{name}\" \"#{@soundcloudfolder}#{name}.mp3\"") if !File.exist?("#{@soundcloudfolder}#{name}.mp3")
                             @songlist << name.split("/")[-1] + ".mp3"
                         end
                     end

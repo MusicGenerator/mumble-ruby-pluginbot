@@ -15,6 +15,8 @@ class Youtube < Plugin
             rescue
                 @ytdloptions = "" 
             end
+            @consoleaddition = "" 
+            @consoleaddition = @bot[:youtube_commandlineprefixes] if @bot[:youtube_commandlineprefixes] != nil
             @songlist = Queue.new
             @keylist = Array.new
             @bot[:youtube] = self
@@ -180,18 +182,18 @@ class Youtube < Plugin
             site.gsub!("&amp;", "&")
             if @bot[:youtube_stream] == nil
                 filename = `#{@bot[:youtube_youtubedl]} --get-filename #{@ytdloptions} -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
-                output =`nice -n20 #{@bot[:youtube_youtubedl]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@tempyoutubefolder}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
+                output =`nice -n20 #{@consoleaddition} #{@bot[:youtube_youtubedl]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@tempyoutubefolder}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
                 filename.split("\n").each do |name|
                     @filetypes.each do |ending|
                         if File.exist?("#{@tempyoutubefolder}#{name}.#{ending}")
-                            system ("nice -n20 convert \"#{@tempyoutubefolder}#{name}.jpg\" -resize 320x240 \"#{@youtubefolder}#{name}.jpg\" ")
+                            system ("nice -n20 #{@consoleaddition} convert \"#{@tempyoutubefolder}#{name}.jpg\" -resize 320x240 \"#{@youtubefolder}#{name}.jpg\" ")
                             if @bot[:youtube_to_mp3] == nil
                                 # Mixin tags without recode on standard
-                                system ("nice -n20 ffmpeg -i \"#{@tempyoutubefolder}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.#{ending}\"") if !File.exist?("#{@youtubefolder}#{name}.#{ending}")
+                                system ("nice -n20 #{@consoleaddition} ffmpeg -i \"#{@tempyoutubefolder}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.#{ending}\"") if !File.exist?("#{@youtubefolder}#{name}.#{ending}")
                                 @songlist << name.split("/")[-1] + ".#{ending}"
                             else
                                 # Mixin tags and recode it to mp3 (vbr 190kBit)
-                                system ("nice -n20 ffmpeg -i \"#{@tempyoutubefolder}#{name}.#{ending}\" -codec:a libmp3lame -qscale:a 2 -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.mp3\"") if !File.exist?("#{@youtubefolder}#{name}.mp3")
+                                system ("nice -n20 #{@consoleaddition} ffmpeg -i \"#{@tempyoutubefolder}#{name}.#{ending}\" -codec:a libmp3lame -qscale:a 2 -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.mp3\"") if !File.exist?("#{@youtubefolder}#{name}.mp3")
                                 @songlist << name.split("/")[-1] + ".mp3"
                             end
                         end
