@@ -151,26 +151,7 @@ class Mpd < Plugin
                 end
             end
 
-        end
-
-        @bot[:cli].on_user_state do |msg|
-            msg_target = @bot[:cli].users[msg.session]
-            if msg_target.user_id.nil?
-                msg_userid = -1
-                sender_is_registered = false
-            else
-                msg_userid = msg_target.user_id
-                sender_is_registered = true
-            end
-            if @bot[:cli].me.current_channel != nil          
-                #msg.actor = session_id of user who did something on someone, if self done, both is the same.
-                #msg.session = session_id of the target
-                if @bot[:cli].me.current_channel.channel_id == msg_target.channel_id
-                    if (@bot[:stop_on_unregistered_users] == true && sender_is_registered == false)
-                        @bot[:mpd].stop
-                        @bot[:cli].text_channel(@bot[:cli].me.current_channel, "<span style='color:red;'>An unregistered user currently joined or is acting in our channel. I stopped the music.</span>")
-                    end
-                end
+            @bot[:cli].on_user_state do |msg|
             end
         end
 

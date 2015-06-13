@@ -5,8 +5,6 @@ class Control < Plugin
         if @bot[:mpd] != nil
             @bot[:control] = self
             @historysize = 20
-            @muted = false
-            @bot[:cli].mute false
             @bot[:control_automute] = false if @bot[:control_automute] == nil
             if @bot[:control_historysize] != nil
                 @historysize =  @bot[:control_historysize]
@@ -14,7 +12,10 @@ class Control < Plugin
                 @historysize = 20
             end
             @history = Array.new 
-        
+            @muted = false
+            @playing  = !@bot[:mpd].paused?
+            @bot[:cli].mute false
+       
             # Register for permission denied messages
             @bot[:cli].on_permission_denied do |msg|
                 nopermission(msg)
@@ -65,27 +66,56 @@ class Control < Plugin
     end
 
     def userstate(msg)
+        #msg.session = session_id of the target
+        #msg.actor = session_id of user who did something on someone, if self done, both is the same.
+  
         me = @bot[:cli].me
-        # If its not my own or a mute message do
-        if ( msg.user != me ) && ( msg.self_mute == nil ) && ( @bot[:control_automute] == true )
+        msg_target = @bot[:cli].users[msg.session]
+        if ( me.current_channel != nil ) && ( msg.channel_id != nil )         
+            # get register status of user
+            if msg_target.user_id.nil?
+                sender_is_registered = false
+            else
+                sender_is_registered = true
+            end
+
+            # if user is in my channel and is unregistered then stop playing if stop on unregistered users is enabled
+            if ( me.current_channel.channel_id == msg_target.channel_id ) && ( @bot[:stop_on_unregistered_users] == true) && ( sender_is_registered == false )  
+                @bot[:mpd].stop
+                @bot[:cli].text_channel(@bot[:cli].me.current_channel, "<span style='color:red;'>An unregistered user currently joined or is acting in our channel. I stopped the music.</span>")
+            end
+
+            # Count users in my channel ...
             user_count = 0
             me_in = 0
-            me_in = @bot[:cli].me.channel_id
-            # count users in my channel
+            me_in = me.channel_id
             @bot[:cli].users.values.select do |user|
                 user_count += 1 if ( user.channel_id == me_in ) 
             end
             # if i'm alone
-            if ( user_count < 2 )
-                    me.mute true 
-                    @muted = true
+            if ( user_count < 2 ) && ( @bot[:control_automute] == true )
+                # if I'm playing then pause play and save that I've stopped myself
+                if @bot[:mpd].paused? == false 
+                    @bot[:mpd].pause = true
+                    @playing = false
+                end
+                # mute myself and save that I've done it myself
+                me.mute true 
+                @muted = true
             else
+                # only unmute me if I've muted myself before
                 if @muted == true
                     me.mute false 
                     @muted = false
                 end
+                # start playing only I've stopped myself
+                if @playing == false
+                    @bot[:mpd].pause = false
+                    @playing = true
+                end
             end
         end
+    
     end
     
     def handle_chat(msg, message)
