@@ -238,7 +238,6 @@ class Mpd < Plugin
             end
             begin
                 @bot[:mpd].seek seekto
-                puts seekto
             rescue
                 # mpd is old and knows no seek commands
                 puts "[mpd-plugin] [error] seek without success, maybe mpd version < 0.17 installed"
