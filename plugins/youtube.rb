@@ -48,7 +48,9 @@ class Youtube < Plugin
                 #local variables for this thread!
                 actor = msg.actor
                 @bot[:messages].text(actor, "Youtube is inspecting link: " + link + "...")
-                get_song link
+                get_song(link).each do |error|
+                    @bot[:messages].text(actor, error)
+                end
                 if ( @songlist.size > 0 ) then
                     @bot[:mpd].update(@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
                     @bot[:messages].text(actor, "Waiting for database update complete...")
@@ -126,7 +128,9 @@ class Youtube < Plugin
                     @bot[:messages].text(actor, "do #{link.length.to_s} time(s)...")    
                     link.each do |l| 
                         @bot[:messages].text(actor, "fetch and convert")
-                        get_song l
+                        get_song(l).each do |error|
+                            @bot[:messages.text(actor, error)]
+                        end
                     end
                     if ( @songlist.size > 0 ) then
                         @bot[:mpd].update(@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
@@ -177,12 +181,16 @@ class Youtube < Plugin
     end
 
     def get_song(site)
+        error = Array.new
         if ( site.include? "www.youtube.com/" ) || ( site.include? "www.youtu.be/" ) || ( site.include? "m.youtube.com/" ) then
             site.gsub!(/<\/?[^>]*>/, '')
             site.gsub!("&amp;", "&")
             if @bot[:youtube_stream] == nil
                 filename = `#{@bot[:youtube_youtubedl]} --get-filename #{@ytdloptions} -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
                 output =`nice -n20 #{@consoleaddition} #{@bot[:youtube_youtubedl]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@tempyoutubefolder}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
+                output.each_line do |line|
+                    error << line if line.include? "ERROR:"
+                end
                 filename.split("\n").each do |name|
                     @filetypes.each do |ending|
                         if File.exist?("#{@tempyoutubefolder}#{name}.#{ending}")
@@ -207,6 +215,6 @@ class Youtube < Plugin
                 end
             end
         end
+        return error
     end
-    
 end
