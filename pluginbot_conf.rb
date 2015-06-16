@@ -66,9 +66,6 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     # Settings for plugins start here ####
     ######################################
 
-    # Todo: Improve the complete directory structure and do NOT
-    # use relative paths.
-
     ###########################
     # Youtube plugin: #########
     ###########################
@@ -106,12 +103,21 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     ###########################
     
     @settings[:youtube_youtubedl_options] = ""
-    # additional options to youtube-dl 
-    # you can add "-r 2.5M" and the downloadspeed will be limited to 2.5 Mb/s 
-    # "--restrict-filenames" transformes filenames into a safe charset 
-    # by default this is empty, but it is not a bad idea to restrict filenames.
+    # Additional options to youtube-dl.
+    # You can add for example "-r 2.5M" and the downloadspeed
+    # will be limited to 2.5 Mb/s. "--restrict-filenames" transformes
+    # filenames into a safe charset. By default this is empty,
+    # but it is not a bad idea to restrict filenames.
     ###########################
-
+    
+    @settings[:youtube_commandlineprefixes] = ""
+    # Additional prefixes for the command which downloads the files
+    # via youtube-dl.
+    # For example you may set this to "ionice -c 3" presumed the
+    # package util-linux is installed (on Debian).
+    # In this case the command would only write to the filesystem if no
+    # other process is writing, so only if the filesystem is idle.
+    
     ###########################
     # Soundcloud plugin: ######
     ###########################
@@ -147,8 +153,15 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     # you can add "-r 2.5M" and the downloadspeed will be limited to 2.5 Mb/s 
     # "--restrict-filenames" transformes filenames into a safe charset 
     # by default this is empty, but it is not a bad idea to restrict filenames.
-    ###########################
+    ##########################
     
+    @settings[:soundcloud_commandlineprefixes] = ""
+    # Additional prefixes for the command which downloads the files
+    # via youtube-dl.
+    # For example you may set this to "ionice -c 3" presumed the
+    # package util-linux is installed (on Debian).
+    # In this case the command would only write to the filesystem if no
+    # other process is writing, so only if the filesystem is idle.
 
     ###########################
     # Mpd plugin: #############
