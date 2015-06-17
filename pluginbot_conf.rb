@@ -37,11 +37,11 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     #@settings[:controlstring] =                     "."                    #Change it if you want to use another starting string/symbol for the commands.
     #@settings[:debug] =                             true                   #Whether debug mode is on or off.
     #@settings[:use_vbr] =                           1                      #Default for mumble-ruby is 0 in order to use cbr, set to 1 to use vbr.
-    #@settings[:listen_to_private_message_only] =    false                  #Wheter the bot should only listen to private messages.
+    #@settings[:listen_to_private_message_only] =    false                  #Whether the bot should only listen to private messages.
     #@settings[:listen_to_registered_users_only] =   true                   #Whether the bot should only react to commands from registered users.
     #@settings[:stop_on_unregistered_users] =        true                   #Whether the bot should stop playing music if a unregistered user joins the channel.
     #@settings[:use_comment_for_status_display] =    true                   #Whether to use comment to display song info; false = send to channel, true = comment.
-
+    #@settings[:ducking_volume] =                    20                     #Percentage of normal volume to ducking down
     #Set default mumble server
     #@settings[:mumbleserver_host] = "127.0.0.1"
     #@settings[:mumbleserver_port] = "64739"

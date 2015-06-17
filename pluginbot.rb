@@ -105,6 +105,7 @@ class MumbleMPD
                 @settings[:certdirectory] = v
             end
         end.parse! 
+        @settings[:ducking_volume] = 20 if @settings[:ducking_volume].nil?
         @configured_settings = @settings.clone 
     end
     
@@ -171,7 +172,7 @@ class MumbleMPD
 
         @cli.on_udp_tunnel do |udp|
             if @settings[:ducking] == true
-                @cli.player.volume = 20 
+                @cli.player.volume = ( @settings[:ducking_volume] |  0x1 ) - 1
                 @duckthread.run if @duckthread.stop?
             end
         end
@@ -324,6 +325,17 @@ class MumbleMPD
                                     @cli.text_user(msg.actor, "Music ducking is off.")
                                 else
                                     @cli.text_user(msg.actor, "Music ducking is on.")
+                                end
+                            end
+
+                            help += "<b>#{cc}duckvol <i>volume</i></b> set the ducking volume (% of normal volume).<br />"
+                            if message.match(/^duckvol [0-9]{1,3}$/)
+                                volume = message.match(/^duckvol ([0-9]{1,3})$/)[1].to_i 
+                                if (volume >=0 ) && (volume <= 100)
+                                    @settings[:ducking_volume] = volume
+                                    @cli.text_user(msg.actor, "ducking is set to #{volume}% of normal volume.")
+                                else
+                                    @cli.text_user(msg.actor, "Volume can be within a range of 0 to 100")
                                 end
                             end
 
