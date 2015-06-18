@@ -256,7 +256,7 @@ class MumbleMPD
                 # Private message looks like this:   <Hashie::Mash actor=54 message="#help" session=[119]>
                 # Channel message:                   <Hashie::Mash actor=54 channel_id=[530] message="#help">
                 # Channel messages don't have a session, so skip them
-                if ( msg.session ) || ( @settings[:listen_to_private_message_only] != false )
+                if ( msg.session ) || ( @settings[:listen_to_private_message_only] != true )
                     if @settings[:controllable] == true 
                         if msg.message.start_with?("#{@settings[:controlstring]}") && msg.message.length >@settings[:controlstring].length #Check whether we have a command after the controlstring.
                             message = msg.message.split(@settings[:controlstring])[1] #Remove@settings[:controlstring]
