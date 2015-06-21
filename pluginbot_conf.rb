@@ -164,6 +164,25 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     # other process is writing, so only if the filesystem is idle.
 
     ###########################
+    # Ektoplazm plugin:  ######
+    ###########################
+    @settings[:ektoplazm_downloadsubdir] = "ektoplazm/"
+    # This is the RELATIVE path where the plugin stores its permanent files.
+    # Note that you also need to set @settings[:mpd_musicfolder] in the next
+    # section of the "Mpd plugin", because the complete path is
+    # built as "@bot[:mpd_musicfolder] + @bot[:soundcloud_downloadsubdir]"
+    # In the default configuration it is: "/home/botmaster/music/ektoplazm/"
+    # WARNING: The configured folder has to exist!
+
+    @settings[:ektoplazm_tempsubdir] = "ektoplazmplugin/"
+    # This is the RELATIVE path where the plugin stores its temporary files.
+    # The full path is built as "@bot[:main_tempdir] + @bot[:soundcloud_tempsubdir]"
+    # Therefore this path must NOT be a relative path and must NOT be set to a
+    # subdirectory of the directory where MPD stores its files.
+    # In the default configuration it is: "/home/botmaster/temp/ektoplazmplugin/"
+    # WARNUNG: The configured folder has to exist!
+  
+    ###########################
     # Mpd plugin: #############
     ###########################
     @settings[:mpd_musicfolder] = "/home/botmaster/music/"
