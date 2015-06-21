@@ -243,17 +243,20 @@ class Mpd < Plugin
                 puts "[mpd-plugin] [error] seek without success, maybe mpd version < 0.17 installed"
             end
             status = @bot[:mpd].status
+            begin
+                #Code from http://stackoverflow.com/questions/19595840/rails-get-the-time-difference-in-hours-minutes-and-seconds
+                now_mm, now_ss = status[:time][0].divmod(60) #Minutes and seconds of current time within the song.
+                now_hh, now_mm = now_mm.divmod(60)
+                total_mm, total_ss = status[:time][1].divmod(60) #Minutes and seconds of total time of the song.
+                total_hh, total_mm = total_mm.divmod(60)
 
-            #Code from http://stackoverflow.com/questions/19595840/rails-get-the-time-difference-in-hours-minutes-and-seconds
-            now_mm, now_ss = status[:time][0].divmod(60) #Minutes and seconds of current time within the song.
-            now_hh, now_mm = now_mm.divmod(60)
-            total_mm, total_ss = status[:time][1].divmod(60) #Minutes and seconds of total time of the song.
-            total_hh, total_mm = total_mm.divmod(60)
+                now = "%02d:%02d:%02d" % [now_hh, now_mm, now_ss]
+                total = "%02d:%02d:%02d" % [total_hh, total_mm, total_ss]
 
-            now = "%02d:%02d:%02d" % [now_hh, now_mm, now_ss]
-            total = "%02d:%02d:%02d" % [total_hh, total_mm, total_ss]
-
-            @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Now on position #{now}/#{total}.")
+                @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Now on position #{now}/#{total}.")
+            rescue
+                @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Sorry! Unknown stream position.")
+            end
         end
 
         if message.match(/^crossfade [0-9]{1,3}$/)
