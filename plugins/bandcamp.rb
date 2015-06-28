@@ -38,7 +38,7 @@ class Bandcamp < Plugin
 
     def help(h)
         h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
-        h += "<b>#{@bot[:controlstring]}bandcamp <i>URL</i></b> - Will try to download the music from the given URL."
+        h += "<b>#{@bot[:controlstring]}bandcamp <i>URL</i></b> - Will try to download the music from the given URL. Be aware that due to bandwidth limitations from bandcamp the bot downloads with the a maximum speed that is slightly higher than the streaming speed. Please be patient if you let the bot download a whole album :)"
     end
 
     def handle_chat(msg, message)
