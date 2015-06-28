@@ -107,25 +107,14 @@ class Bandcamp < Plugin
                 @filetypes.each do |ending|
                     if File.exist?("#{@tempbandcampfolder}#{name}.#{ending}")
                         system ("nice -n20 #{@consoleaddition} convert \"#{@tempbandcampfolder}#{name}.jpg\" -resize 320x240 \"#{@bandcampfolder}#{name}.jpg\" ")
+                        # Mixin tags without recode on standard
                         
-                        if @bot[:bandcamp_to_mp3] == nil
-                            # Mixin tags without recode on standard
-                            system ("nice -n20 #{@consoleaddition} ffmpeg -i \"#{@tempbandcampfolder}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{finaldirectory}/#{name}.#{ending}\"") if !File.exist?("#{finaldirectory}/#{name}.#{ending}")
-                            
-                            if is_album
-                                @songlist << albumname + "/" + name.split("/")[-1] + ".#{ending}"
-                            else
-                                @songlist << name.split("/")[-1] + ".#{ending}"
-                            end
+                        system ("nice -n20 #{@consoleaddition} cp \"#{@tempbandcampfolder}#{name}.#{ending}\" \"#{finaldirectory}/#{name}.#{ending}\"") if !File.exist?("#{finaldirectory}/#{name}.#{ending}")
+                        
+                        if is_album
+                            @songlist << albumname + "/" + name.split("/")[-1] + ".#{ending}"
                         else
-                            # Mixin tags and recode it to mp3 (vbr 190kBit)
-                            system ("nice -n20 #{@consoleaddition} ffmpeg -i \"#{@tempbandcampfolder}#{name}.#{ending}\" -codec:a libmp3lame -qscale:a 2 -metadata title=\"#{name}\" \"#{finaldirectory}/#{name}.mp3\"") if !File.exist?("#{finaldirectory}/#{name}.mp3")
-                            
-                            if is_album
-                                @songlist << albumname + "/" + name.split("/")[-1] + ".mp3"
-                            else
-                                @songlist << name.split("/")[-1] + ".mp3"
-                            end
+                            @songlist << name.split("/")[-1] + ".#{ending}"
                         end
                     end
                 end
