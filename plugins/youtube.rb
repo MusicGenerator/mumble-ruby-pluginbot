@@ -6,6 +6,9 @@ class Youtube < Plugin
             begin
                 @youtubefolder = @bot[:mpd_musicfolder] + @bot[:youtube_downloadsubdir]
                 @tempyoutubefolder = @bot[:main_tempdir] + @bot[:youtube_tempsubdir]
+                
+                Dir.mkdir(@youtubefolder) unless File.exists?(@youtubefolder)
+                Dir.mkdir(@tempyoutubefolder) unless File.exists?(@tempyoutubefolder)
             rescue
                 puts "Error: Youtube-Plugin doesn't found settings for mpd music directory and/or your preferred temporary download directory"
                 puts "See pluginbot_conf.rb"

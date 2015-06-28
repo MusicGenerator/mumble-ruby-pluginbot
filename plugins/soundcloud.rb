@@ -6,6 +6,9 @@ class Soundcloud < Plugin
             begin
                 @soundcloudfolder = @bot[:mpd_musicfolder] + @bot[:soundcloud_downloadsubdir]
                 @tempsoundcloudfolder = @bot[:main_tempdir] + @bot[:soundcloud_tempsubdir]
+                
+                Dir.mkdir(@soundcloudfolder) unless File.exists?(@soundcloudfolder)
+                Dir.mkdir(@tempsoundcloudfolder) unless File.exists?(@tempsoundcloudfolder)
             rescue
                 puts "Error: soundcloud-Plugin doesn't found settings for mpd music directory and/or your preferred temporary download directory"
                 puts "See pluginbot_conf.rb"
