@@ -6,6 +6,9 @@ class Ektoplazm < Plugin
             begin
                 @ektoplazmfolder = @bot[:mpd_musicfolder] + @bot[:ektoplazm_downloadsubdir]
                 @tempektoplazmfolder = @bot[:main_tempdir] + @bot[:ektoplazm_tempsubdir]
+                
+                Dir.mkdir(@ektoplazmfolder) unless File.exists?(@ektoplazmfolder)
+                Dir.mkdir(@tempektoplazmfolder) unless File.exists?(@tempektoplazmfolder)
             rescue
                 puts "Error: Ektoplazm-Plugin doesn't found settings for mpd music directory and/or your preferred temporary download directory"
                 puts "See pluginbot_conf.rb"
