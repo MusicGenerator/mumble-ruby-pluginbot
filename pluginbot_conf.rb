@@ -180,7 +180,7 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     # Therefore this path must NOT be a relative path and must NOT be set to a
     # subdirectory of the directory where MPD stores its files.
     # In the default configuration it is: "/home/botmaster/temp/ektoplazmplugin/"
-    # WARNUNG: The configured folder has to exist!
+    # WARNING: The configured folder has to exist!
   
     ###########################
     # Mpd plugin: #############
