@@ -15,18 +15,9 @@ mumble-ruby-pluginbot is a Mumble-Ruby based, extensible bot which can play audi
 * If the bot is already running on your Mumble server, write **.help** to him.
 
 ##Included plugins
-- **mpd**: Control the MPD that feeds the bot
-- **youtube**: Search, download and add music
-- **radiostream**: Let the bot play an internet radio stream
-- **control**: Control the bot's behaviour
-- **messages**: Handle the bot's messages
-- **soundcloud**: Download tracks/albums from soundcloud.com
-- **ektoplazm**: Download and extract albums from ektoplazm.com
-- **bandcamp**: Download tracks/albums from bandcamp.com
+See [here for the list of all plugins](http://wiki.natenom.com/w/Category:Plugins_for_Mumble-Ruby-Pluginbot) and also for the documentation of each plugin.
 
 Each plugin has its own help implemented. To get it, write **.help pluginname** to the bot, for example **.help youtube**
-
-More documentation about the plugins can be found at http://wiki.natenom.com/w/Usage_of_the_plugins_for_Mumble-Ruby-Pluginbot.
 
 ##Pre configured system images
 ###Banana Pi
