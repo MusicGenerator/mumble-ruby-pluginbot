@@ -75,6 +75,9 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     # section of the "Mpd plugin", because the complete path is
     # built as "@bot[:mpd_musicfolder] + @bot[:youtube_downloadsubdir]"
     # In the default configuration it is: "/home/botmaster/music/downloadedfromyt/"
+    #
+    # If this directory does not exist it will automatically
+    # be created by the bot when this plugin gets loaded.
 
     @settings[:youtube_tempsubdir] = "youtubeplugin/"
     # This is the RELATIVE path where the plugin stores its temporary files.
@@ -82,6 +85,9 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     # Therefore this path must NOT be a relative path and must NOT be set to a
     # subdirectory of the directory where MPD stores its files.
     # In the default configuration it is: "/home/botmaster/temp/youtubeplugin/"
+    #
+    # If this directory does not exist it will automatically
+    # be created by the bot when this plugin gets loaded.
 
     @settings[:youtube_stream] = nil
     # Set this to another value then nil in order to NOT download
@@ -127,6 +133,9 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     # section of the "Mpd plugin", because the complete path is
     # built as "@bot[:mpd_musicfolder] + @bot[:soundcloud_downloadsubdir]"
     # In the default configuration it is: "/home/botmaster/music/downloadedfromsc/"
+    #
+    # If this directory does not exist it will automatically
+    # be created by the bot when this plugin gets loaded.
 
     @settings[:soundcloud_tempsubdir] = "soundcloudplugin/"
     # This is the RELATIVE path where the plugin stores its temporary files.
@@ -134,6 +143,9 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     # Therefore this path must NOT be a relative path and must NOT be set to a
     # subdirectory of the directory where MPD stores its files.
     # In the default configuration it is: "/home/botmaster/temp/soundcloudplugin/"
+    #
+    # If this directory does not exist it will automatically
+    # be created by the bot when this plugin gets loaded.
   
     @settings[:soundcloud_youtubedl] = "/home/botmaster/src/youtube-dl"
     # Path to the youtube-dl binary. The default value should be fine if
@@ -172,7 +184,9 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     # section of the "Mpd plugin", because the complete path is
     # built as "@bot[:mpd_musicfolder] + @bot[:soundcloud_downloadsubdir]"
     # In the default configuration it is: "/home/botmaster/music/ektoplazm/"
-    # WARNING: The configured folder has to exist!
+    #
+    # If this directory does not exist it will automatically
+    # be created by the bot when this plugin gets loaded.
 
     @settings[:ektoplazm_tempsubdir] = "ektoplazmplugin/"
     # This is the RELATIVE path where the plugin stores its temporary files.
@@ -180,7 +194,9 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     # Therefore this path must NOT be a relative path and must NOT be set to a
     # subdirectory of the directory where MPD stores its files.
     # In the default configuration it is: "/home/botmaster/temp/ektoplazmplugin/"
-    # WARNUNG: The configured folder has to exist!
+    #
+    # If this directory does not exist it will automatically
+    # be created by the bot when this plugin gets loaded.
   
     ###########################
     # Mpd plugin: #############
