@@ -208,7 +208,7 @@ class Youtube < Plugin
                     end
                 end
             else
-                streams = `youtube-dl -g "#{site}"`
+                streams = `#{@bot[:youtube_youtubedl]} -g "#{site}"`
                 streams.each_line do |line|
                     line.chop!
                     @bot[:mpd].add line if line.include? "mime=audio/mp4"
