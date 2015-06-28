@@ -264,6 +264,18 @@ class MumbleMPD
                                 plugin.handle_chat(msg, message)
                             end
                             
+                            help += "<b>#{cc}about</b> Get information about this bot.<br />"                           
+                            if message == 'about'
+                                out = "<br />Hi, I am the Mumble-Ruby-Pluginbot.<br />
+                                <ul>
+                                    <li><a href='https://github.com/dafoxia/mumble-ruby-pluginbot'>Get my source code</a></li>
+                                    <li><a href='http://wiki.natenom.com/w/Mumble-Ruby-Pluginbot'>Read my documentation</a></li>
+                                    <li>I am licensed by the <a href='https://github.com/dafoxia/mumble-ruby-pluginbot/blob/master/LICENSE'>MIT license</a></li>
+                                    <li>If you have any issues, bugs or ideas please tell us on <a href='https://github.com/dafoxia/mumble-ruby-pluginbot/issues'>https://github.com/dafoxia/mumble-ruby-pluginbot/issues</a></li>
+                                </ul>"
+                                @cli.text_user(msg.actor, out)
+                            end
+                            
                             help += "<b>#{cc}settings</b> display current settings.<br />"
                             if message == 'settings' 
                                 out = "<table>"
@@ -271,7 +283,7 @@ class MumbleMPD
                                     out += "<tr><td>#{key}</td><td>#{value}</td></tr>" if key != :logo
                                 end
                                 out += "</table>"
-                                @cli.text_user(msg.actor, out)    
+                                @cli.text_user(msg.actor, out)
                             end
 
                             help += "<b>#{cc}set <i>variable=value</i></b> Set variable to value.<br />"
