@@ -339,17 +339,23 @@ class Mpd < Plugin
         end
 
         if message == 'queue'
-            text_out ="<table><th><td>#</td><td>Name</td></th>"
-            songnr = 0
-            @bot[:mpd].queue.each do |song|
-                if song.title.to_s.empty?
-                    text_out += "<tr><td>#{songnr}</td><td>No ID / Stream?</td></tr>"
-                else
-                    text_out += "<tr><td>#{songnr}</td><td>#{song.title}</td></tr>" 
+            if @bot[:mpd].queue.length > 0
+                text_out ="<table><th><td>#</td><td>Name</td></th>"
+                songnr = 0
+            
+                @bot[:mpd].queue.each do |song|
+                    if song.title.to_s.empty?
+                        text_out += "<tr><td>#{songnr}</td><td>No ID / Stream?</td></tr>"
+                    else
+                        text_out += "<tr><td>#{songnr}</td><td>#{song.title}</td></tr>" 
+                    end
+                    songnr += 1
                 end
-                songnr += 1
+                text_out += "</table>"
+            else
+                text_out = "The queue is empty."
             end
-            text_out += "</table>"
+            
             @bot[:cli].text_user(msg.actor, text_out)
         end
         
