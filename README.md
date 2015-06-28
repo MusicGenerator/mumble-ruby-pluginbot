@@ -20,6 +20,9 @@ mumble-ruby-pluginbot is a Mumble-Ruby based, extensible bot which can play audi
 - **radiostream**: Let the bot play an internet radio stream
 - **control**: Control the bot's behaviour
 - **messages**: Handle the bot's messages
+- **soundcloud**: Download tracks/albums from soundcloud.com
+- **ektoplazm**: Download and extract albums from ektoplazm.com
+- **bandcamp**: Download tracks/albums from bandcamp.com
 
 Each plugin has its own help implemented. To get it, write **.help pluginname** to the bot, for example **.help youtube**
 
