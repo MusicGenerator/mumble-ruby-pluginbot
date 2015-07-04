@@ -1,3 +1,5 @@
+require 'cgi'
+
 class Youtube < Plugin
 
     def init(init)
@@ -87,10 +89,8 @@ class Youtube < Plugin
             search = message[4..-1]
             if !(( search == nil ) || ( search == "" ))
                 workingsearch = Thread.new {
-                    search.gsub!(" ", "+")
-                    search.gsub!(/"/, "")
-                    @bot[:messages].text(msg.actor, "searching for #{search}, please be patient...")    
-                    songs = find_youtube_song(search)
+                    @bot[:messages].text(msg.actor, "searching for \"#{search}\", please be patient...")    
+                    songs = find_youtube_song(CGI.escape(search))
                     @keylist[msg.actor] = songs
                     index = 0
                     out = ""
