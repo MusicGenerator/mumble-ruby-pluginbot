@@ -6,7 +6,7 @@ def ext_config()
                     chan_notify: 0x0000, 
                     controlstring: ".", 
                     debug: true, 
-                    listen_to_private_message_only: true, 
+                    listen_to_private_message_only: false, 
                     listen_to_registered_users_only: true, 
                     use_vbr: 1, 
                     stop_on_unregistered_users: true,
