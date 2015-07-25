@@ -201,7 +201,10 @@ class Mpd < Plugin
         h += "<b>#{@bot[:controlstring]}v <i>value</i></b> - Set the volume to the given value.<br />"
         h += "<b>#{@bot[:controlstring]}v</b> - Print the current playback volume.<br />"
         h += "<b>#{@bot[:controlstring]}update</b> - Start a MPD database update.<br />"
-        h += "<b>#{@bot[:controlstring]}displayinfo</b> - Toggles whether to display current song information in the comment of the bot or via text message.<br />"
+        h += "<b>#{@bot[:controlstring]}mpdconfig</b> - Try to read mpd config.<br />"
+        h += "<b>#{@bot[:controlstring]}mpdcommands</b> - Show what commands mpd do allow to Bot (not to you!).<br />"
+        h += "<b>#{@bot[:controlstring]}mpdnotcommands</b> - Show what commands mpd disallowed to Bot.<br />"
+        h += "<b>#{@bot[:controlstring]}mpddecoders</b> - Show enabled decoders and what they can decode for your mpd.<br />"
         
     end
 
@@ -508,6 +511,59 @@ class Mpd < Plugin
                 end
             end
         end
- 
+        
+        if message == 'mpdconfig'
+            begin
+                config = @bot[:mpd].config
+            rescue
+                config = "Configuration only for local clients readable"
+            end
+            @bot[:cli].text_user(msg.actor, config)
+        end
+
+        if message == 'mpdcommands'
+            output = ""
+            @bot[:mpd].commands.each do |command| 
+                output += "<br/>#{command}"
+            end
+            @bot[:cli].text_user(msg.actor, output)
+        end
+
+        if message == 'mpdnotcommands'
+            output = ""
+            @bot[:mpd].notcommands.each do |command| 
+                output += "<br\>#{command}"
+            end
+            @bot[:cli].text_user(msg.actor, output)
+        end
+
+        if message == 'mpdurlhandlers'
+            output = ""
+            @bot[:mpd].url_handlers.each do |handler| 
+                output += "<br\>#{handler}"
+            end
+            @bot[:cli].text_user(msg.actor, output)
+        end
+
+        if message == 'mpddecoders'
+            output = "<table>"
+            @bot[:mpd].decoders.each do |decoder| 
+                output += "<tr>"
+                output += "<td>#{decoder[:plugin]}</td>"
+                output += "<td>"
+                begin
+                decoder[:suffix].each do |suffix|
+                    output += "#{suffix} "
+                end
+                output += "</td>"
+                rescue
+                    output += "#{decoder[:suffix]}"
+                end
+            end
+            output += "</table>"
+            @bot[:cli].text_user(msg.actor, output)
+        end
+
+        
     end
 end
