@@ -30,6 +30,6 @@ Each plugin has its own help implemented. To get it, write **.help pluginname** 
 ###Raspberry Pi2
 [Download the image](http://soa.chickenkiller.com/daten/dafoxia_raspi2.pluginbot.zip)
 
-- root password: pi
+- root password: raspberry
 - user name:  botmaster
 - user password: botmaster
