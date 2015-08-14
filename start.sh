@@ -5,6 +5,7 @@ DEBUG=""
 if [ "$1" == "debug" ];
 then
     DEBUG=">> /home/botmaster/logs/pluginbots.log 2>&1"
+    mkdir /home/botmaster/logs
 fi
 
 ### Kill all running mpd instances (of the user botmaster) ... ###
