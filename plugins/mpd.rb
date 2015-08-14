@@ -132,7 +132,8 @@ class Mpd < Plugin
                                          image = @bot[:logo]
                                     end
                                     output = "<br />" + @template_if_comment_enabled % [current.artist, current.title, current.album,@bot[:controlstring]]
-                                rescue NoMethodError
+                                    @bot[:cli].set_comment(image+output)
+                               rescue NoMethodError
                                     if @bot[:debug]
                                         puts "#{$!}"
                                     end
@@ -348,7 +349,7 @@ class Mpd < Plugin
             
                 @bot[:mpd].queue.each do |song|
                     if song.title.to_s.empty?
-                        text_out += "<tr><td>#{songnr}</td><td>No ID / Stream?</td></tr>"
+                        text_out += "<tr><td>#{songnr}</td><td>No ID / Stream? Source: #{song.file}</td></tr>"
                     else
                         text_out += "<tr><td>#{songnr}</td><td>#{song.title}</td></tr>" 
                     end
