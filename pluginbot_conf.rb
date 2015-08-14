@@ -264,13 +264,11 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
     @settings[:mpd_template_comment_disabled] = "<b>Artist: </b>DISABLED<br />"\
                                               + "<b>Title: </b>DISABLED<br />" \
                                               + "<b>Album: </b>DISABLED<br /><br />" \
-                                              + "Write <b>%shelp</b> to me, to get a list of my commands.<br />" \
-                                              + "Or write <b>%sabout</b> to get some information about me."
+                                              + "<b>Write %shelp to me, to get a list of my commands!"
     #This template must always contain four %s strings.
     @settings[:mpd_template_comment_enabled] = "<b>Artist: </b>%s<br />"\
                                              + "<b>Title: </b>%s<br />" \
                                              + "<b>Album: </b>%s<br /><br />" \
-                                             + "Write <b>%shelp</b> to me, to get a list of my commands.<br />" \
-                                             + "Or write <b>%sabout</b> to get some information about me."
+                                             + "<b>Write %shelp to me, to get a list of my commands!</b>"
     ###########################
 end
