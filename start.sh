@@ -1,5 +1,12 @@
 #!/bin/bash
 
+DEBUG=""
+
+if [ "$1" == "debug" ];
+then
+    DEBUG=">> /home/botmaster/logs/pluginbots.log 2>&1"
+fi
+
 ### Kill all running mpd instances (of the user botmaster) ... ###
 echo "Killing running mpd instances of user \"$LOGNAME\""
 killall mpd > /dev/null 2>&1
@@ -31,13 +38,13 @@ cd /home/botmaster/src/mumble-ruby-pluginbot/
 
 ### Start Mumble-Ruby-Bots - MPD instances must already be running. ###
 # Bot 1
-tmux new-session -d -n bot1 'LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot1_conf.rb --certdir /home/botmaster/src/certs'
+tmux new-session -d -n bot1 "LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot1_conf.rb --certdir /home/botmaster/src/certs$DEBUG"
 
 # Bot 2
-#tmux new-session -d -n bot2 'LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot2_conf.rb --certdir /home/botmaster/src/certs'
+#tmux new-session -d -n bot2 "LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot2_conf.rb --certdir /home/botmaster/src/certs$DEBUG"
 
 # Bot 3
-#tmux new-session -d -n bot3 'LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot3_conf.rb --certdir /home/botmaster/src/certs'
+#tmux new-session -d -n bot3 "LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot3_conf.rb --certdir /home/botmaster/src/certs$DEBUG"
 
 
 
