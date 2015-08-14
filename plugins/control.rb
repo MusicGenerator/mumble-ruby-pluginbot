@@ -121,6 +121,7 @@ class Control < Plugin
     def handle_chat(msg, message)
     
         # Put message in Messagehistory and pop old's if size exceeds max. historysize.
+        msg.username = @bot[:cli].users[msg.actor].name
         @history << msg                 
         @history.shift if @history.length > @historysize
 
@@ -129,7 +130,7 @@ class Control < Plugin
             if @bot[:cli].me.current_channel.channel_id.to_i == channeluserisin.to_i
                 @bot[:cli].text_user(msg.actor, "Hey superbrain, I am already in your channel :)")
             else
-                @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Hey, \"#{@bot[:cli].users[msg.actor].name}\" asked me to make some music, going now. Bye :)")
+                @bot[:cli].text_channel(@bot[:cli].me.current_channel, "Hey, \"#{msg.username}\" asked me to make some music, going now. Bye :)")
                 @bot[:cli].join_channel(channeluserisin)
             end
         end
@@ -272,7 +273,7 @@ class Control < Plugin
             loop do 
                 break if history.empty?
                 histmessage = history.shift
-                out += "<tr><td>#{histmessage.message}</td><td>#{@bot[:cli].users[histmessage.actor].name}</td></tr>"
+                out += "<tr><td>#{histmessage.message}</td><td>#{histmessage.username}</td></tr>"
             end
             out += "</table>"
             @bot[:cli].text_user(msg.actor, out)
