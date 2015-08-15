@@ -39,13 +39,13 @@ cd /home/botmaster/src/mumble-ruby-pluginbot/
 
 ### Start Mumble-Ruby-Bots - MPD instances must already be running. ###
 # Bot 1
-tmux new-session -d -n bot1 "LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot1_conf.rb --certdir /home/botmaster/src/certs$DEBUG"
+tmux new-session -d -n bot1 "LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot1_conf.rb$DEBUG"
 
 # Bot 2
-#tmux new-session -d -n bot2 "LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot2_conf.rb --certdir /home/botmaster/src/certs$DEBUG"
+#tmux new-session -d -n bot2 "LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot2_conf.rb$DEBUG"
 
 # Bot 3
-#tmux new-session -d -n bot3 "LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot3_conf.rb --certdir /home/botmaster/src/certs$DEBUG"
+#tmux new-session -d -n bot3 "LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby /home/botmaster/src/mumble-ruby-pluginbot/pluginbot.rb --config=/home/botmaster/src/bot3_conf.rb$DEBUG"
 
 
 
