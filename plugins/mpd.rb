@@ -5,10 +5,7 @@ class Mpd < Plugin
     def init(init)
         @bot = init
         #init default template
-        @template_if_comment_enabled = @bot[:mpd_template_comment_enabled]
-        @template_if_comment_disabled = @bot[:mpd_template_comment_disabled]
-        @template_if_comment_enabled = "<b>Artist: </b>%s<br /><b>Title: </b>%s<br /><b>Album: </b>%s<br /><br /><b>Write %shelp to me, to get a list of my commands!</b>" if @template_if_comment_enabled == nil
-        @template_if_comment_disabled = "<b>Artist: </b>DISABLED<br /><b>Title: </b>DISABLED<br /><b>Album: </b>DISABLED<br /><br /><b>Write %shelp to me, to get a list of my commands!</b>" if @template_if_comment_disabled == nil
+        @infotemplate = "send #{@bot[:controlstring]}help or #{@bot[:controlstring]}about for more information over me."
 
         if ( @bot[:messages] != nil ) && ( @bot[:mpd] == nil ) then
             @bot[:mpd] = MPD.new @bot[:mpd_host], @bot[:mpd_port].to_i
@@ -80,33 +77,6 @@ class Mpd < Plugin
             end
 
             @bot[:mpd].on :song do |current|
-                if not current.nil? #Would crash if playlist was empty.
-                    if @bot[:use_comment_for_status_display] == true && @bot[:set_comment_available] == true
-                        begin
-                            if ( @bot[:youtube_downloadsubdir] != nil ) && ( @bot[:mpd_musicfolder] != nil )
-                                if File.exist?(@bot[:mpd_musicfolder]+@bot[:youtube_downloadsubdir]+current.title.to_s+".jpg")
-                                    image = @bot[:cli].get_imgmsg(@bot[:mpd_musicfolder]+@bot[:youtube_downloadsubdir]+current.title+".jpg")
-                                else
-                                    image = @bot[:logo]
-                                end
-                            else
-                                 image = @bot[:logo]
-                            end
-                            output = "<br />" + @template_if_comment_enabled % [current.artist, current.title, current.album,@bot[:controlstring]]
-                            @bot[:cli].set_comment(image+output)
-                        rescue NoMethodError
-                            if @bot[:debug]
-                                puts "#{$!}"
-                            end
-                        end
-                    else
-                        #if current.artist.nil? && current.title.nil? && current.album.nil?
-                        #    @bot[:cli].text_channel(@bot[:cli].me.current_channel, "#{current.file}") if @bot[:chan_notify] && 0x80
-                        #else
-                        #    @bot[:cli].text_channel(@bot[:cli].me.current_channel, "#{current.artist} - #{current.title} (#{current.album})") if (@bot[:chan_notify] && 0x80) != 0
-                        #end
-                    end
-                end
             end
 
             @bot[:cli].player.stream_named_pipe(@bot[:mpd_fifopath]) 
@@ -114,24 +84,32 @@ class Mpd < Plugin
             
             main = Thread.new do
                 mpd =@bot[:mpd]
+                lastcurrent = nil
+                init = true
                 while (true == true)
                     sleep 1
                     current = mpd.current_song if mpd.connected?
                     if not current.nil? #Would crash if playlist was empty.
                         lastcurrent = current if lastcurrent.nil? 
-                        if lastcurrent.title != current.title 
+                        if ( lastcurrent.title != current.title ) || ( init == true )
+                            init = false
                             if @bot[:use_comment_for_status_display] == true && @bot[:set_comment_available] == true
                                 begin
                                     if ( @bot[:youtube_downloadsubdir] != nil ) && ( @bot[:mpd_musicfolder] != nil )
-                                        if File.exist?(@bot[:mpd_musicfolder]+@bot[:youtube_downloadsubdir]+current.title.to_s+".jpg")
-                                            image = @bot[:cli].get_imgmsg(@bot[:mpd_musicfolder]+@bot[:youtube_downloadsubdir]+current.title+".jpg")
+                                        if File.exist?(@bot[:mpd_musicfolder]+current.file.to_s.chomp(File.extname(current.file.to_s))+".jpg")
+                                            image = @bot[:cli].get_imgmsg(@bot[:mpd_musicfolder]+current.file.to_s.chomp(File.extname(current.file.to_s))+".jpg")
                                         else
                                             image = @bot[:logo]
                                         end
                                     else
                                          image = @bot[:logo]
                                     end
-                                    output = "<br />" + @template_if_comment_enabled % [current.artist, current.title, current.album,@bot[:controlstring]]
+                                    output = "<br /><table>"
+                                    output += "<tr><td>Artist:</td><td>#{current.artist}</td></tr>" if !current.artist.nil?
+                                    output += "<tr><td>Title:</td><td>#{current.title}</td></tr>" if !current.title.nil?
+                                    output += "<tr><td>Album:</td><td>#{current.album}</td></tr>" if !current.album.nil?
+                                    output += "<tr><td>Source:</td><td>#{current.file}</td></tr>" if ( !current.file.nil? ) && ( current.album.nil? ) && ( current.artist.nil? )
+                                    output += "</table><br />" + @infotemplate
                                     @bot[:cli].set_comment(image+output)
                                rescue NoMethodError
                                     if @bot[:debug]
