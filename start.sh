@@ -65,3 +65,21 @@ mpc -p 7701 play
 #mpc -p 7703 clear
 #mpc -p 7703 add http://stream.url.tld/musik.ogg
 #mpc -p 7703 play
+
+cat <<EOF
+
+
+
+Your bot(s) should now be connected to the configured Mumble server.
+Have fun with mumble-ruby-pluginbot :)
+
+If something doesn't work, start this script with the additional parameter debug:
+~/src/mumble-ruby-pluginbot/start.sh debug
+
+Then take a look into the logfile within /home/botmaster/logs/.
+
+Also make sure to run this script as user botmaster if you used the official installation documentation and DO NOT RUN THIS SCRIPT AS root.
+
+Also please reread the official documentation at http://wiki.natenom.com/w/Mumble-Ruby-Pluginbot
+EOF
+
