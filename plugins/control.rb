@@ -79,10 +79,18 @@ class Control < Plugin
                 sender_is_registered = true
             end
 
-            # if user is in my channel and is unregistered then stop playing if stop on unregistered users is enabled
+            # If user is in my channel and is unregistered then pause playing if stop_on_unregistered_users is enabled.
             if ( me.current_channel.channel_id == msg_target.channel_id ) && ( @bot[:stop_on_unregistered_users] == true) && ( sender_is_registered == false )  
-                @bot[:mpd].stop
-                @bot[:cli].text_channel(@bot[:cli].me.current_channel, "<span style='color:red;'>An unregistered user currently joined or is acting in our channel. I stopped the music.</span>")
+                current = @bot[:mpd].current_song
+                if current.file.include? "://" #If yes, it is probably some kind of a stream.
+                    @bot[:mpd].stop
+                else
+                    if @bot[:mpd].paused? == false
+                        @bot[:mpd].pause = true
+                    end
+                end
+
+                @bot[:cli].text_channel(@bot[:cli].me.current_channel, "<span style='color:red;'>An unregistered user currently joined or is acting in our channel. I stopped/paused the music.</span>")
             end
 
             # Count users in my channel ...
