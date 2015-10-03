@@ -284,12 +284,15 @@ class Mpd < Plugin
 
         @bot[:mpd].stop if message == 'stop'
 
-        if message[0,4] == 'play'
-            begin
-                @bot[:mpd].play message.split(/ /)[1]
-            rescue
-                @bot[:mpd].play
-            end
+        if message == 'play'
+            @bot[:mpd].play
+            @bot[:cli].me.deafen false
+            @bot[:cli].me.mute false
+        end
+
+        if message.match(/^play [0-9]{1,3}$/)
+            tracknumber = message.match(/^play ([0-9]{1,3})$/)[1].to_i
+            @bot[:mpd].play tracknumber
             @bot[:cli].me.deafen false
             @bot[:cli].me.mute false
         end
