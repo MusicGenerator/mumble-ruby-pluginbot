@@ -236,7 +236,8 @@ class MumbleMPD
             # the help command should be the last command in this function
             cc = @settings[:controlstring]
 
-            msg.message.gsub!(/(<[^<^>]*>)/, "") #Strip html tags.
+            #FIXME
+            #msg.message.gsub!(/(<[^<^>]*>)/, "") #Strip html tags. #BEFORE doing this we need to ensure that no plugin needs the html source code. For example youtube plugin needs them...
 
             if msg.message == @superpassword+"restart"
                 @settings = @configured_settings.clone
@@ -258,9 +259,11 @@ class MumbleMPD
                 if ( msg.session ) || ( @settings[:listen_to_private_message_only] != true )
                     if @settings[:controllable] == true 
                         if msg.message.start_with?("#{@settings[:controlstring]}") && msg.message.length >@settings[:controlstring].length #Check whether we have a command after the controlstring.
-                            message = msg.message.split(@settings[:controlstring])[1] #Remove@settings[:controlstring]
+                            message = msg.message.split(@settings[:controlstring])[1 .. -1].join() #Remove @settings[:controlstring]
                             @plugin.each do |plugin|
                                 plugin.handle_chat(msg, message)
+                                puts msg.message
+                                puts message
                             end
 
                             if message == 'about'
