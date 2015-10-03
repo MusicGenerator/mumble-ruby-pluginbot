@@ -203,13 +203,12 @@ class MumbleMPD
         end
         puts "maybe not all plugin functional!" if maxcount <= 0
     end
-    
-    
+
     def handle_user_state_changes(msg)
         #msg.actor = session_id of user who did something on someone, if self done, both is the same.
         #msg.session = session_id of the target
     end
-    
+
     def handle_text_message(msg)
         if !msg.actor.nil?
             # else ignore text messages from the server
@@ -223,7 +222,7 @@ class MumbleMPD
                 msg_userid = @cli.users[msg.actor].user_id
                 sender_is_registered = true
             end
-            
+
             # check if User is on a blacklist
             if @settings.has_key?(@cli.users[msg.actor].hash.to_sym)
                 sender_is_registered = false
@@ -236,9 +235,9 @@ class MumbleMPD
             help ="<br />"    # start with empty help
             # the help command should be the last command in this function
             cc = @settings[:controlstring]
-            
-            help = "<br /><span style='color:red;'><b>Internal commands</b></span><br />"
-            help += "<b>superpassword+restart</b> will restart the bot.<br />"
+
+            msg.message.gsub!(/(<[^<^>]*>)/, "") #Strip html tags.
+
             if msg.message == @superpassword+"restart"
                 @settings = @configured_settings.clone
                 @cli.text_channel(@cli.me.current_channel,@superanswer);
@@ -246,11 +245,11 @@ class MumbleMPD
                 @cli.disconnect
             end
 
-            help += "<b>superpassword+reset</b> will reset variables to start values.<br />"
             if msg.message == @superpassword+"reset"
                 @settings = @configured_settings.clone
                 @cli.text_channel(@cli.me.current_channel,@superanswer);
             end
+
             if (sender_is_registered == true) || (@settings[:listen_to_registered_users_only] == false)
                 #Check whether message is a private one or was sent to the channel.
                 # Private message looks like this:   <Hashie::Mash actor=54 message="#help" session=[119]>
@@ -263,8 +262,7 @@ class MumbleMPD
                             @plugin.each do |plugin|
                                 plugin.handle_chat(msg, message)
                             end
-                            
-                            help += "<b>#{cc}about</b> Get information about this bot.<br />"                           
+
                             if message == 'about'
                                 out = "<br />Hi, I am the Mumble-Ruby-Pluginbot.<br />
                                 <ul>
@@ -275,8 +273,7 @@ class MumbleMPD
                                 </ul>"
                                 @cli.text_user(msg.actor, out)
                             end
-                            
-                            help += "<b>#{cc}settings</b> display current settings.<br />"
+
                             if message == 'settings' 
                                 out = "<table>"
                                 @settings.each do |key, value|
@@ -286,7 +283,6 @@ class MumbleMPD
                                 @cli.text_user(msg.actor, out)
                             end
 
-                            help += "<b>#{cc}set <i>variable=value</i></b> Set variable to value.<br />"
                             if message.split[0] == 'set' 
                                 if !@settings[:need_binding] || @settings[:boundto]==msg_userid
                                     setting = message.split('=',2)
@@ -294,22 +290,18 @@ class MumbleMPD
                                 end
                             end
 
-                            help += "<b>#{cc}bind</b> Bind Bot to a user. (some functions will only do if bot is bound).<br />"
                             if message == 'bind'
                                 @settings[:boundto] = msg_userid if @settings[:boundto] == "nobody"
-                            end        
-                            
-                            help += "<b>#{cc}unbind</b> Unbind Bot.<br />"
+                            end
+
                             if message == 'unbind'
                                 @settings[:boundto] = "nobody" if @settings[:boundto] == msg_userid
                             end
-                            
-                            help += "<b>#{cc}reset</b> Reset variables to default value. Needs binding!<br />"
+
                             if message == 'reset' 
                                 @settings = @configured_settings.clone if @settings[:boundto] == msg_userid
                             end
-                            
-                            help += "<b>#{cc}restart</b> Restart Bot. Needs binding.<br />"
+
                             if message == 'restart'
                                 if @settings[:boundto] == msg_userid
                                     @run=false
@@ -317,7 +309,6 @@ class MumbleMPD
                                 end
                             end
 
-                            help += "<b>#{cc}blacklist <i>username</i></b> Add user to blacklist. Needs binding.<br />"
                             if message.split(" ")[0] == 'blacklist'
                                 if @settings[:boundto] == msg_userid
                                     if @cli.find_user(message.split[1..-1].join(" ")) != nil
@@ -330,8 +321,7 @@ class MumbleMPD
                                 end
                             end
 
-                            help += "<b>#{cc}ducking</b> toggle voice ducking on/off.<br />"
-                            if message == 'ducking' 
+                            if message == 'ducking'
                                @settings[:ducking] = !@settings[:ducking]
                                if @settings[:ducking] == false 
                                     @cli.text_user(msg.actor, "Music ducking is off.")
@@ -340,7 +330,6 @@ class MumbleMPD
                                 end
                             end
 
-                            help += "<b>#{cc}duckvol <i>volume</i></b> set the ducking volume (% of normal volume).<br />"
                             if message.match(/^duckvol [0-9]{1,3}$/)
                                 volume = message.match(/^duckvol ([0-9]{1,3})$/)[1].to_i 
                                 if (volume >=0 ) && (volume <= 100)
@@ -351,28 +340,71 @@ class MumbleMPD
                                 end
                             end
 
-                            help += "<b>#{cc}help <i>pluginname</i></b> Get help for plugin.<br />"
+                            if message == 'plugins'
+                                help = "<br /><span style='color:red;'>Loaded plugins:<br /><b>"
+                                @plugin.each do |plugin|
+                                    help += plugin.name + "<br />"
+                                end
+                                help += "</b></span>"
+                                
+                                help += "<br /><b>#{cc}help <i>pluginname</i></b> Get the help text for the specific plugin.<br /><br />For example send the following text to get some basic control commands of the bot:<br /><b>#{cc}help mpd</b><br />"
+                                @cli.text_user(msg.actor, help)
+                            end
+                            
+                            if message == 'internals'
+                                help = "<br /><span style='color:red;'><b>Internal commands</b></span><br />"
+                                help += "<b>superpassword+restart</b> will restart the bot.<br />"
+                                help += "<b>superpassword+reset</b> will reset variables to start values.<br />"
+                                help += "<b>#{cc}about</b> Get information about this bot.<br />"
+                                help += "<b>#{cc}settings</b> display current settings.<br />"
+                                help += "<b>#{cc}set <i>variable=value</i></b> Set variable to value.<br />"
+                                help += "<b>#{cc}bind</b> Bind Bot to a user. (some functions will only work if bot is bound).<br />"
+                                help += "<b>#{cc}unbind</b> Unbind Bot.<br />"
+                                help += "<b>#{cc}reset</b> Reset variables to default value. Needs binding!<br />"
+                                help += "<b>#{cc}restart</b> Restart Bot. Needs binding.<br />"
+                                help += "<b>#{cc}blacklist <i>username</i></b> Add user to blacklist. Needs binding.<br />"
+                                help += "<b>#{cc}ducking</b> toggle voice ducking on/off.<br />"
+                                help += "<b>#{cc}duckvol <i>volume</i></b> set the ducking volume (% of normal volume).<br />"
+
+                                @cli.text_user(msg.actor, help)
+                            end
+
                             if message.split[0] == 'help'
-                                if message.split[1]=='all'
+                                if message.split[1]=='all' #Send help texts of all plugins.
                                     @plugin.each do |plugin|
                                         help = plugin.help(help.to_s)
+                                        @cli.text_user(msg.actor, help)
                                     end
                                 end
-                                if message.split[1]!=nil
+                                if message.split[1]!=nil #Send help for a specific plugin.
                                     @plugin.each do |plugin|
                                       help = plugin.help('') if plugin.name.upcase == message.split[1].upcase
                                     end
-                                else
-                                    help += "<span style='color:red;'>Loaded plugins:<br /><b>"
-                                    @plugin.each do |plugin|
-                                        help += plugin.name + "<br />"
-                                    end
-                                    help += "</b></span>"
+
+                                    @cli.text_user(msg.actor, help)
+                                else #Send default help text.
+                                    help = "<br />\
+                                            Hi, I am a <a href='http://wiki.natenom.com/w/Mumble-Ruby-Pluginbot'>Mumble-Ruby-Pluginbot</a> and YOU can control me through text commands.<br /><br />
+                                    I will give you a good start with the basic commands you need to control the music I have to offer :) - if you send me the following command:<br />\
+                                    <b>#{cc}help mpd</b><br />
+                                    <br />\
+                                    If you are more interested in who/what I am, send to me:<br />\
+                                    <b>#{cc}about</b><br />\
+                                    <br />\
+                                    <b><u>Commands for advanced users:</b></u><br />\
+                                    <b>#{cc}plugins</b> - Get a list of available plugins.<br />\
+                                    <br />\
+                                    Note: Every plugin has its own help text; to get it send the command:<br />\
+                                    <b>#{cc}help name_of_the_plugin</b><br />\
+                                    For example:<br />\
+                                    <b>#{cc}help mpd</b><br />
+                                    <br />\
+                                    <b><u>Commands for experts only:</b></u><br />\
+                                    <b>#{cc}internals</b> - See my internal commands.<br />"
+
+                                    @cli.text_user(msg.actor, help)
                                 end
-                                
-                                @cli.text_user(msg.actor, help)
                             end
-                
                         end
                     end
                 else
