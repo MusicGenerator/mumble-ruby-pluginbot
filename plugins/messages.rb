@@ -10,31 +10,31 @@ class Messages < Plugin
     Cstate =       0x80 #send message when state changes
 
     def init(init)
-        @bot = init
-        if @bot[:messages] == nil
+        super
+        if @@bot[:messages] == nil
             @priv_notify = {}
-            @bot[:messages] = self
-            @mqueue = Queue.new
-            @uqueue = Queue.new
-            @lastmessage = Time.now
-            @messagecount = 0
-            domessages = Thread.new {
-                while true == true 
-                    if ( @messagecount < 10 ) && ( @mqueue.length > 0 ) 
-                        @bot[:cli].text_user(@uqueue.pop,@mqueue.pop) 
-                        @messagecount += 1 if ( ( Time.now - @lastmessage ) < 10 )
-                        @lastmessage = Time.now
-                    end
-                    @messagecount = 0 if ( Time.now - @lastmessage ) > 11
-                    sleep (0.1)
-                end
-            }
+            @@bot[:messages] = self
+            #@mqueue = Queue.new
+            #@uqueue = Queue.new
+            #@lastmessage = Time.now
+            #@messagecount = 0
+            #domessages = Thread.new {
+            #    while true == true 
+            #        if ( @messagecount < 10 ) && ( @mqueue.length > 0 ) 
+            #            @@bot[:cli].text_user(@uqueue.pop,@mqueue.pop) 
+            #            @messagecount += 1 if ( ( Time.now - @lastmessage ) < 10 )
+            #            @lastmessage = Time.now
+            #        end
+            #        @messagecount = 0 if ( Time.now - @lastmessage ) > 11
+            #        sleep (0.1)
+            #    end
+            #}
         end
-        return @bot
+        return @@bot
     end
 
     def name
-        if @bot[:messages] != nil
+        if @@bot[:messages] != nil
             "Messages"
         else
             self.class.name
@@ -43,18 +43,18 @@ class Messages < Plugin
 
     def help(h)
         h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
-        h += "<b>#{@bot[:controlstring]}+ #(<i>Hashtag</i>)</b> - Subscribe to a notification.<br />"
-        h += "<b>#{@bot[:controlstring]}- #(<i>Hashtag</i>)</b> - Unsubscribe from a notification.<br />"
+        h += "<b>#{@@bot[:controlstring]}+ #(<i>Hashtag</i>)</b> - Subscribe to a notification.<br />"
+        h += "<b>#{@@bot[:controlstring]}- #(<i>Hashtag</i>)</b> - Unsubscribe from a notification.<br />"
         h += "You can choose one or more of the following values:<br />"
         h += "volume, random, update, single, xfade, consume, repeat, state<br />"
-        h += "<b>#{@bot[:controlstring]}* List subscribed notifications.<br />"
+        h += "<b>#{@@bot[:controlstring]}* List subscribed notifications.<br />"
     end
 
     def handle_chat(msg, message)
+        super
         @priv_notify[msg.actor] = 0 if @priv_notify[msg.actor].nil?
         if message[2] == '#'
             message.split.each do |command|
-                puts command
                 case command
                 when "#volume"
                     add = Cvolume
@@ -93,16 +93,16 @@ class Messages < Plugin
             else
                 send += "You listen to no MPD-Channels"
             end
-            @bot[:cli].text_user(msg.actor, send)
+            @@bot[:cli].text_user(msg.actor, send)
         end
     end
     
     def sendmessage (message, messagetype)
-        @bot[:cli].text_channel(@bot[:cli].me.current_channel, message) if ( @bot[:chan_notify] & messagetype) != 0
+        channelmessgage( message) if ( @@bot[:chan_notify] & messagetype) != 0
         if !@priv_notify.nil?
             @priv_notify.each do |user, notify| 
                 begin
-                    @bot[:cli].text_user(user,message) if ( notify & messagetype) != 0
+                    @@bot[:cli].text_user(user,message) if ( notify & messagetype) != 0
                 rescue
                 
                 end
@@ -110,8 +110,8 @@ class Messages < Plugin
         end
     end
     
-    def text (user, message)
-        @mqueue << message
-        @uqueue << user
-    end
+    #def text (user, message)
+    #    @mqueue << message
+    #    @uqueue << user
+    #end
 end

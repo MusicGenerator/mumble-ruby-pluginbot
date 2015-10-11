@@ -1,11 +1,11 @@
 class Soundcloud < Plugin
 
     def init(init)
-        @bot = init
-        if ( @bot[:mpd] != nil ) && ( @bot[:messages] != nil ) && ( @bot[:soundcloud] == nil )
+        super
+        if ( @@bot[:mpd] != nil ) && ( @@bot[:messages] != nil ) && ( @@bot[:soundcloud] == nil )
             begin
-                @soundcloudfolder = @bot[:mpd_musicfolder] + @bot[:soundcloud_downloadsubdir]
-                @tempsoundcloudfolder = @bot[:main_tempdir] + @bot[:soundcloud_tempsubdir]
+                @soundcloudfolder = @@bot[:mpd_musicfolder] + @@bot[:soundcloud_downloadsubdir]
+                @tempsoundcloudfolder = @@bot[:main_tempdir] + @@bot[:soundcloud_tempsubdir]
                 
                 Dir.mkdir(@soundcloudfolder) unless File.exists?(@soundcloudfolder)
                 Dir.mkdir(@tempsoundcloudfolder) unless File.exists?(@tempsoundcloudfolder)
@@ -14,22 +14,22 @@ class Soundcloud < Plugin
                 puts "See pluginbot_conf.rb"
             end
             begin
-                @ytdloptions = @bot[:soundcloud_youtubedl_options]
+                @ytdloptions = @@bot[:soundcloud_youtubedl_options]
             rescue
                 @ytdloptions = "" 
             end
             @consoleaddition = "" 
-            @consoleaddition = @bot[:soundcloud_commandlineprefixes] if @bot[:soundcloud_commandlineprefixes] != nil
+            @consoleaddition = @@bot[:soundcloud_commandlineprefixes] if @@bot[:soundcloud_commandlineprefixes] != nil
             @songlist = Queue.new
             @keylist = Array.new
-            @bot[:soundcloud] = self
+            @@bot[:soundcloud] = self
         end
         @filetypes= ["ogg", "mp3", "mp2", "m4a", "aac", "wav", "ape", "flac"]
-        return @bot
+        return @@bot
     end
 
     def name
-        if ( @bot[:mpd] == nil ) || ( @bot[:soundcloud] == nil)
+        if ( @@bot[:mpd] == nil ) || ( @@bot[:soundcloud] == nil)
             "false"
         else    
             self.class.name
@@ -38,43 +38,50 @@ class Soundcloud < Plugin
 
     def help(h)
         h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
-        h += "<b>#{@bot[:controlstring]}soundcloud <i>URL</i></b> - Will try to download the music from the given URL."
+        h += "<b>#{@@bot[:controlstring]}soundcloud <i>URL</i></b> - Will try to download the music from the given URL. <br />"
+        h += "<b>#{@@bot[:controlstring]}ytdl-version</b> - print used download helper version"
     end
 
     def handle_chat(msg, message)
+        super
+
+        if message == "ytdl-version"
+            privatemessage("Soundcloud uses youtube-dl " + `#{@@bot[:soundcloud_youtubedl]} --version`) 
+        end
+
         if message.start_with?("soundcloud <a href=") || message.start_with?("<a href=") then
             link = msg.message[msg.message.index('>') + 1 .. -1]
             link = link[0..link.index('<')-1]
             workingdownload = Thread.new {
                 #local variables for this thread!
                 actor = msg.actor
-                @bot[:messages].text(actor, "Soundcloud is inspecting link: " + link + "...")
+                @@bot[:messages].text(actor, "Soundcloud is inspecting link: " + link + "...")
                 get_song link
                 if ( @songlist.size > 0 ) then
-                    @bot[:mpd].update(@bot[:soundcloud_downloadsubdir].gsub(/\//,"")) 
-                    @bot[:messages].text(actor, "Waiting for database update complete...")
+                    @@bot[:mpd].update(@@bot[:soundcloud_downloadsubdir].gsub(/\//,"")) 
+                    @@bot[:messages].text(actor, "Waiting for database update complete...")
                     
                     begin
                         #Caution! following command needs patched ruby-mpd!
-                        @bot[:mpd].idle("update")
+                        @@bot[:mpd].idle("update")
                         # find this lines in ruby-mpd/plugins/information.rb (actual 47-49)
                         # def idle(*masks)
                         #  send_command(:idle, *masks)
                         # end
                         # and uncomment it there, then build gem new.
                     rescue
-                        puts "[soundcloud-plugin] [info] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds." if @bot[:debug]
+                        puts "[soundcloud-plugin] [info] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds." if @@bot[:debug]
                         sleep 10
                     end
                         
-                    @bot[:messages].text(actor, "Update done.")
+                    @@bot[:messages].text(actor, "Update done.")
                     while @songlist.size > 0 
                         song = @songlist.pop
-                        @bot[:messages].text(actor, song)
-                        @bot[:mpd].add(@bot[:soundcloud_downloadsubdir]+song)
+                        @@bot[:messages].text(actor, song)
+                        @@bot[:mpd].add(@@bot[:soundcloud_downloadsubdir]+song)
                     end
                 else
-                    @bot[:messages].text(actor, "Soundcloud: The link contains nothing interesting.") if @bot[:soundcloud_stream] == nil
+                    @@bot[:messages].text(actor, "Soundcloud: The link contains nothing interesting.") if @@bot[:soundcloud_stream] == nil
                 end
             }
         end
@@ -85,13 +92,13 @@ class Soundcloud < Plugin
             site.gsub!(/<\/?[^>]*>/, '')
             site.gsub!("&amp;", "&")
             puts site
-            filename = `#{@bot[:soundcloud_youtubedl]} --get-filename #{@ytdloptions} -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
-            output =`nice -n20 #{@consoleaddition} #{@bot[:soundcloud_youtubedl]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@tempsoundcloudfolder}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
+            filename = `#{@@bot[:soundcloud_youtubedl]} --get-filename #{@ytdloptions} -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
+            output =`nice -n20 #{@consoleaddition} #{@@bot[:soundcloud_youtubedl]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@tempsoundcloudfolder}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
             filename.split("\n").each do |name|
                 @filetypes.each do |ending|
                     if File.exist?("#{@tempsoundcloudfolder}#{name}.#{ending}")
                         system ("nice -n20 #{@consoleaddition} convert \"#{@tempsoundcloudfolder}#{name}.jpg\" -resize 320x240 \"#{@soundcloudfolder}#{name}.jpg\" ")
-                        if @bot[:soundcloud_to_mp3] == nil
+                        if @@bot[:soundcloud_to_mp3] == nil
                             # Mixin tags without recode on standard
                             system ("nice -n20 #{@consoleaddition} ffmpeg -i \"#{@tempsoundcloudfolder}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@soundcloudfolder}#{name}.#{ending}\"") if !File.exist?("#{@soundcloudfolder}#{name}.#{ending}")
                             @songlist << name.split("/")[-1] + ".#{ending}"

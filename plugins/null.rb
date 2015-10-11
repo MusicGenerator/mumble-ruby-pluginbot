@@ -1,9 +1,9 @@
 class Null < Plugin
 
     def init(init)
-        @bot = init
-        @bot[:bot] = self
-        return @bot
+        super
+        @@bot[:bot] = self
+        return @@bot
         #nothing to init
     end
     

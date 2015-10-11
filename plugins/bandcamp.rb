@@ -1,11 +1,12 @@
 class Bandcamp < Plugin
 
     def init(init)
-        @bot = init
-        if ( @bot[:mpd] != nil ) && ( @bot[:messages] != nil ) && ( @bot[:bandcamp] == nil )
+        super
+
+        if ( @@bot[:mpd] != nil ) && ( @@bot[:messages] != nil ) && ( @@bot[:bandcamp] == nil )
             begin
-                @bandcampfolder = @bot[:mpd_musicfolder] + @bot[:bandcamp_downloadsubdir]
-                @tempbandcampfolder = @bot[:main_tempdir] + @bot[:bandcamp_tempsubdir]
+                @bandcampfolder = @@bot[:mpd_musicfolder] + @@bot[:bandcamp_downloadsubdir]
+                @tempbandcampfolder = @@bot[:main_tempdir] + @@bot[:bandcamp_tempsubdir]
                 
                 Dir.mkdir(@bandcampfolder) unless File.exists?(@bandcampfolder)
                 Dir.mkdir(@tempbandcampfolder) unless File.exists?(@tempbandcampfolder)
@@ -14,22 +15,22 @@ class Bandcamp < Plugin
                 puts "See pluginbot_conf.rb"
             end
             begin
-                @ytdloptions = @bot[:bandcamp_youtubedl_options]
+                @ytdloptions = @@bot[:bandcamp_youtubedl_options]
             rescue
                 @ytdloptions = "" 
             end
             @consoleaddition = "" 
-            @consoleaddition = @bot[:bandcamp_commandlineprefixes] if @bot[:bandcamp_commandlineprefixes] != nil
+            @consoleaddition = @@bot[:bandcamp_commandlineprefixes] if @@bot[:bandcamp_commandlineprefixes] != nil
             @songlist = Queue.new
             @keylist = Array.new
-            @bot[:bandcamp] = self
+            @@bot[:bandcamp] = self
         end
         @filetypes= ["ogg", "mp3", "mp2", "m4a", "aac", "wav", "ape", "flac"]
-        return @bot
+        return @@bot
     end
 
     def name
-        if ( @bot[:mpd] == nil ) || ( @bot[:bandcamp] == nil)
+        if ( @@bot[:mpd] == nil ) || ( @@bot[:bandcamp] == nil)
             "false"
         else    
             self.class.name
@@ -38,43 +39,50 @@ class Bandcamp < Plugin
 
     def help(h)
         h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
-        h += "<b>#{@bot[:controlstring]}bandcamp <i>URL</i></b> - Will try to download the music from the given URL. Be aware that due to bandwidth limitations from bandcamp the bot downloads with the a maximum speed that is slightly higher than the streaming speed. Please be patient if you let the bot download a whole album :)"
+        h += "<b>#{@@bot[:controlstring]}bandcamp <i>URL</i></b> - Will try to download the music from the given URL. Be aware that due to bandwidth limitations from bandcamp the bot downloads with the a maximum speed that is slightly higher than the streaming speed. Please be patient if you let the bot download a whole album :)<br />"
+        h += "<b>#{@@bot[:controlstring]}ytdl-version</b> - print used download helper version"
     end
 
     def handle_chat(msg, message)
+        super
+
+        if message == "ytdl-version"
+            privatemessage("Bandcamp uses youtube-dl " + `#{@@bot[:bandcamp_youtubedl]} --version`) 
+        end
+
         if message.start_with?("bandcamp <a href=") || message.start_with?("<a href=") then
             link = msg.message[msg.message.index('>') + 1 .. -1]
             link = link[0..link.index('<')-1]
             workingdownload = Thread.new {
                 #local variables for this thread!
                 actor = msg.actor
-                @bot[:messages].text(actor, "Bandcamp is inspecting link: " + link + "...")
+                @@bot[:messages].text(actor, "Bandcamp is inspecting link: " + link + "...")
                 get_song link
                 if ( @songlist.size > 0 ) then
-                    @bot[:mpd].update(@bot[:bandcamp_downloadsubdir].gsub(/\//,"")) 
-                    @bot[:messages].text(actor, "Waiting for database update complete...")
+                    @@bot[:mpd].update(@@bot[:bandcamp_downloadsubdir].gsub(/\//,"")) 
+                    @@bot[:messages].text(actor, "Waiting for database update complete...")
                     
                     begin
                         #Caution! following command needs patched ruby-mpd!
-                        @bot[:mpd].idle("update")
+                        @@bot[:mpd].idle("update")
                         # find this lines in ruby-mpd/plugins/information.rb (actual 47-49)
                         # def idle(*masks)
                         #  send_command(:idle, *masks)
                         # end
                         # and uncomment it there, then build gem new.
                     rescue
-                        puts "[bandcamp-plugin] [info] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds." if @bot[:debug]
+                        puts "[bandcamp-plugin] [info] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds." if @@bot[:debug]
                         sleep 10
                     end
                         
-                    @bot[:messages].text(actor, "Update done.")
+                    @@bot[:messages].text(actor, "Update done.")
                     while @songlist.size > 0 
                         song = @songlist.pop
-                        @bot[:messages].text(actor, song)
-                        @bot[:mpd].add(@bot[:bandcamp_downloadsubdir]+song)
+                        @@bot[:messages].text(actor, song)
+                        @@bot[:mpd].add(@@bot[:bandcamp_downloadsubdir]+song)
                     end
                 else
-                    @bot[:messages].text(actor, "Bandcamp: The link contains nothing interesting.") if @bot[:bandcamp_stream] == nil
+                    @@bot[:messages].text(actor, "Bandcamp: The link contains nothing interesting.") if @@bot[:bandcamp_stream] == nil
                 end
             }
         end
@@ -101,8 +109,8 @@ class Bandcamp < Plugin
             
             puts site
             
-            filename = `#{@bot[:bandcamp_youtubedl]} --get-filename #{@ytdloptions} -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
-            output =`nice -n20 #{@consoleaddition} #{@bot[:bandcamp_youtubedl]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@tempbandcampfolder}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
+            filename = `#{@@bot[:bandcamp_youtubedl]} --get-filename #{@ytdloptions} -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
+            output =`nice -n20 #{@consoleaddition} #{@@bot[:bandcamp_youtubedl]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@tempbandcampfolder}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
             filename.split("\n").each do |name|
                 @filetypes.each do |ending|
                     if File.exist?("#{@tempbandcampfolder}#{name}.#{ending}")

@@ -1,16 +1,16 @@
 class Radiostream < Plugin
 
     def init(init)
-        @bot = init
-        if ( @bot[:mpd] != nil ) && ( @bot[:messages] != nil ) && ( @bot[:radiostream] == nil )
-            @bot[:radiostream] = self
+        super
+        if ( @@bot[:mpd] != nil ) && ( @@bot[:messages] != nil ) && ( @@bot[:radiostream] == nil )
+            @@bot[:radiostream] = self
         end
-        return @bot
+        return @@bot
         #nothing to init
     end
     
     def name
-        if ( @bot[:mpd] == nil ) || ( @bot[:messages] == nil ) || ( @bot[:radiostream] == nil)
+        if ( @@bot[:mpd] == nil ) || ( @@bot[:messages] == nil ) || ( @@bot[:radiostream] == nil)
             "false"
         else    
             self.class.name
@@ -19,15 +19,16 @@ class Radiostream < Plugin
     
     def help(h)
         h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
-        h += "<b>#{@bot[:controlstring]}radiostream URL</b> - Will try to forward the radio stream.<br />"
+        h += "<b>#{@@bot[:controlstring]}radiostream URL</b> - Will try to forward the radio stream.<br />"
         h += "   This early version does only understand URLs that end with .pls or such that are in fact .pls files."
     end
    
     def handle_chat(msg, message)
+        super
         if message.start_with? "radiostream <a href=" 
             link = msg.message[msg.message.index('>') + 1 .. -1]
             link = link[0..link.index('<')-1]
-            @bot[:messages].text(msg.actor, add_link(link, ""))
+            @@bot[:messages].text(msg.actor, add_link(link, ""))
         end
     end
     
@@ -37,7 +38,7 @@ class Radiostream < Plugin
             # seems to be an .pls link
             file.each_line do |line|
                 if line.start_with? ("File1=")
-                    @bot[:mpd].add(line[6..-1].strip)
+                    @@bot[:mpd].add(line[6..-1].strip)
                     added += line[6..-1].strip + "<br>"
                 end
             end
@@ -49,7 +50,7 @@ class Radiostream < Plugin
                     if line.include? ".pls"
                         add_link line, added 
                     else
-                        @bot[:mpd].add(line.strip)
+                        @@bot[:mpd].add(line.strip)
                         added += line.strip + "<br>"
                     end
                 end
