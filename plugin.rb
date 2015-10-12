@@ -11,6 +11,7 @@ class Plugin
   
   # Usually a good idea for debugging if you have lots of methods
   def handle_chat(msg, message)
+    @user = msg.actor
     #raise "#{self.class.name} doesn't implement `handle_chat`!"
   end
   
@@ -27,7 +28,17 @@ class Plugin
   end
   
   def init(init)
+    @@bot = init
   end
+  
+  private
+  def privatemessage(message)
+    @@bot[:cli].text_user(@user, message)
+  end
+  def channelmessage(message)
+    @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, message)
+  end
+  
 end
  
 

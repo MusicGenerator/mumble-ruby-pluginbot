@@ -136,7 +136,7 @@ class Control < Plugin
         if message == 'ch'
             channeluserisin = @@bot[:cli].users[msg.actor].channel_id
             if @@bot[:cli].me.current_channel.channel_id.to_i == channeluserisin.to_i
-                privatemessgage( "Hey superbrain, I am already in your channel :)")
+                privatemessage( "Hey superbrain, I am already in your channel :)")
             else
                 @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, "Hey, \"#{msg.username}\" asked me to make some music, going now. Bye :)")
                 @@bot[:cli].join_channel(channeluserisin)
@@ -166,7 +166,7 @@ class Control < Plugin
 
         if message == 'follow'
                 if @alreadyfollowing == true
-                    privatemessgage( "I am already following someone! But from now on I will follow you, master.")
+                    privatemessage( "I am already following someone! But from now on I will follow you, master.")
                     @alreadyfollowing = false
                     begin
                         Thread.kill(@following)
@@ -177,7 +177,7 @@ class Control < Plugin
                         end
                     end
                 else
-                privatemessgage( "I am following your steps, master.")
+                privatemessage( "I am following your steps, master.")
                 end
                 @follow = true
                 @alreadyfollowing = true
@@ -202,9 +202,9 @@ class Control < Plugin
 
         if message == 'unfollow'
             if @follow == false
-                privatemessgage( "I am not following anyone.")
+                privatemessage( "I am not following anyone.")
             else
-                privatemessgage( "I will stop following.")
+                privatemessage( "I will stop following.")
                 @follow = false
                 @alreadyfollowing = false
                 begin
@@ -214,14 +214,14 @@ class Control < Plugin
                     if @@bot[:debug]
                         puts "#{$!}"
                     end
-                    privatemessgage( "#{@controlstring}follow hasn't been executed yet.")
+                    privatemessage( "#{@controlstring}follow hasn't been executed yet.")
                 end
             end
         end
 
         if message == 'stick'
             if @alreadysticky == true
-                privatemessgage( "I'm already sticked! Resetting...")
+                privatemessage( "I'm already sticked! Resetting...")
                 @alreadysticky = false
                 begin
                     Thread.kill(@sticked)
@@ -232,7 +232,7 @@ class Control < Plugin
                     end
                 end
             else
-                privatemessgage( "I am now sticked to this channel.")
+                privatemessage( "I am now sticked to this channel.")
             end
             @sticky = true
             @alreadysticky = true
@@ -260,9 +260,9 @@ class Control < Plugin
 
         if message == 'unstick'
             if @sticky == false
-                privatemessgage( "I am currently not sticked to a channel.")
+                privatemessage( "I am currently not sticked to a channel.")
             else
-                privatemessgage( "I am not sticked anymore")
+                privatemessage( "I am not sticked anymore")
                 @sticky = false
                 @alreadysticky = false
                 begin
@@ -284,15 +284,15 @@ class Control < Plugin
                 out += "<tr><td>#{histmessage.message}</td><td>#{histmessage.username}</td></tr>"
             end
             out += "</table>"
-            privatemessgage( out)
+            privatemessage( out)
         end
         
         if message == 'automute'
             if @@bot[:control_automute] == false
-                privatemessgage( "Automute is now activated")
+                privatemessage( "Automute is now activated")
                 @@bot[:control_automute] = true    
             else    
-                privatemessgage( "Automute is now deactivated")
+                privatemessage( "Automute is now deactivated")
                 @@bot[:control_automute] = false
             end
         end
