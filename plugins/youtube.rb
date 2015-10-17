@@ -39,10 +39,10 @@ class Youtube < Plugin
     end
 
     def help(h)
-        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
-        h += "<b>#{@@bot[:controlstring]}ytlink <i>URL</i></b> - Will try to download the music from the given URL.<br />"
-        h += "<b>#{@@bot[:controlstring]}yts keywords</b> - Will search on Youtube for one or more keywords and print the results to you.<br />"
-        h += "<b>#{@@bot[:controlstring]}yta <i>number</i></b> - Let the bot download the given song from the list you got via <i>#{@@bot[:controlstring]}yts</i>.<br />Instead of a specific numer, write <b>#{@@bot[:controlstring]}yta <i>all</i></b> to let the bot download all found songs.<br />"
+        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
+        h += "<b>#{@@bot[:controlstring]}ytlink <i>URL</i></b> - Will try to download the music from the given URL.<br>"
+        h += "<b>#{@@bot[:controlstring]}yts keywords</b> - Will search on Youtube for one or more keywords and print the results to you.<br>"
+        h += "<b>#{@@bot[:controlstring]}yta <i>number</i></b> - Let the bot download the given song from the list you got via <i>#{@@bot[:controlstring]}yts</i>.<br>Instead of a specific numer, write <b>#{@@bot[:controlstring]}yta <i>all</i></b> to let the bot download all found songs.<br>"
         h += "<b>#{@@bot[:controlstring]}ytdl-version</b> - print used download helper version"
     end
 
@@ -128,7 +128,7 @@ class Youtube < Plugin
                 else
                     out = ""
                     @keylist[msg.actor].each do |downloadid|
-                        out += "adding #{downloadid[1]}<br />"
+                        out += "adding #{downloadid[1]}<br>"
                         link << "https://www.youtube.com/watch?v="+downloadid[0]
                     end
                     @@bot[:messages].text(msg.actor, out)    
@@ -160,14 +160,14 @@ class Youtube < Plugin
                             sleep 10
                         end
                         @@bot[:messages].text(actor, "Update done.")
-                        out = "<b>Added:</b><br />"
+                        out = "<b>Added:</b><br>"
                         while @songlist.size > 0 
                             song = @songlist.pop
                             begin
                                 @@bot[:mpd].add(@@bot[:youtube_downloadsubdir]+song)
-                                out += song + "<br />"
+                                out += song + "<br>"
                             rescue
-                                out += "fixme: " + song + " not found!<br />"
+                                out += "fixme: " + song + " not found!<br>"
                             end
                         end
                         @@bot[:messages].text(actor, out)

@@ -37,8 +37,8 @@ class Soundcloud < Plugin
     end
 
     def help(h)
-        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
-        h += "<b>#{@@bot[:controlstring]}soundcloud <i>URL</i></b> - Will try to download the music from the given URL. <br />"
+        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
+        h += "<b>#{@@bot[:controlstring]}soundcloud <i>URL</i></b> - Will try to download the music from the given URL. <br>"
         h += "<b>#{@@bot[:controlstring]}ytdl-version</b> - print used download helper version"
     end
 

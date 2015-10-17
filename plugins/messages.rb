@@ -42,12 +42,12 @@ class Messages < Plugin
     end
 
     def help(h)
-        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
-        h += "<b>#{@@bot[:controlstring]}+ #(<i>Hashtag</i>)</b> - Subscribe to a notification.<br />"
-        h += "<b>#{@@bot[:controlstring]}- #(<i>Hashtag</i>)</b> - Unsubscribe from a notification.<br />"
-        h += "You can choose one or more of the following values:<br />"
-        h += "volume, random, update, single, xfade, consume, repeat, state<br />"
-        h += "<b>#{@@bot[:controlstring]}* List subscribed notifications.<br />"
+        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
+        h += "<b>#{@@bot[:controlstring]}+ #(<i>Hashtag</i>)</b> - Subscribe to a notification.<br>"
+        h += "<b>#{@@bot[:controlstring]}- #(<i>Hashtag</i>)</b> - Unsubscribe from a notification.<br>"
+        h += "You can choose one or more of the following values:<br>"
+        h += "volume, random, update, single, xfade, consume, repeat, state<br>"
+        h += "<b>#{@@bot[:controlstring]}* List subscribed notifications.<br>"
     end
 
     def handle_chat(msg, message)

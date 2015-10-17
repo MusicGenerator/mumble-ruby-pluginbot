@@ -39,16 +39,16 @@ class Control < Plugin
     end
 
     def help(h)
-        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
-        h += "<b>#{@@bot[:controlstring]}ch</b> - The bot will enter your channel if he has permission to.<br />"
-        h += "<b>#{@@bot[:controlstring]}debug</b> - Probe command.<br />"
-        h += "<b>#{@@bot[:controlstring]}gotobed</b> - Bot sleeps in less then 1 second :)<br />"
-        h += "<b>#{@@bot[:controlstring]}wakeup</b> - Bot is under adrenalin again.<br />"
-        h += "<b>#{@@bot[:controlstring]}follow</b> - Bot will start to follow you.<br />"
-        h += "<b>#{@@bot[:controlstring]}unfollow</b> - Bot transforms from a dog into a lazy cat :).<br />"
-        h += "<b>#{@@bot[:controlstring]}stick</b> - Jail bot into channel.<br />"
-        h += "<b>#{@@bot[:controlstring]}unstick</b> - Free the bot.<br />"
-        h += "<b>#{@@bot[:controlstring]}history</b> - Print last #{@historysize} commanding users with command given.<br />"
+        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
+        h += "<b>#{@@bot[:controlstring]}ch</b> - The bot will enter your channel if he has permission to.<br>"
+        h += "<b>#{@@bot[:controlstring]}debug</b> - Probe command.<br>"
+        h += "<b>#{@@bot[:controlstring]}gotobed</b> - Bot sleeps in less then 1 second :)<br>"
+        h += "<b>#{@@bot[:controlstring]}wakeup</b> - Bot is under adrenalin again.<br>"
+        h += "<b>#{@@bot[:controlstring]}follow</b> - Bot will start to follow you.<br>"
+        h += "<b>#{@@bot[:controlstring]}unfollow</b> - Bot transforms from a dog into a lazy cat :).<br>"
+        h += "<b>#{@@bot[:controlstring]}stick</b> - Jail bot into channel.<br>"
+        h += "<b>#{@@bot[:controlstring]}unstick</b> - Free the bot.<br>"
+        h += "<b>#{@@bot[:controlstring]}history</b> - Print last #{@historysize} commanding users with command given.<br>"
         h += "<b>#{@@bot[:controlstring]}automute</b> - Toggles auto muting system."
     end
 

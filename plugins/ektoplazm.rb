@@ -31,7 +31,7 @@ class Ektoplazm < Plugin
     end
 
     def help(h)
-        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
+        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
         h += "<b>#{@@bot[:controlstring]}ektoplazm <i>URL</i></b> - Will try to download the music from the given URL."
     end
 

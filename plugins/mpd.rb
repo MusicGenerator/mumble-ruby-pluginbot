@@ -20,7 +20,7 @@ class Mpd < Plugin
             end
 
             @@bot[:mpd].on :updating_db do |jobid|
-                channelmessage( "I am running a database update just now ... new songs :)<br />My job id is: #{jobid}.") if (@@bot[:chan_notify] & 0x02) != 0
+                channelmessage( "I am running a database update just now ... new songs :)<br>My job id is: #{jobid}.") if (@@bot[:chan_notify] & 0x02) != 0
             end
 
             @@bot[:mpd].on :random do |random|
@@ -105,12 +105,12 @@ class Mpd < Plugin
                                     else
                                          image = @@bot[:logo]
                                     end
-                                    output = "<br /><table>"
+                                    output = "<br><table>"
                                     output += "<tr><td>Artist:</td><td>#{current.artist}</td></tr>" if !current.artist.nil?
                                     output += "<tr><td>Title:</td><td>#{current.title}</td></tr>" if !current.title.nil?
                                     output += "<tr><td>Album:</td><td>#{current.album}</td></tr>" if !current.album.nil?
                                     output += "<tr><td>Source:</td><td>#{current.file}</td></tr>" if ( !current.file.nil? ) && ( current.album.nil? ) && ( current.artist.nil? )
-                                    output += "</table><br />" + @infotemplate
+                                    output += "</table><br>" + @infotemplate
                                     @@bot[:cli].set_comment(image+output)
                                rescue NoMethodError
                                     if @@bot[:debug]
@@ -147,44 +147,44 @@ class Mpd < Plugin
     end
 
     def help(h)
-        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
-        h += "<b>#{@@bot[:controlstring]}settings</b> - Print current MPD settings.<br />"
-        h += "<b>#{@@bot[:controlstring]}seek <i>value</i> | <i>+/-value</i></b> - Seek to an absolute position (in seconds). Use +value or -value to seek relative to the current position.<br />"
-        h += "<b>#{@@bot[:controlstring]}seek <i>mm:ss</i> | <i>+/-mm:ss</i></b> - Seek to an absolute position. Use + or - to seek relative to the current position.<br />"
-        h += "<b>#{@@bot[:controlstring]}seek <i>hh:mm:ss</i> | <i>+/-hh:mm:ss</i></b> - Seek to an absolute position. Use + or - to seek relative to the current position.<br />"
-        h += "<b>#{@@bot[:controlstring]}crossfade <i>value</i></b> - Set Crossfade to value seconds, 0 to disable crossfading.<br />"
-        h += "<b>#{@@bot[:controlstring]}next</b> - Play next title in the queue.<br />"
-        h += "<b>#{@@bot[:controlstring]}prev</b> - Play previous title in the queue.<br />"
-        h += "<b>#{@@bot[:controlstring]}clear</b> - Clear the playqueue.<br />"
-        h += "<b>#{@@bot[:controlstring]}random</b> - Toggle random mode.<br />"
-        h += "<b>#{@@bot[:controlstring]}single</b> - Toggle single mode.<br />"
-        h += "<b>#{@@bot[:controlstring]}repeat</b> - Toggle repeat mode.<br />"
-        h += "<b>#{@@bot[:controlstring]}consume</b> - Toggle consume mode. If this mode is enabled, songs will be removed from the play queue once they were played.<br />"
-        h += "<b>#{@@bot[:controlstring]}pp</b> - Toggle pause/play.<br />"
-        h += "<b>#{@@bot[:controlstring]}stop</b> - Stop playing.<br />"
-        h += "<b>#{@@bot[:controlstring]}play</b> - Start playing.<br />"
-        h += "<b>#{@@bot[:controlstring]}play <i>number</i></b> - Play title on position <i>number</i> in queue.<br />"
-        h += "<b>#{@@bot[:controlstring]}songlist</b> - Print the list of ALL songs in the MPD collection.<br />"
-        h += "<b>#{@@bot[:controlstring]}playlist <i>id</i></b> - Load the playlist referenced by the id.<br />"
-        h += "<b>#{@@bot[:controlstring]}saveplaylist <i>name</i></b> - Save queue into a playlist named 'name'<br />"
-        h += "<b>#{@@bot[:controlstring]}song</b> - Print some information about the currently played song.<br />"
-        h += "<b>#{@@bot[:controlstring]}status</b> - Print current status of MPD.<br />"
-        h += "<b>#{@@bot[:controlstring]}playlists</b> - Print the available playlists from MPD.<br />"
-        h += "<b>#{@@bot[:controlstring]}add <i>searchstring</i></b> - Find song(s) by searchstring and print matches.<br />"
-        h += "<b>#{@@bot[:controlstring]}where <i>searchstring</i></b> - Find song(s) by searchstring and print matches.<br />"
-        h += "<b>#{@@bot[:controlstring]}queue</b> - Print the current play queue.<br />"
-        h += "<b>#{@@bot[:controlstring]}stats</b> - Print some interesing MPD statistics.<br />"
-        h += "<b>#{@@bot[:controlstring]}shuffle</b> – Play songs from the play queue in a random order.<br />"
-        h += "<b>#{@@bot[:controlstring]}file</b> - Print the filename of the current song. This is useful if the file doesn't have ID3 tags and so the <b>#{@@bot[:controlstring]}song</b> command shows nothing.<br />"
-        h += "<b>#{@@bot[:controlstring]}v++++</b> - Turns volume 20% up.<br />"
-        h += "<b>#{@@bot[:controlstring]}v-</b> - Turns volume 5% down.<br />"
-        h += "<b>#{@@bot[:controlstring]}v <i>value</i></b> - Set the volume to the given value.<br />"
-        h += "<b>#{@@bot[:controlstring]}v</b> - Print the current playback volume.<br />"
-        h += "<b>#{@@bot[:controlstring]}update</b> - Start a MPD database update.<br />"
-        h += "<b>#{@@bot[:controlstring]}mpdconfig</b> - Try to read mpd config.<br />"
-        h += "<b>#{@@bot[:controlstring]}mpdcommands</b> - Show what commands mpd do allow to Bot (not to you!).<br />"
-        h += "<b>#{@@bot[:controlstring]}mpdnotcommands</b> - Show what commands mpd disallowed to Bot.<br />"
-        h += "<b>#{@@bot[:controlstring]}mpddecoders</b> - Show enabled decoders and what they can decode for your mpd.<br />"
+        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
+        h += "<b>#{@@bot[:controlstring]}settings</b> - Print current MPD settings.<br>"
+        h += "<b>#{@@bot[:controlstring]}seek <i>value</i> | <i>+/-value</i></b> - Seek to an absolute position (in seconds). Use +value or -value to seek relative to the current position.<br>"
+        h += "<b>#{@@bot[:controlstring]}seek <i>mm:ss</i> | <i>+/-mm:ss</i></b> - Seek to an absolute position. Use + or - to seek relative to the current position.<br>"
+        h += "<b>#{@@bot[:controlstring]}seek <i>hh:mm:ss</i> | <i>+/-hh:mm:ss</i></b> - Seek to an absolute position. Use + or - to seek relative to the current position.<br>"
+        h += "<b>#{@@bot[:controlstring]}crossfade <i>value</i></b> - Set Crossfade to value seconds, 0 to disable crossfading.<br>"
+        h += "<b>#{@@bot[:controlstring]}next</b> - Play next title in the queue.<br>"
+        h += "<b>#{@@bot[:controlstring]}prev</b> - Play previous title in the queue.<br>"
+        h += "<b>#{@@bot[:controlstring]}clear</b> - Clear the playqueue.<br>"
+        h += "<b>#{@@bot[:controlstring]}random</b> - Toggle random mode.<br>"
+        h += "<b>#{@@bot[:controlstring]}single</b> - Toggle single mode.<br>"
+        h += "<b>#{@@bot[:controlstring]}repeat</b> - Toggle repeat mode.<br>"
+        h += "<b>#{@@bot[:controlstring]}consume</b> - Toggle consume mode. If this mode is enabled, songs will be removed from the play queue once they were played.<br>"
+        h += "<b>#{@@bot[:controlstring]}pp</b> - Toggle pause/play.<br>"
+        h += "<b>#{@@bot[:controlstring]}stop</b> - Stop playing.<br>"
+        h += "<b>#{@@bot[:controlstring]}play</b> - Start playing.<br>"
+        h += "<b>#{@@bot[:controlstring]}play <i>number</i></b> - Play title on position <i>number</i> in queue.<br>"
+        h += "<b>#{@@bot[:controlstring]}songlist</b> - Print the list of ALL songs in the MPD collection.<br>"
+        h += "<b>#{@@bot[:controlstring]}playlist <i>id</i></b> - Load the playlist referenced by the id.<br>"
+        h += "<b>#{@@bot[:controlstring]}saveplaylist <i>name</i></b> - Save queue into a playlist named 'name'<br>"
+        h += "<b>#{@@bot[:controlstring]}song</b> - Print some information about the currently played song.<br>"
+        h += "<b>#{@@bot[:controlstring]}status</b> - Print current status of MPD.<br>"
+        h += "<b>#{@@bot[:controlstring]}playlists</b> - Print the available playlists from MPD.<br>"
+        h += "<b>#{@@bot[:controlstring]}add <i>searchstring</i></b> - Find song(s) by searchstring and print matches.<br>"
+        h += "<b>#{@@bot[:controlstring]}where <i>searchstring</i></b> - Find song(s) by searchstring and print matches.<br>"
+        h += "<b>#{@@bot[:controlstring]}queue</b> - Print the current play queue.<br>"
+        h += "<b>#{@@bot[:controlstring]}stats</b> - Print some interesing MPD statistics.<br>"
+        h += "<b>#{@@bot[:controlstring]}shuffle</b> – Play songs from the play queue in a random order.<br>"
+        h += "<b>#{@@bot[:controlstring]}file</b> - Print the filename of the current song. This is useful if the file doesn't have ID3 tags and so the <b>#{@@bot[:controlstring]}song</b> command shows nothing.<br>"
+        h += "<b>#{@@bot[:controlstring]}v++++</b> - Turns volume 20% up.<br>"
+        h += "<b>#{@@bot[:controlstring]}v-</b> - Turns volume 5% down.<br>"
+        h += "<b>#{@@bot[:controlstring]}v <i>value</i></b> - Set the volume to the given value.<br>"
+        h += "<b>#{@@bot[:controlstring]}v</b> - Print the current playback volume.<br>"
+        h += "<b>#{@@bot[:controlstring]}update</b> - Start a MPD database update.<br>"
+        h += "<b>#{@@bot[:controlstring]}mpdconfig</b> - Try to read mpd config.<br>"
+        h += "<b>#{@@bot[:controlstring]}mpdcommands</b> - Show what commands mpd do allow to Bot (not to you!).<br>"
+        h += "<b>#{@@bot[:controlstring]}mpdnotcommands</b> - Show what commands mpd disallowed to Bot.<br>"
+        h += "<b>#{@@bot[:controlstring]}mpddecoders</b> - Show enabled decoders and what they can decode for your mpd.<br>"
         
     end
 
@@ -394,7 +394,7 @@ class Mpd < Plugin
                 text_out = text_out + "#{counter} - #{playlist.name}<br/>"
                 counter += 1
             end
-            privatemessage( "I know the following playlists:<br />#{text_out}")
+            privatemessage( "I know the following playlists:<br>#{text_out}")
         end
 
         if message.match(/^playlist [0-9]{1,3}.*$/)
@@ -421,7 +421,7 @@ class Mpd < Plugin
 
        if message == 'file'
             current = @@bot[:mpd].current_song
-            privatemessage( "Filename of currently played song:<br />#{current.file}</span>") if not current.nil?
+            privatemessage( "Filename of currently played song:<br>#{current.file}</span>") if not current.nil?
         end
 
         if message == 'song'

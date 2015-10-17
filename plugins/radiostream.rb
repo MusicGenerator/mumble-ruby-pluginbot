@@ -18,8 +18,8 @@ class Radiostream < Plugin
     end
     
     def help(h)
-        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br />"
-        h += "<b>#{@@bot[:controlstring]}radiostream URL</b> - Will try to forward the radio stream.<br />"
+        h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
+        h += "<b>#{@@bot[:controlstring]}radiostream URL</b> - Will try to forward the radio stream.<br>"
         h += "   This early version does only understand URLs that end with .pls or such that are in fact .pls files."
     end
    
