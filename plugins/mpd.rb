@@ -16,11 +16,11 @@ class Mpd < Plugin
             end
 
             @@bot[:mpd].on :error do |error|
-                channelmessgage( "<span style='color:red;font-weight:bold;>An error occured: #{error}.</span>") 
+                channelmessage( "<span style='color:red;font-weight:bold;>An error occured: #{error}.</span>") 
             end
 
             @@bot[:mpd].on :updating_db do |jobid|
-                channelmessgage( "I am running a database update just now ... new songs :)<br />My job id is: #{jobid}.") if (@@bot[:chan_notify] & 0x02) != 0
+                channelmessage( "I am running a database update just now ... new songs :)<br />My job id is: #{jobid}.") if (@@bot[:chan_notify] & 0x02) != 0
             end
 
             @@bot[:mpd].on :random do |random|
@@ -29,14 +29,14 @@ class Mpd < Plugin
                 else
                     random = "Off"
                 end
-                channelmessgage( "Random mode is now: #{random}.") if (@@bot[:chan_notify] & 0x04) != 0
+                channelmessage( "Random mode is now: #{random}.") if (@@bot[:chan_notify] & 0x04) != 0
             end
 
             @@bot[:mpd].on :state  do |state|
                 if @@bot[:chan_notify] & 0x80 != 0 then
-                    channelmessgage( "Music paused.") if  state == :pause 
-                    channelmessgage( "Music stopped.") if state == :stop  
-                    channelmessgage( "Music start playing.") if state == :play 
+                    channelmessage( "Music paused.") if  state == :pause 
+                    channelmessage( "Music stopped.") if state == :stop  
+                    channelmessage( "Music start playing.") if state == :play 
                 end
             end
 
@@ -46,7 +46,7 @@ class Mpd < Plugin
                 else
                     single = "Off"
                 end
-                channelmessgage( "Single mode is now: #{single}.") if (@@bot[:chan_notify] & 0x08) != 0
+                channelmessage( "Single mode is now: #{single}.") if (@@bot[:chan_notify] & 0x08) != 0
             end
 
             @@bot[:mpd].on :consume do |consume|
@@ -56,15 +56,15 @@ class Mpd < Plugin
                     consume = "Off"
                 end
 
-                channelmessgage( "Consume mode is now: #{consume}.") if (@@bot[:chan_notify] & 0x10) != 0
+                channelmessage( "Consume mode is now: #{consume}.") if (@@bot[:chan_notify] & 0x10) != 0
             end
 
             @@bot[:mpd].on :xfade do |xfade|
                 if xfade.to_i == 0
                     xfade = "Off"
-                    channelmessgage( "Crossfade is now: #{xfade}.") if (@@bot[:chan_notify] & 0x20) != 0
+                    channelmessage( "Crossfade is now: #{xfade}.") if (@@bot[:chan_notify] & 0x20) != 0
                 else
-                    channelmessgage( "Crossfade time (in seconds) is now: #{xfade}.") if (@@bot[:chan_notify] & 0x20) != 0 
+                    channelmessage( "Crossfade time (in seconds) is now: #{xfade}.") if (@@bot[:chan_notify] & 0x20) != 0 
                 end
             end
 
@@ -74,7 +74,7 @@ class Mpd < Plugin
                 else
                     repeat = "Off"
                 end
-                channelmessgage( "Repeat mode is now: #{repeat}.") if (@@bot[:chan_notify] & 0x40) != 0
+                channelmessage( "Repeat mode is now: #{repeat}.") if (@@bot[:chan_notify] & 0x40) != 0
             end
 
             @@bot[:mpd].on :song do |current|
@@ -119,9 +119,9 @@ class Mpd < Plugin
                                 end
                             else
                                 if current.artist.nil? && current.title.nil? && current.album.nil?
-                                    channelmessgage( "#{current.file}") if @@bot[:chan_notify] && 0x80
+                                    channelmessage( "#{current.file}") if @@bot[:chan_notify] && 0x80
                                 else
-                                    channelmessgage( "#{current.artist} - #{current.title} (#{current.album})") if (@@bot[:chan_notify] && 0x80) != 0
+                                    channelmessage( "#{current.artist} - #{current.title} (#{current.album})") if (@@bot[:chan_notify] && 0x80) != 0
                                 end
                             end
                             lastcurrent = current
@@ -237,9 +237,9 @@ class Mpd < Plugin
                 now = "%02d:%02d:%02d" % [now_hh, now_mm, now_ss]
                 total = "%02d:%02d:%02d" % [total_hh, total_mm, total_ss]
 
-                channelmessgage( "Now on position #{now}/#{total}.")
+                channelmessage( "Now on position #{now}/#{total}.")
             rescue
-                channelmessgage( "Sorry! Unknown stream position.")
+                channelmessage( "Sorry! Unknown stream position.")
             end
         end
 
@@ -457,7 +457,7 @@ class Mpd < Plugin
             multi = message.match(/^v([-]+)$/)[1].scan(/\-/).length
             volume = ((@@bot[:mpd].volume).to_i - 5 * multi)
             if volume < 0
-                channelmessgage( "Volume can't be set to &lt; 0.")
+                channelmessage( "Volume can't be set to &lt; 0.")
                 volume = 0
             end
             @@bot[:mpd].volume = volume
@@ -467,7 +467,7 @@ class Mpd < Plugin
             multi = message.match(/^v([+]+)$/)[1].scan(/\+/).length
             volume = ((@@bot[:mpd].volume).to_i + 5 * multi)
             if volume > 100
-                channelmessgage( "Volume can't be set to &gt; 100.")
+                channelmessage( "Volume can't be set to &gt; 100.")
                 volume = 100
             end
             @@bot[:mpd].volume = volume
