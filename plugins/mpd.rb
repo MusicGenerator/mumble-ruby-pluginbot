@@ -304,7 +304,7 @@ class Mpd < Plugin
             out = ""
             @@bot[:mpd].songs.each do |song|
                 if block >= 50
-                    #@@bot[:messages].text(msg.actor, out.to_s)
+                    #messageto(msg.actor, out.to_s)
                     privatemessage(out.to_s)
                     out = ""
                     block = 0
@@ -312,7 +312,7 @@ class Mpd < Plugin
                 out += "<br/>" + song.file.to_s
                 block += 1
             end
-            #@@bot[:messages].text(msg.actor, out.to_s)
+            #messageto(msg.actor, out.to_s)
             privatemessage(out.to_s)    
         end
 

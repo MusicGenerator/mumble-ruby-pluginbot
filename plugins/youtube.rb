@@ -26,7 +26,7 @@ class Youtube < Plugin
             @keylist = Array.new
             @@bot[:youtube] = self
         end
-        @filetypes= ["ogg", "mp3", "mp2", "m4a", "aac", "wav", "ape", "flac"]
+        @filetypes= ["ogg", "mp3", "mp2", "m4a", "aac", "wav", "ape", "flac", "opus"]
         return @@bot
     end
 
@@ -60,13 +60,13 @@ class Youtube < Plugin
             workingdownload = Thread.new {
                 #local variables for this thread!
                 actor = msg.actor
-                @@bot[:messages].text(actor, "Youtube is inspecting link: " + link + "...")
+                messageto(actor, "Youtube is inspecting link: " + link + "...")
                 get_song(link).each do |error|
-                    @@bot[:messages].text(actor, error)
+                    messageto(actor, error)
                 end
                 if ( @songlist.size > 0 ) then
                     @@bot[:mpd].update(@@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
-                    @@bot[:messages].text(actor, "Waiting for database update complete...")
+                    messageto(actor, "Waiting for database update complete...")
                     
                     begin
                         #Caution! following command needs patched ruby-mpd!
@@ -81,14 +81,14 @@ class Youtube < Plugin
                         sleep 10
                     end
                         
-                    @@bot[:messages].text(actor, "Update done.")
+                    messageto(actor, "Update done.")
                     while @songlist.size > 0 
                         song = @songlist.pop
-                        @@bot[:messages].text(actor, song)
+                        messageto(actor, song)
                         @@bot[:mpd].add(@@bot[:youtube_downloadsubdir]+song)
                     end
                 else
-                    @@bot[:messages].text(actor, "Youtube: The link contains nothing interesting.") if @@bot[:youtube_stream] == nil
+                    messageto(actor, "Youtube: The link contains nothing interesting.") if @@bot[:youtube_stream] == nil
                 end
             }
         end
@@ -97,24 +97,24 @@ class Youtube < Plugin
             search = message[4..-1]
             if !(( search == nil ) || ( search == "" ))
                 workingsearch = Thread.new {
-                    @@bot[:messages].text(msg.actor, "searching for \"#{search}\", please be patient...")    
+                    messageto(msg.actor, "searching for \"#{search}\", please be patient...")    
                     songs = find_youtube_song(CGI.escape(search))
                     @keylist[msg.actor] = songs
                     index = 0
                     out = ""
                     @keylist[msg.actor].each do |id , title|
                         if ( ( index % 30 ) == 0 )
-                            @@bot[:messages].text(msg.actor, out + "</table>") if index != 0   
+                            messageto(msg.actor, out + "</table>") if index != 0   
                             out = "<table><tr><td><b>Index</b></td><td>Title</td></tr>"
                         end
                         out += "<tr><td><b>#{index}</b></td><td>#{title}</td></tr>"
                         index += 1
                     end
                     out +="</table>"
-                    @@bot[:messages].text(msg.actor, out)    
+                    messageto(msg.actor, out)    
                 }
             else    
-                @@bot[:messages].text(msg.actor, "won't search for nothing!")    
+                messageto(msg.actor, "won't search for nothing!")    
             end
         end
 
@@ -123,7 +123,7 @@ class Youtube < Plugin
                 link = []
                 if message.split[1] != "all"
                     downloadid = @keylist[msg.actor][message.split[1].to_i]
-                    @@bot[:messages].text(msg.actor, "adding #{downloadid[1]}")    
+                    messageto(msg.actor, "adding #{downloadid[1]}")    
                     link << "https://www.youtube.com/watch?v="+downloadid[0]
                 else
                     out = ""
@@ -131,21 +131,21 @@ class Youtube < Plugin
                         out += "adding #{downloadid[1]}<br>"
                         link << "https://www.youtube.com/watch?v="+downloadid[0]
                     end
-                    @@bot[:messages].text(msg.actor, out)    
+                    messageto(msg.actor, out)    
                 end
                 workingdownload = Thread.new {
                     #local variables for this thread!
                     actor = msg.actor
-                    @@bot[:messages].text(actor, "do #{link.length.to_s} time(s)...")    
+                    messageto(actor, "do #{link.length.to_s} time(s)...")    
                     link.each do |l| 
-                        @@bot[:messages].text(actor, "fetch and convert")
+                        messageto(actor, "fetch and convert")
                         get_song(l).each do |error|
                             @@bot[:messages.text(actor, error)]
                         end
                     end
                     if ( @songlist.size > 0 ) then
                         @@bot[:mpd].update(@@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
-                        @@bot[:messages].text(actor, "Waiting for database update complete...")
+                        messageto(actor, "Waiting for database update complete...")
                         
                         begin
                             #Caution! following command needs patched ruby-mpd!
@@ -159,7 +159,7 @@ class Youtube < Plugin
                             puts "[youtube-plugin] [info] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds." if @@bot[:debug]
                             sleep 10
                         end
-                        @@bot[:messages].text(actor, "Update done.")
+                        messageto(actor, "Update done.")
                         out = "<b>Added:</b><br>"
                         while @songlist.size > 0 
                             song = @songlist.pop
@@ -170,13 +170,13 @@ class Youtube < Plugin
                                 out += "fixme: " + song + " not found!<br>"
                             end
                         end
-                        @@bot[:messages].text(actor, out)
+                        messageto(actor, out)
                     else
-                        @@bot[:messages].text(actor, "Youtube: The link contains nothing interesting.") if @@bot[:youtube_stream] == nil
+                        messageto(actor, "Youtube: The link contains nothing interesting.") if @@bot[:youtube_stream] == nil
                     end
                 }
             rescue
-                @@bot[:messages].text(msg.actor, "[error](youtube-plugin)- index number is out of bounds!")    
+                messageto(msg.actor, "[error](youtube-plugin)- index number is out of bounds!")    
             end
         end
     end

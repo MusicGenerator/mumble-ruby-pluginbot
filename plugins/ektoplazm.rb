@@ -44,7 +44,7 @@ class Ektoplazm < Plugin
                 #local variables for this thread!
                 actor = msg.actor
                 if ( link.include? "www.ektoplazm.com/files" ) then
-                    @@bot[:messages].text(actor, "ektoplazm is inspecting link: " + link + "...")
+                    messageto(actor, "ektoplazm is inspecting link: " + link + "...")
                     link.gsub!(/<\/?[^>]*>/, '')
                     link.gsub!("&amp;", "&")
                     name = link.split("/")[-1]
@@ -68,7 +68,7 @@ class Ektoplazm < Plugin
                     end
                     if ( @songlist.size > 0 ) then
                         @@bot[:mpd].update(@@bot[:ektoplazm_downloadsubdir].gsub(/\//,"")) 
-                        @@bot[:messages].text(actor, "Waiting for database update complete...")
+                        messageto(actor, "Waiting for database update complete...")
                         
                         begin
                             #Caution! following command needs patched ruby-mpd!
@@ -83,17 +83,17 @@ class Ektoplazm < Plugin
                             sleep 10
                         end
                             
-                        @@bot[:messages].text(actor, "Update done.")
+                        messageto(actor, "Update done.")
                         while @songlist.size > 0 
                             song = @songlist.pop
-                            @@bot[:messages].text(actor, song)
+                            messageto(actor, song)
                             @@bot[:mpd].add(@@bot[:ektoplazm_downloadsubdir]+song)
                         end
                     else
-                        @@bot[:messages].text(actor, "Ektoplazm: The link contains nothing interesting.") if @@bot[:Ektoplazm_stream] == nil
+                        messageto(actor, "Ektoplazm: The link contains nothing interesting.") if @@bot[:Ektoplazm_stream] == nil
                     end
                 else
-                    @@bot[:messages].text(actor, "No ektoplazm link!?") if message.start_with?("ektoplazm")
+                    messageto(actor, "No ektoplazm link!?") if message.start_with?("ektoplazm")
                 end
             }
         end

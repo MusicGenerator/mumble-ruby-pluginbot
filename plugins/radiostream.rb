@@ -28,7 +28,7 @@ class Radiostream < Plugin
         if message.start_with? "radiostream <a href=" 
             link = msg.message[msg.message.index('>') + 1 .. -1]
             link = link[0..link.index('<')-1]
-            @@bot[:messages].text(msg.actor, add_link(link, ""))
+            messageto(msg.actor, add_link(link, ""))
         end
     end
     

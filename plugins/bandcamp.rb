@@ -56,11 +56,11 @@ class Bandcamp < Plugin
             workingdownload = Thread.new {
                 #local variables for this thread!
                 actor = msg.actor
-                @@bot[:messages].text(actor, "Bandcamp is inspecting link: " + link + "...")
+                messageto(actor, "Bandcamp is inspecting link: " + link + "...")
                 get_song link
                 if ( @songlist.size > 0 ) then
                     @@bot[:mpd].update(@@bot[:bandcamp_downloadsubdir].gsub(/\//,"")) 
-                    @@bot[:messages].text(actor, "Waiting for database update complete...")
+                    messageto(actor, "Waiting for database update complete...")
                     
                     begin
                         #Caution! following command needs patched ruby-mpd!
@@ -75,14 +75,14 @@ class Bandcamp < Plugin
                         sleep 10
                     end
                         
-                    @@bot[:messages].text(actor, "Update done.")
+                    messageto(actor, "Update done.")
                     while @songlist.size > 0 
                         song = @songlist.pop
-                        @@bot[:messages].text(actor, song)
+                        messageto(actor, song)
                         @@bot[:mpd].add(@@bot[:bandcamp_downloadsubdir]+song)
                     end
                 else
-                    @@bot[:messages].text(actor, "Bandcamp: The link contains nothing interesting.") if @@bot[:bandcamp_stream] == nil
+                    messageto(actor, "Bandcamp: The link contains nothing interesting.") if @@bot[:bandcamp_stream] == nil
                 end
             }
         end
