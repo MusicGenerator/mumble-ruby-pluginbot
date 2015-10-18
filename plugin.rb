@@ -35,6 +35,9 @@ class Plugin
   def privatemessage(message)
     @@bot[:cli].text_user(@user, message)
   end
+  def messageto(actor, message)
+    @@bot[:cli].text_user(actor, message)
+  end
   def channelmessage(message)
     @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, message)
   end
