@@ -4,8 +4,7 @@ After=network.target
 
 [Service]
 Type=oneshot
-PIDFile=/run/murmur/murmur.pid
-ExecStart=su - botmaster -c "/home/botmaster/src/mumble-ruby-pluginbot/start.sh" &
+ExecStart=/bin/su - botmaster -c "/home/botmaster/src/mumble-ruby-pluginbot/start.sh" &
 
 [Install]
 WantedBy=multi-user.target
