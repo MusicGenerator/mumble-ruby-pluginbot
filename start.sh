@@ -15,14 +15,17 @@ sleep 2
 killall mpd > /dev/null 2>&1
 
 
-
-
 ### Start needed mpd instances for botmaster ###
 mpd /home/botmaster/mpd1/mpd.conf
 #mpd /home/botmaster/mpd2/mpd.conf
 #mpd /home/botmaster/mpd3/mpd.conf
 
 
+# Do an update of youtube-dl on every start as there are very often updates.
+if [ -f /home/botmaster/src/youtube-dl ]; then
+    echo "Updating youtube-dl..."
+    /home/botmaster/src/youtube-dl -U
+fi
 
 
 ### Kill running mumble-ruby-pluginbots (of the user botmaster) ###
