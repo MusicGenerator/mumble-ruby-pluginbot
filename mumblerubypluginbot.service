@@ -1,0 +1,10 @@
+[Unit]
+Description=Mumble Ruby Pluginbot
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/su - botmaster -c "/home/botmaster/src/mumble-ruby-pluginbot/start.sh" &
+
+[Install]
+WantedBy=multi-user.target

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 DEBUG=""
+FIRST_START_FILE="/home/botmaster/src/.first_start_done"
 
 if [ "$1" == "debug" ];
 then
@@ -15,14 +16,17 @@ sleep 2
 killall mpd > /dev/null 2>&1
 
 
-
-
 ### Start needed mpd instances for botmaster ###
 mpd /home/botmaster/mpd1/mpd.conf
 #mpd /home/botmaster/mpd2/mpd.conf
 #mpd /home/botmaster/mpd3/mpd.conf
 
 
+# Do an update of youtube-dl on every start as there are very often updates.
+if [ -f /home/botmaster/src/youtube-dl ]; then
+    echo "Updating youtube-dl..."
+    /home/botmaster/src/youtube-dl -U
+fi
 
 
 ### Kill running mumble-ruby-pluginbots (of the user botmaster) ###
@@ -49,12 +53,16 @@ tmux new-session -d -n bot1 "LD_LIBRARY_PATH=/home/botmaster/src/celt/lib/ ruby 
 
 
 
-
 ### Optional: Clear playlist, add music and play it; three lines for every bot ###
 # Bot 1
 # Comment out the next tree lines if you don't want to always listen to the radio.
-mpc -p 7701 add http://ogg.theradio.cc/
-mpc -p 7701 play
+if [ ! -f "${FIRST_START_FILE}" ];
+then
+    mpc -p 7701 add http://ogg.theradio.cc/
+    mpc -p 7701 play
+
+    touch /home/botmaster/src/.first_start_done
+fi
 
 # Bot 2
 #mpc -p 7702 clear
@@ -82,4 +90,3 @@ Also make sure to run this script as user botmaster if you used the official ins
 
 Also please reread the official documentation at http://wiki.natenom.com/w/Mumble-Ruby-Pluginbot
 EOF
-
