@@ -1,4 +1,4 @@
-def ext_config()
+def std_config()
 	puts "Config loaded!"
     @settings = {   version: 2.0, 
                     main_tempdir: "/home/botmaster/temp/",

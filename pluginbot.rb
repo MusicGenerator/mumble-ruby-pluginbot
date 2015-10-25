@@ -31,24 +31,30 @@ class MumbleMPD
             puts "Plugin #{f} geladen."
         end
         @plugin = Array.new
-
         @settings = Hash.new()
         #Initialize default values
 
         #Read config file if available 
         begin
             require_relative 'pluginbot_conf.rb'
-            ext_config()
+            std_config()
         rescue
             puts "Config could not be loaded! Using default configuration."
         end
+
+        #Try to reinit extra config (only on success on restarts
+        begin
+	    ext_config()
+	    puts "restarting bot"
+	rescue
+	end
 
         OptionParser.new do |opts|
             opts.banner = "Usage: pluginbot.rb [options]"
 
             opts.on("--config=", "(Relative) path and filename to config") do |v|
+		puts "parse extra config"
                 if File.exist? v
-                    require_relative v
                     begin
                         require_relative v
                         ext_config()
@@ -125,12 +131,12 @@ class MumbleMPD
     end
     
     def mumble_start
-
         @cli.connect
          while not @cli.connected? do
             sleep(0.5)
             puts "Connecting to the server is still ongoing." if @settings[:debug]
         end
+        puts "connected"
         begin
             @cli.join_channel(@settings[:mumbleserver_targetchannel])
         rescue
@@ -262,8 +268,6 @@ class MumbleMPD
                             message = msg.message.split(@settings[:controlstring])[1 .. -1].join() #Remove @settings[:controlstring]
                             @plugin.each do |plugin|
                                 plugin.handle_chat(msg, message)
-                                puts msg.message
-                                puts message
                             end
 
                             if message == 'about'
