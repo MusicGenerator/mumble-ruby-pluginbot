@@ -294,7 +294,11 @@ class Mpd < Plugin
 
         if message.match(/^play [0-9]{1,3}$/)
             tracknumber = message.match(/^play ([0-9]{1,3})$/)[1].to_i
-            @@bot[:mpd].play tracknumber
+            begin
+                @@bot[:mpd].play tracknumber
+            rescue
+                privatemessage("Title on position #{tracknumber.to_s} does not exist")
+            end
             @@bot[:cli].me.deafen false
             @@bot[:cli].me.mute false
         end
