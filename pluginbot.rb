@@ -57,7 +57,7 @@ class MumbleMPD
                 if File.exist? v
                     begin
                         require_relative v
-                        ext_config()
+                        std_config()
                     rescue
                         puts "Your config could not be loaded!"
                     end
