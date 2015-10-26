@@ -25,8 +25,6 @@ class Control < Plugin
             @@bot[:cli].on_user_state do |msg|
                 userstate(msg)
             end
-	    
-	    @channelstate = Hash.new
         end
         
         return @@bot
