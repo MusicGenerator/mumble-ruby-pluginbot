@@ -288,8 +288,8 @@ class Mpd < Plugin
 
         if message == 'play'
             @@bot[:mpd].play
-            @@bot[:cli].me.deafen false
-            @@bot[:cli].me.mute false
+            @@bot[:cli].me.deafen false if @@bot[:cli].me.deafened?
+            @@bot[:cli].me.mute false if @@bot[:cli].me.muted?
         end
 
         if message.match(/^play [0-9]{1,3}$/)
@@ -299,8 +299,8 @@ class Mpd < Plugin
             rescue
                 privatemessage("Title on position #{tracknumber.to_s} does not exist")
             end
-            @@bot[:cli].me.deafen false
-            @@bot[:cli].me.mute false
+            @@bot[:cli].me.deafen false if @@bot[:cli].me.deafened?
+            @@bot[:cli].me.mute false if @@bot[:cli].me.muted?
         end
 
         if message == 'songlist'
