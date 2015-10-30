@@ -28,7 +28,7 @@ class MumbleMPD
         require './plugin'
         Dir["./plugins/*.rb"].each do |f| 
             require f 
-            puts "Plugin #{f} geladen."
+            puts "Plugin #{f} loaded."
         end
         @plugin = Array.new
         @settings = Hash.new()
