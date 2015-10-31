@@ -133,14 +133,17 @@ class MumbleMPD
     def mumble_start
     
 	@cli.on_server_config do |serverconfig|
-		@settings[:mumbleserver_imagelength] = serverconfig.image_message_length
-		@settings[:mumbleserver_messagelength] = serverconfig.message_length
-		@settings[:mumbleserver_allow_thml] = serverconfig.allow_html
+	    @settings[:mumbleserver_imagelength] = serverconfig.image_message_length
+	    @settings[:mumbleserver_messagelength] = serverconfig.message_length
+	    @settings[:mumbleserver_allow_html] = serverconfig.allow_html
 	end
 	
 	@cli.on_suggest_config do |suggestconfig|
-	    puts suggestconfig
+	    @settings[:mumbleserver_version] = suggestconfig.version
+	    @settings[:mumbleserver_positional] = suggestconfig.positional
+	    @settings[:mumbleserver_push_to_talk] = suggestconfig.push_to_talk
 	end
+	
         @cli.connect
          while not @cli.connected? do
             sleep(0.5)
