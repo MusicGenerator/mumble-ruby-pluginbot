@@ -19,6 +19,11 @@ See [here for the list of all plugins](http://wiki.natenom.com/w/Category:Plugin
 
 Each plugin has its own help implemented. To get it, write **.help pluginname** to the bot, for example **.help youtube**
 
+##Fully set up Mumble-Ruby-Pluginbot as a Virtual Appliance VirtualBox
+Instead of setting up the bot yourself you can download a fully set up Mumble-Ruby-Pluginbot as a virtual appliance for VirtualBox. All you need to do after importing it to VirtualBox is to change one configuration file and add your server address and bot name.
+
+The howto can be [found here](http://wiki.natenom.com/w/VirtualBox_Appliance_for_Mumble-Ruby-Pluginbot)
+
 ##Pre configured system images
 ###Banana Pi
 [Download the image](http://soa.chickenkiller.com/daten/dafoxia_BananaPiPluginbot.zip)
