@@ -389,7 +389,7 @@ class MumbleMPD
                                 help += "<b>#{cc}reset</b> Reset variables to default value. Needs binding!<br />"
                                 help += "<b>#{cc}restart</b> Restart Bot. Needs binding.<br />"
                                 help += "<b>#{cc}blacklist <i>username</i></b> Add user to blacklist. Needs binding.<br />"
-                                help += "<b>#{cc}register</b>Register the bot on the current server. Works only if server allows it. If it doesn't work ask an administrator of your Mumble server.<br />"
+                                help += "<b>#{cc}register</b> Let the bot register itself on the current server. Works only if server allows it. If it doesn't work ask an administrator of your Mumble server. Be aware that after registration only an administrator can change the name of the bot.<br />"
                                 help += "<b>#{cc}ducking</b> toggle voice ducking on/off.<br />"
                                 help += "<b>#{cc}duckvol <i>volume</i></b> set the ducking volume (% of normal volume).<br />"
 
