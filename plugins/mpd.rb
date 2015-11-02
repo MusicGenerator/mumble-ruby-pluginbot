@@ -363,6 +363,17 @@ class Mpd < Plugin
             end
         end
 
+        if message.match(/^delplaylist [0-9]{1,3}.*$/)
+            playlist_id = message.match(/^delplaylist ([0-9]{1,3})$/)[1].to_i
+            begin
+                playlist = @@bot[:mpd].playlists[playlist_id]
+                playlist.destroy
+                privatemessage( "The playlist \"#{playlist.name}\" deleted.")
+            rescue
+                privatemessage( "Sorry, the given playlist id does not exist.")
+            end
+        end
+
         if ( message[0,5] == 'where' ) 
             search = message.gsub("where", "").lstrip
             text_out = "you should search not nothing!"
@@ -512,7 +523,7 @@ class Mpd < Plugin
         if message == 'mpdcommands'
             output = ""
             @@bot[:mpd].commands.each do |command| 
-                output += "<br/>#{command}"
+                output += "<br>#{command}"
             end
             privatemessage( output)
         end
