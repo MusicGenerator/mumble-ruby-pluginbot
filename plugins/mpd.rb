@@ -167,7 +167,7 @@ class Mpd < Plugin
         h += "<b>#{@@bot[:controlstring]}songlist</b> - Print the list of ALL songs in the MPD collection.<br>"
         h += "<b>#{@@bot[:controlstring]}playlist <i>id</i></b> - Load the playlist referenced by the id.<br>"
         h += "<b>#{@@bot[:controlstring]}saveplaylist <i>name</i></b> - Save queue into a playlist named 'name'<br>"
-        h += "<b>#{@@bot[:controlstring]}delplaylist <i>id</i></b> - Remove a playlist with the given id. Use #{@@bot[:controlstring]} to get a list of available playlists.<br>"
+        h += "<b>#{@@bot[:controlstring]}delplaylist <i>id</i></b> - Remove a playlist with the given id. Use #{@@bot[:controlstring]}playlists to get a list of available playlists.<br>"
         h += "<b>#{@@bot[:controlstring]}song</b> - Print some information about the currently played song.<br>"
         h += "<b>#{@@bot[:controlstring]}status</b> - Print current status of MPD.<br>"
         h += "<b>#{@@bot[:controlstring]}playlists</b> - Print the available playlists from MPD.<br>"
