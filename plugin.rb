@@ -43,21 +43,21 @@ class Plugin
     begin
       @@bot[:cli].text_user(@user, message)
     rescue
-      puts "Sending message to user #{@user} failed. Maybe left server before we try to send." if @settings[:debug]
+      puts "Sending message to user #{@user} failed. Maybe left server before we try to send."
     end
   end
   def messageto(actor, message)
     begin
       @@bot[:cli].text_user(actor, message)
     rescue
-      puts "Sending message to user #{actor} failed. Maybe left server before we try to send." if @settings[:debug]
+      puts "Sending message to user #{actor} failed. Maybe left server before we try to send." 
     end
   end
   def channelmessage(message)
     begin
       @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, message)
     rescue
-      puts "Sending message to channel #{@@bot[:cli].me.current_channel} failed. ->should never happen<-" if @settings[:debug]
+      puts "Sending message to channel #{@@bot[:cli].me.current_channel} failed. ->should never happen<-" 
     end
   end
   
