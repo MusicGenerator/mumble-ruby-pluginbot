@@ -32,15 +32,35 @@ class Plugin
   end
   
   private
+  def prozessmessage(message)
+    # count lines
+    # for future use (send long messages in smaller parts)
+    lines = message.count("<br>") + message.count("<tr>")
+    puts lines
+    return message
+  end
   def privatemessage(message)
-    @@bot[:cli].text_user(@user, message)
+    begin
+      @@bot[:cli].text_user(@user, message)
+    rescue
+      puts "Sending message to user #{@user} failed. Maybe left server before we try to send." if @settings[:debug]
+    end
   end
   def messageto(actor, message)
-    @@bot[:cli].text_user(actor, message)
+    begin
+      @@bot[:cli].text_user(actor, message)
+    rescue
+      puts "Sending message to user #{actor} failed. Maybe left server before we try to send." if @settings[:debug]
+    end
   end
   def channelmessage(message)
-    @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, message)
+    begin
+      @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, message)
+    rescue
+      puts "Sending message to channel #{@@bot[:cli].me.current_channel} failed. ->should never happen<-" if @settings[:debug]
+    end
   end
+  
   
 end
  
