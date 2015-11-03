@@ -18,6 +18,7 @@ def std_config()
                     mumbleserver_userpassword: "",
                     mumbleserver_targetchannel: "Bottest",
                     quality_bitrate: 72000,
+                    initial_volume: 65,
                     mpd_fifopath: "/home/botmaster/mpd1/mpd.fifo",
                     mpd_host: "localhost",
                     mpd_port: 7701,

@@ -161,7 +161,7 @@ class MumbleMPD
         rescue
             puts "[killduckthread] can't kill because #{$!}" if @settings[:debug]
         end
-        
+
         #Start duckthread
         @duckthread = Thread.new do
             while (true == true)
@@ -202,6 +202,7 @@ class MumbleMPD
         #init all plugins
         init = @settings.clone
         init[:cli] = @cli
+
         puts "initplugins"
         Plugin.plugins.each do |plugin_class|
             @plugin << plugin_class.new
@@ -449,7 +450,7 @@ while true == true
     client = MumbleMPD.new
     client.init_settings
     puts "start"
-    client.mumble_start    
+    client.mumble_start
     sleep 3
     begin
         while client.run == true
