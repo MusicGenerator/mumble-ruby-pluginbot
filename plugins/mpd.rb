@@ -197,10 +197,10 @@ class Mpd < Plugin
         
         if message[0..3] == 'seek'
             seekto = case message.count ":"
-                when 0 then
-                    0               # Seconds
+                when 0 then         # Seconds
+		    0
                     if message.match(/^seek [+-]?[0-9]{1,3}$/)
-                        message.match(/^seek ([+-]?[0-9]{1,3})$/)[1].to_i
+                        result = message.match(/^seek ([+-]?[0-9]{1,3})$/)[1]
                     end
                 when 1 then         # Minutes:Seconds
                     if message.match(/^seek ([+-]?[0-5]?[0-9]:[0-5]?[0-9])/)
@@ -209,6 +209,7 @@ class Mpd < Plugin
                             result = time[0].to_i * 60 + time[1].to_i * -1
                         else
                             result = time[0].to_i * 60 + time[1].to_i
+			    result = "+" + result.to_s if time[0][0] == "+" 
                         end
                     end
                 when 2 then         # Hours:Minutes:Seconds
@@ -218,6 +219,7 @@ class Mpd < Plugin
                             result = time[0].to_i * 3600 + time[1].to_i * -60 + time[2].to_i * -1
                         else
                             result = time[0].to_i * 3600 + time[1].to_i * 60 + time[2].to_i
+			    result = "+" + result.to_s if time[0][0] == "+" 
                         end
                     end
             end
