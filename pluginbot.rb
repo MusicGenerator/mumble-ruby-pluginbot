@@ -357,6 +357,10 @@ class MumbleMPD
                                 end
                             end
 
+                            if message == 'duckvol'
+                                @cli.text_user(msg.actor, "Ducking volume is set to #{@settings[:ducking_volume]}% of normal volume. Ducking itself it set to: #{@settings[:ducking]}.")
+                            end
+
                             if message.match(/^duckvol [0-9]{1,3}$/)
                                 volume = message.match(/^duckvol ([0-9]{1,3})$/)[1].to_i 
                                 if (volume >=0 ) && (volume <= 100)
@@ -393,6 +397,7 @@ class MumbleMPD
                                 help += "<b>#{cc}register</b> Let the bot register itself on the current server. Works only if server allows it. If it doesn't work ask an administrator of your Mumble server. Be aware that after registration only an administrator can change the name of the bot.<br />"
                                 help += "<b>#{cc}ducking</b> toggle voice ducking on/off.<br />"
                                 help += "<b>#{cc}duckvol <i>volume</i></b> set the ducking volume (% of normal volume).<br />"
+                                help += "<b>#{cc}duckvol</b> Show current ducking volume.<br />"
 
                                 @cli.text_user(msg.actor, help)
                             end
