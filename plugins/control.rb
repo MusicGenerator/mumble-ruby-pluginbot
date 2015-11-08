@@ -160,8 +160,8 @@ class Control < Plugin
 
         if message == 'wakeup'
             @@bot[:mpd].pause = false
-            @@bot[:cli].me.deafen false
-            @@bot[:cli].me.mute false
+            @@bot[:cli].me.deafen false if @@bot[:cli].me.deafened?
+            @@bot[:cli].me.mute false if @@bot[:cli].me.muted?
         end
 
         if message == 'follow'
