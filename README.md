@@ -9,6 +9,43 @@ mumble-ruby-pluginbot is a Mumble-Ruby based, extensible bot which can play audi
 - Can download music from Youtube or a search on Youtube
 - Supports both CELT and Opus codec for maximum compatibility even on old Mumble servers
 
+##Example for the bot usage
+Lets say you want to listen to music from mozart...
+
+First lets search on youtube:
+```.yts mozart```
+
+The bot responds with:
+```0 Mozart for Baby (3 Hours) - Baby Bedtime Music - Lullaby for Babies
+1 The Best of Mozart | 3 HOURS Piano Sonatas | Classical Music Studying Concentration Reading Playlist
+2 Mozart for Studying and Concentration Vol. 2 - Classical Music for Studying - Study Music Playlist```
+
+Now you can either let the bot download all search results
+```.yta all```
+
+or just one specific song
+```.yta 2```
+
+In both cases the bot will inform you about the current download status:
+```[21:59:22] ♫ Music Bot 1: do 1 time(s)...
+[21:59:22] ♫ Music Bot 1: fetch and convert```
+
+Followed by a database update:
+```[21:59:48] ♫ Music Bot 1: Waiting for database update complete...```
+
+Now lets show the current music queue:
+```.queue```
+
+The bot responds with:
+```0 The Best of Mozart _ 3 HOURS Piano Sonatas ...```
+
+Now lets playl the file with:
+```.play```
+
+Have fun :)
+
+More examples can be found in the official documentation.
+
 ##Documentation
 * General information about the bot can be found at http://wiki.natenom.com/w/Mumble-Ruby-Pluginbot
 * A tutorial about the the installation of Mumble-Ruby-Pluginbot can be found at http://wiki.natenom.com/w/Installation_of_mumble-ruby-pluginbot.
