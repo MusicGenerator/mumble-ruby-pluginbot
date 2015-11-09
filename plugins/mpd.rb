@@ -134,7 +134,7 @@ class Mpd < Plugin
             @@bot[:cli].on_user_state do |msg|
             end
 
-            @@bot[:mpd].volume = @@bot[:initial_volume]
+            @@bot[:mpd].volume = @@bot[:initial_volume] if @@bot[:initial_volume] != nil
         end
 
         return @@bot
