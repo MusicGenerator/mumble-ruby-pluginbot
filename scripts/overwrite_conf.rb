@@ -9,6 +9,7 @@ def ext_config()
                     stop_on_unregistered_users: true,
                     mpd_fifopath: "/home/botmaster/mpd1/mpd.fifo",
                     mpd_port: 7701,
+                    initial_volume: nil
                  }
 
     @settings = @settings.merge(overwrite)
