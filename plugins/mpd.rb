@@ -217,7 +217,7 @@ class Mpd < Plugin
                 when 2 then         # Hours:Minutes:Seconds
                     if message.match(/^seek ([+-]?(?:[01]?[0-9]|2[0-3]):[0-5]?[0-9]:[0-5]?[0-9])/)
                         time = message.match(/^seek ([+-]?(?:[01]?[0-9]|2[0-3]):[0-5]?[0-9]:[0-5]?[0-9])/)[1].split(/:/)
-                        if time[0] < 0 
+                        if time[0].to_i < 0 
                             result = time[0].to_i * 3600 + time[1].to_i * -60 + time[2].to_i * -1
                         else
                             result = time[0].to_i * 3600 + time[1].to_i * 60 + time[2].to_i
