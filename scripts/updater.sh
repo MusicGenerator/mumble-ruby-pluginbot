@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash --login
  
 INPUT=/tmp/menu.sh.$$
 OUTPUT=/tmp/output.sh.$$
