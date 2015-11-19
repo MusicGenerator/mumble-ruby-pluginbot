@@ -16,8 +16,11 @@ Lets say you want to listen to music from Mozart...
     **.yts mozart**
 * The bot responds with:
     ```0 Mozart for Baby (3 Hours) - ...```
+
     ```1 The Best of Mozart | 3 HOURS Piano Sonatas ...```
+    
     ```2 Mozart for Studying and ...```
+    
 * Now you can either let the bot download all search results
     **.yta all**
 * or just one specific song
