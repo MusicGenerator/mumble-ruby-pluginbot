@@ -4,7 +4,8 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/bin/su - botmaster -c "/home/botmaster/src/mumble-ruby-pluginbot/scripts/start.sh" &
+User=botmaster
+ExecStart=/home/botmaster/src/mumble-ruby-pluginbot/scripts/start.sh &
 
 [Install]
 WantedBy=multi-user.target
