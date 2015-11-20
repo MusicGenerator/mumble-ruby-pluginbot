@@ -57,14 +57,32 @@ The howto can be [found here](http://wiki.natenom.com/w/VirtualBox_Appliance_for
 ##Pre configured system images
 ###Banana Pi
 [Download the image](http://soa.chickenkiller.com/daten/dafoxia_BananaPiPluginbot.zip)
-
+OUTDATED and link broken. Working on it.
 - root password: pi
 - user name:  botmaster
 - user password: botmaster
 
 ###Raspberry Pi2
-[Download the image](http://soa.chickenkiller.com/daten/dafoxia_raspi2.pluginbot.zip)
+Download one of the following compressed images:
+[(image2.img.gz)](https://robingroppe.de/media/mumble-ruby-pluginbot/image2.img.gz), 
+[(image2.img.xz)](https://robingroppe.de/media/mumble-ruby-pluginbot/image2.img.xz), 
+[(image2.img.zip)](https://robingroppe.de/media/mumble-ruby-pluginbot/image2.img.zip) 
 
+####Install on SD-Card:
+#####Linux
+
+`sudo gunzip -c image2.img.gz | dd of=/dev/sdX`
+
+or
+
+`sudo xz -c -d image2.img.xz | dd of=/dev/sdX`
+
+where sdX is the device for your SD-Card!
+
+#####Windows
+Unzip image2.img.zip and then write image2.img with Win32DiskImager.
+####Setup Bot
+Set up Bot as described in [Virtual Appliance] https://wiki.natenom.com/w/VirtualBox_Appliance_for_Mumble-Ruby-Pluginbot
 - root password: raspberry
 - user name:  botmaster
 - user password: botmaster
