@@ -82,7 +82,7 @@ where sdX is the device for your SD-Card!
 #####Windows
 Unzip image2.img.zip and then write image2.img with Win32DiskImager.
 ####Setup Bot
-Set up Bot as described in [Virtual Appliance] https://wiki.natenom.com/w/VirtualBox_Appliance_for_Mumble-Ruby-Pluginbot
+Set up Bot as described in [Virtual Appliance](https://wiki.natenom.com/w/VirtualBox_Appliance_for_Mumble-Ruby-Pluginbot)
 - root password: raspberry
 - user name:  botmaster
 - user password: botmaster
