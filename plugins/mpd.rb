@@ -369,6 +369,9 @@ class Mpd < Plugin
                 @@bot[:mpd].queue.each do |song|
                     playlist.add song
                 end
+
+                privatemessage( "The playlist \"#{name}\" was created.
+                                 Use the command #{@controlstring}playlists to get a list of all available playlists." )
             else
               privatemessage( "no playlist name gaven.")
             end
