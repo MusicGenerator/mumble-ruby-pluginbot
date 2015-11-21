@@ -371,7 +371,7 @@ class Mpd < Plugin
                 end
 
                 privatemessage( "The playlist \"#{name}\" was created.
-                                 Use the command #{@controlstring}playlists to get a list of all available playlists." )
+                                 Use the command #{@@bot[:controlstring]}playlists to get a list of all available playlists." )
             else
               privatemessage( "no playlist name gaven.")
             end
