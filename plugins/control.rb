@@ -140,13 +140,18 @@ class Control < Plugin
             else
                 @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, "Hey, \"#{msg.username}\" asked me to make some music, going now. Bye :)")
                 @@bot[:cli].join_channel(channeluserisin)
+
+                #additionally do a "wakeup"
+                @@bot[:mpd].pause = false
+                @@bot[:cli].me.deafen false if @@bot[:cli].me.deafened?
+                @@bot[:cli].me.mute false if @@bot[:cli].me.muted?
             end
         end
 
         if message == 'debug'
             privatemessage("<span style='color:red;font-size:30px;'>Stay out of here :)</span>")
         end
-       
+
         if message == 'gotobed'
             @@bot[:cli].join_channel(@@bot[:mumbleserver_targetchannel])
             @@bot[:mpd].pause = true
