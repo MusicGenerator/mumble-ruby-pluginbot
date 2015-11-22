@@ -2,7 +2,8 @@ def std_config()
 	puts "Config loaded!"
     @settings = {   version: 2.0, 
                     main_tempdir: "/home/botmaster/temp/",
-                    ducking: false, 
+                    ducking: false,
+                    control_automute: true,
                     chan_notify: 0x0000, 
                     controlstring: ".", 
                     debug: true, 
