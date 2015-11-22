@@ -57,9 +57,9 @@ The howto can be [found here](https://wiki.natenom.com/w/VirtualBox_Appliance_fo
 ##Pre configured system images
 ###Banana Pi
 Download one of the following compressed images:
-[(image2.img.gz)](https://robingroppe.de/media/mumble-ruby-pluginbot/banana.img.gz), 
-[(image2.img.xz)](https://robingroppe.de/media/mumble-ruby-pluginbot/banana.img.xz), 
-[(image2.img.zip)](https://robingroppe.de/media/mumble-ruby-pluginbot/banana.img.zip) 
+[(banana.img.gz)](https://robingroppe.de/media/mumble-ruby-pluginbot/banana.img.gz), 
+[(banana.img.xz)](https://robingroppe.de/media/mumble-ruby-pluginbot/banana.img.xz), 
+[(banana.img.zip)](https://robingroppe.de/media/mumble-ruby-pluginbot/banana.img.zip) 
 
 ####Install on SD-Card:
 #####Linux
