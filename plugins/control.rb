@@ -49,7 +49,7 @@ class Control < Plugin
         h += "<b>#{@@bot[:controlstring]}stick</b> - Jail bot into channel.<br>"
         h += "<b>#{@@bot[:controlstring]}unstick</b> - Free the bot.<br>"
         h += "<b>#{@@bot[:controlstring]}history</b> - Print last #{@historysize} commanding users with command given.<br>"
-        h += "<b>#{@@bot[:controlstring]}automute</b> - Toggles auto muting system."
+        h += "<b>#{@@bot[:controlstring]}automute</b> - Toggles auto muting system. If active and if the bot is alone in a channel it instantly mutes himself and pauses the current song until a user joins the channel. Then it unmutes and starts playing the paused song. This helps to save much bandwidth on your server :)"
     end
 
     def nopermission(msg)
