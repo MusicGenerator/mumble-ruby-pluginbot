@@ -153,13 +153,19 @@ class Control < Plugin
         end
 
         if message == 'gotobed'
-            @@bot[:cli].join_channel(@@bot[:mumbleserver_targetchannel])
-            @@bot[:mpd].pause = true
-            @@bot[:cli].me.deafen true
-            begin
-                Thread.kill(@following)
-                @alreadyfollowing = false
-            rescue
+            if @@bot[:mumbleserver_targetchannel].length > 0
+                @@bot[:cli].join_channel(@@bot[:mumbleserver_targetchannel])
+                @@bot[:mpd].pause = true
+                @@bot[:cli].me.deafen true
+                begin
+                    Thread.kill(@following)
+                    @alreadyfollowing = false
+                rescue
+                end
+            else
+                privatemessage( "Genius; you didn't define a bedroom for me :P
+                                See \"mumbleserver_targetchannel\" in my
+                                configuration file and set a valid room name where I can go to sleep :)" )
             end
         end
 
