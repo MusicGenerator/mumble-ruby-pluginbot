@@ -17,7 +17,7 @@ function done_wait() {
 function update_pluginbot() {
     echo "Updating the mumble-ruby-pluginbot from github..."
     cd ~/src/mumble-ruby-pluginbot/
-    git pull
+    git pull origin master
     done_wait
 }
 
