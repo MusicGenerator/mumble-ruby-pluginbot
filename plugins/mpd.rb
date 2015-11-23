@@ -441,10 +441,41 @@ class Mpd < Plugin
     if message == 'status' 
       out = "<table>"
       @@bot[:mpd].status.each do |key, value|
-        out += "<tr><td>#{key}</td><td>#{value}</td></tr>"
+
+        case
+        when key.to_s == 'volume'
+          out += "<tr><td>Current volume:</td><td>#{value}%</td></tr>"
+        when key.to_s == 'repeat'
+          out += "<tr><td>Repeat mode:</td><td>#{value}</td></tr>"
+        when key.to_s == 'random'
+          out += "<tr><td>Random mode:</td><td>#{value}</td></tr>"
+        when key.to_s == 'single'
+          out += "<tr><td>Single mode:</td><td>#{value}</td></tr>"
+        when key.to_s == 'consume'
+          out += "<tr><td>Consume mode:</td><td>#{value}</td></tr>"
+        when key.to_s == 'playlist'
+          out += "<tr><td>Current playlist:</td><td>#{value}</td></tr>"
+
+          #FIXME Not possible, because the "value" in this context is random(?) after every playlist loading.
+          #playlist = @@bot[:mpd].playlists[value.to_i]
+          #if not playlist.nil?
+          #  out += "<tr><td>Current playlist:</td><td>#{playlist.name}</td></tr>"
+          #else
+          #  out += "<tr><td>Current playlist:</td><td>#{value}</td></tr>"
+          #end
+        when key.to_s == 'playlistlength'
+          out += "<tr><td>Songs in the playlist:</td><td>#{value}</td></tr>"
+        when key.to_s == 'mixrampdb'
+          out += "<tr><td>Mixramp db:</td><td>#{value}</td></tr>"
+        when key.to_s == 'state'
+          out += "<tr><td>Current status:</td><td>#{value}</td></tr>"
+        else
+          out += "<tr><td>#{key}:</td><td>#{value}</td></tr>"
+        end
+
       end
       out += "</table>"
-      privatemessage( out)    
+      privatemessage(out)
     end
 
    if message == 'file'
