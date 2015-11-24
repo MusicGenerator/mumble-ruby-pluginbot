@@ -20,8 +20,8 @@ class Version < Plugin
   def handle_chat(msg, message)
     super
     if message == "version"
-      versionshort = `git rev-parse --short HEAD`
-      versionlong = `git rev-parse HEAD` 
+      versionshort = `git rev-parse --short master`
+      versionlong = `git rev-parse master` 
       privatemessage("Version: " + versionshort.to_s + " / " +versionlong.to_s)
     end
   end
