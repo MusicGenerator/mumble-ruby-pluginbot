@@ -439,20 +439,40 @@ class Mpd < Plugin
     end
 
     if message == 'status' 
-      out = "<table>"
+      out = "<table border='1'>"
       @@bot[:mpd].status.each do |key, value|
 
         case
         when key.to_s == 'volume'
           out += "<tr><td>Current volume:</td><td>#{value}%</td></tr>"
-        when key.to_s == 'repeat'
-          out += "<tr><td>Repeat mode:</td><td>#{value}</td></tr>"
+        when key.to_s == 'repeat' 
+          if value
+            repeat = "on"
+          else
+            repeat = "off"
+          end
+          out += "<tr><td>Repeat mode:</td><td>#{repeat}</td></tr>"
         when key.to_s == 'random'
-          out += "<tr><td>Random mode:</td><td>#{value}</td></tr>"
+          if value
+            random = "on"
+          else
+            random = "off"
+          end
+          out += "<tr><td>Random mode:</td><td>#{random}</td></tr>"
         when key.to_s == 'single'
-          out += "<tr><td>Single mode:</td><td>#{value}</td></tr>"
+          if value
+            single = "on"
+          else
+            single = "off"
+          end
+          out += "<tr><td>Single mode:</td><td>#{single}</td></tr>"
         when key.to_s == 'consume'
-          out += "<tr><td>Consume mode:</td><td>#{value}</td></tr>"
+          if value
+            consume = "on"
+          else
+            consume = "off"
+          end
+          out += "<tr><td>Consume mode:</td><td>#{consume}</td></tr>"
         when key.to_s == 'playlist'
           out += "<tr><td>Current playlist:</td><td>#{value}</td></tr>"
 
@@ -464,11 +484,64 @@ class Mpd < Plugin
           #  out += "<tr><td>Current playlist:</td><td>#{value}</td></tr>"
           #end
         when key.to_s == 'playlistlength'
-          out += "<tr><td>Songs in the playlist:</td><td>#{value}</td></tr>"
+          out += "<tr><td>Song count in current queue/playlist:</td><td valign='bottom'>#{value}</td></tr>"
         when key.to_s == 'mixrampdb'
           out += "<tr><td>Mixramp db:</td><td>#{value}</td></tr>"
         when key.to_s == 'state'
-          out += "<tr><td>Current status:</td><td>#{value}</td></tr>"
+          case
+          when value.to_s == 'play'
+            state = "playing"
+          when value.to_s == 'stop'
+            state = "stopped"
+          when value.to_s == 'pause'
+            state = "paused"
+          else
+            state = "unknown state"
+          end
+          out += "<tr><td>Current state:</td><td>#{state}</td></tr>"
+        when key.to_s == 'song'
+          current = @@bot[:mpd].current_song
+          if not current.nil? 
+            out += "<tr><td>Current song:</td><td>#{current.artist} - #{current.title} (#{current.album})</td></tr>"
+          else
+            out += "<tr><td>Current song:</td><td>#{value})</td></tr>"
+          end
+        when key.to_s == 'songid'
+          #queue = Queue.new
+          ##queue = @@bot[:mpd].queue
+          #puts "queue: " + queue.inspect
+          #current_song = queue.song_with_id(value.to_i)
+
+          #out += "<tr><td>Current songid:</td><td>#{current_song}</td></tr>"
+          out += "<tr><td>Current songid:</td><td>#{value}</td></tr>"
+        when key.to_s == 'time'
+          begin
+            #Code from http://stackoverflow.com/questions/19595840/rails-get-the-time-difference-in-hours-minutes-and-seconds
+            now_mm, now_ss = value[0].divmod(60) #Minutes and seconds of current time within the song.
+            now_hh, now_mm = now_mm.divmod(60)
+            total_mm, total_ss = value[1].divmod(60) #Minutes and seconds of total time of the song.
+            total_hh, total_mm = total_mm.divmod(60)
+
+            now = "%02d:%02d:%02d" % [now_hh, now_mm, now_ss]
+            total = "%02d:%02d:%02d" % [total_hh, total_mm, total_ss]
+
+            out += "<tr><td>Current position:</td><td>#{now}/#{total}</td></tr>"
+          rescue
+            out += "<tr><td>Current position:</td><td>Unknown stream position.</td></tr>"
+          end
+        when key.to_s == 'elapsed'
+          now_mm, now_ss = value.divmod(60) #Minutes and seconds of current time within the song.
+          now_hh, now_mm = now_mm.divmod(60)
+          now = "%02d:%02d:%02d" % [now_hh, now_mm, now_ss]
+          out += "<tr><td>Elapsed:</td><td>#{now}</td></tr>"
+        when key.to_s == 'bitrate'
+          out += "<tr><td>Current song bitrate:</td><td>#{value}</td></tr>"
+        when key.to_s == 'audio'
+          out += "<tr><td>Audio properties:</td><td>samplerate(#{value[0]}), bitrate(#{value[1]}), channels(#{value[2]})</td></tr>"
+        when key.to_s == 'nextsong'
+          out += "<tr><td>Position ID of next song to play (in the queue):</td><td valign='bottom'>#{value}</td></tr>"
+        when key.to_s == 'nextsongid'
+          out += "<tr><td>Song ID of next song to play</td><td valign='bottom'>#{value}</td></tr>"
         else
           out += "<tr><td>#{key}:</td><td>#{value}</td></tr>"
         end
