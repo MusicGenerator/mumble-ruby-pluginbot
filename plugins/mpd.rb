@@ -541,7 +541,7 @@ class Mpd < Plugin
         when key.to_s == 'nextsong'
           out += "<tr><td>Position ID of next song to play (in the queue):</td><td valign='bottom'>#{value}</td></tr>"
         when key.to_s == 'nextsongid'
-          out += "<tr><td>Song ID of next song to play</td><td valign='bottom'>#{value}</td></tr>"
+          out += "<tr><td>Song ID of next song to play:</td><td valign='bottom'>#{value}</td></tr>"
         else
           out += "<tr><td>#{key}:</td><td>#{value}</td></tr>"
         end

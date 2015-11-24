@@ -32,7 +32,8 @@ class Ektoplazm < Plugin
 
   def help(h)
     h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h += "<b>#{@@bot[:controlstring]}ektoplazm <i>URL</i></b> - Will try to download the music from the given URL."
+    h += "<b>#{@@bot[:controlstring]}ektoplazm <i>URL</i></b> - Will try to download the music from the given URL.<br />"
+    h += "<br />Note: This plugins supports only .zip archives from ektoplazm.com which means you can use mp3 or flac archives, not wav archives."
   end
 
   def handle_chat(msg, message)

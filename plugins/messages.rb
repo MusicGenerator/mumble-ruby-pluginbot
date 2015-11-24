@@ -47,7 +47,8 @@ class Messages < Plugin
     h += "<b>#{@@bot[:controlstring]}- #(<i>Hashtag</i>)</b> - Unsubscribe from a notification.<br>"
     h += "You can choose one or more of the following values:<br>"
     h += "volume, random, update, single, xfade, consume, repeat, state<br>"
-    h += "<b>#{@@bot[:controlstring]}* List subscribed notifications.<br>"
+    h += "<b>#{@@bot[:controlstring]}*</b> - List subscribed notifications.<br>"
+    h += "<br /><b>Example:</b> To get a message when the repeat mode changes send the command \"#{@@bot[:controlstring]}+ #repeat\""
   end
 
   def handle_chat(msg, message)
