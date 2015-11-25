@@ -22,7 +22,7 @@ class Version < Plugin
     if message == "version"
       versionshort = `git rev-parse --short HEAD`
       versionlong = `git rev-parse HEAD` 
-      privatemessage("Version: " + versionshort.to_s + " / " +versionlong.to_s)
+      privatemessage("Version: #{versionshort.to_s} / #{versionlong.to_s}")
     end
   end
 end

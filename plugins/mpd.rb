@@ -112,18 +112,18 @@ class Mpd < Plugin
                   output += "<tr><td>Source:</td><td>#{current.file}</td></tr>" if ( !current.file.nil? ) && ( current.album.nil? ) && ( current.artist.nil? )
                   output += "</table><br>" + @infotemplate
                   @@bot[:cli].set_comment(image+output)
-               rescue NoMethodError
-                 if @@bot[:debug]
+                rescue NoMethodError
+                  if @@bot[:debug]
                     puts "#{$!}"
-                 end
-              end
-            else
-              if current.artist.nil? && current.title.nil? && current.album.nil?
-                channelmessage( "#{current.file}") if @@bot[:chan_notify] && 0x80
+                  end
+                end
               else
-                channelmessage( "#{current.artist} - #{current.title} (#{current.album})") if (@@bot[:chan_notify] && 0x80) != 0
+                if current.artist.nil? && current.title.nil? && current.album.nil?
+                  channelmessage( "#{current.file}") if @@bot[:chan_notify] && 0x80
+                else
+                  channelmessage( "#{current.artist} - #{current.title} (#{current.album})") if (@@bot[:chan_notify] && 0x80) != 0
+                end
               end
-            end
             lastcurrent = current
             puts "[displayinfo] update" if @@bot[:debug]
             end
@@ -199,9 +199,10 @@ class Mpd < Plugin
     if message[0..3] == 'seek'
       seekto = case message.count ":"
         when 0 then         # Seconds
-          0
           if message.match(/^seek [+-]?[0-9]{1,3}$/)
             result = message.match(/^seek ([+-]?[0-9]{1,3})$/)[1]
+          else
+            return 0
           end
         when 1 then         # Minutes:Seconds
           if message.match(/^seek ([+-]?[0-5]?[0-9]:[0-5]?[0-9])/)
@@ -551,7 +552,7 @@ class Mpd < Plugin
       privatemessage(out)
     end
 
-   if message == 'file'
+    if message == 'file'
       current = @@bot[:mpd].current_song
       privatemessage( "Filename of currently played song:<br>#{current.file}</span>") if not current.nil?
     end

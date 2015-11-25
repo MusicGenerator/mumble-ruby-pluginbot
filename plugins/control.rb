@@ -198,9 +198,9 @@ class Control < Plugin
           end
           sleep 0.5
         end
-        rescue
-          if @@bot[:debug]
-            puts "#{$!}"
+      rescue
+        if @@bot[:debug]
+          puts "#{$!}"
         end
         @alreadyfollowing = false
         Thread.kill(@following)

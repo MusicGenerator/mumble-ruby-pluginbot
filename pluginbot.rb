@@ -44,10 +44,10 @@ class MumbleMPD
 
       #Try to reinit extra config (only on success on restarts
       begin
-    ext_config()
-    puts "restarting bot"
-rescue
-end
+        ext_config()
+        puts "restarting bot"
+      rescue
+      end
 
       OptionParser.new do |opts|
           opts.banner = "Usage: pluginbot.rb [options]"
@@ -145,7 +145,7 @@ end
     end
 
     @cli.connect
-     while not @cli.connected? do
+    while not @cli.connected? do
       sleep(0.5)
       puts "Connecting to the server is still ongoing." if @settings[:debug]
     end
@@ -415,7 +415,7 @@ end
                   end
 
                   @cli.text_user(msg.actor, help)
-                  else #Send default help text.
+                else #Send default help text.
                     help = "<br />\
                             Hi, I am a <a href='http://wiki.natenom.com/w/Mumble-Ruby-Pluginbot'>Mumble-Ruby-Pluginbot</a> and YOU can control me through text commands.<br /><br />
                     I will give you a good start with the basic commands you need to control the music I have to offer :) - if you send me the following command:<br />\
@@ -435,19 +435,19 @@ end
                     <b><u>Commands for experts only:</b></u><br />\
                     <b>#{cc}internals</b> - See my internal commands.<br />"
                     @cli.text_user(msg.actor, help)
-                  end
                 end
               end
             end
-          else
-              puts "Debug: Not listening because @settings[:listen_to_private_message_only] is true and message was sent to channel." if @settings[:debug]
           end
+        else
+          puts "Debug: Not listening because @settings[:listen_to_private_message_only] is true and message was sent to channel." if @settings[:debug]
+        end
       else
         puts "Debug: Not listening because @settings[:listen_to_registered_users_only] is true and sender is unregistered or on a blacklist." if @settings[:debug]
       end
     end
   end
- end
+end
 
 while true == true
     puts "pluginbot is starting..." 
