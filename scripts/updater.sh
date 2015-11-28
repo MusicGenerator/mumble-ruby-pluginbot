@@ -67,7 +67,7 @@ function update_celt-libs() {
     cd ~/src/celt-0.7.0
     git pull
     ./autogen.sh
-    ./configure --prefix=/home/botmaster/src/celt
+    ./configure --prefix=$HOME/src/celt
     make
     make install
     done_wait
