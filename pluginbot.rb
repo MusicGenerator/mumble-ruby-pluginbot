@@ -370,7 +370,52 @@ class MumbleMPD
                   @cli.text_user(msg.actor, "Volume can be within a range of 0 to 100")
                 end
               end
+              
+              if message == 'bitrate'
+                begin
+                  @cli.text_user(msg.actor, "Encoding is set o #{@cli.get_bitrate.to_s} bit/s")
+                rescue
+                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
+                end
+              end
+              
+           
+              if message.match(/^bitrate [0-9]{1,3}$/)
+                bitrate = message.match(/^bitrate ([0-9]{1,3})$/)[1].to_i * 1000
+                begin
+                  @cli.set_bitrate(bitrate)
+                  @cli.text_user(msg.actor, "Encoding is set now to #{@cli.get_bitrate} bit/s")
+                  @cli.text_user(msg.actor, "The calculated datarate is #{(1000/ @cli.get_frame_length.to_f * 320 ).to_i + @cli.get_bitrate} bit/s")
+                rescue
+                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
+                end
+              end
+              
+              if message == 'framesize'
+                begin
+                  @cli.text_user(msg.actor, "sending in #{@cli.get_frame_length.to_s} ms frames")
+                rescue
+                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
+                end
+              end
+    
+              if message.match(/^framesize [0-9]{1,2}$/)
+                framelength = message.match(/^framesize ([0-9]{1,2})$/)[1].to_i
+                begin
+                  @cli.set_frame_length(framelength)
+                  @cli.text_user(msg.actor, "sending in #{@cli.get_frame_length.to_s} ms frames")
+                  @cli.text_user(msg.actor, "The calculated datarate is #{(1000/ @cli.get_frame_length.to_f * 320 ).to_i + @cli.get_bitrate} bit/s")
+                rescue
+                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
+                end
+              end
 
+              if message == 'datarate'
+                begin
+                  @cli.text_user(msg.actor, "The calculated datarate is #{(1000/ @cli.get_frame_length.to_f * 320 ).to_i + @cli.get_bitrate} bit/s")
+                rescue
+                end
+              end
               if message == 'plugins'
                 help = "<br /><span style='color:red;'>Loaded plugins:<br /><b>"
                 @plugin.each do |plugin|
@@ -398,6 +443,7 @@ class MumbleMPD
                 help += "<b>#{cc}ducking</b> toggle voice ducking on/off.<br />"
                 help += "<b>#{cc}duckvol <i>volume</i></b> set the ducking volume (% of normal volume).<br />"
                 help += "<b>#{cc}duckvol</b> Show current ducking volume.<br />"
+                help += "<b>#{cc}bitrate <i>rate in kbit/s</i> set audio encoding rate"
 
                 @cli.text_user(msg.actor, help)
               end
