@@ -53,7 +53,7 @@ class MumbleMPD
           opts.banner = "Usage: pluginbot.rb [options]"
 
           opts.on("--config=", "(Relative) path and filename to config") do |v|
-  puts "parse extra config"
+          puts "parse extra config"
               if File.exist? v
                   begin
                       require_relative v
@@ -63,6 +63,7 @@ class MumbleMPD
                   end
               else
                   puts "Config path- and/or filename is wrong!"
+                  puts "used #{v}"
                   puts "Config not loaded!"
               end
           end
@@ -423,6 +424,7 @@ class MumbleMPD
                   @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
                 end
               end
+
               if message == 'plugins'
                 help = "<br /><span style='color:red;'>Loaded plugins:<br /><b>"
                 @plugin.each do |plugin|
@@ -518,6 +520,9 @@ while true == true
         puts "An error occurred: #{$!}"
         client.disconnect
     end
+    puts "----------------------------------------------"
+    puts "-- Restart                                 ---"
+    puts "----------------------------------------------"
     sleep 0.5
 end
 
