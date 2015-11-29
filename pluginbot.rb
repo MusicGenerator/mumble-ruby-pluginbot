@@ -130,6 +130,10 @@ class MumbleMPD
     @cli.disconnect if @cli.connected?
   end
   
+  def get_overall_bandwidth
+    ( 1000/ @cli.get_frame_length.to_f * 320 ).to_i + @cli.get_bitrate
+  end
+  
   def mumble_start
   
     @cli.on_server_config do |serverconfig|
@@ -367,53 +371,56 @@ class MumbleMPD
                   @settings[:ducking_volume] = volume
                   @cli.text_user(msg.actor, "ducking is set to #{volume}% of normal volume.")
                 else
-                  @cli.text_user(msg.actor, "Volume can be within a range of 0 to 100")
+                  @cli.text_user(msg.actor, "Volume can be within a range of 0 to 100.")
                 end
               end
-              
+
               if message == 'bitrate'
                 begin
-                  @cli.text_user(msg.actor, "Encoding is set o #{@cli.get_bitrate.to_s} bit/s")
-                rescue
-                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
-                end
-              end
-              
-           
-              if message.match(/^bitrate [0-9]{1,3}$/)
-                bitrate = message.match(/^bitrate ([0-9]{1,3})$/)[1].to_i * 1000
-                begin
-                  @cli.set_bitrate(bitrate)
-                  @cli.text_user(msg.actor, "Encoding is set now to #{@cli.get_bitrate} bit/s")
-                  @cli.text_user(msg.actor, "The calculated datarate is #{(1000/ @cli.get_frame_length.to_f * 320 ).to_i + @cli.get_bitrate} bit/s")
-                rescue
-                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
-                end
-              end
-              
-              if message == 'framesize'
-                begin
-                  @cli.text_user(msg.actor, "sending in #{@cli.get_frame_length.to_s} ms frames")
-                rescue
-                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
-                end
-              end
-    
-              if message.match(/^framesize [0-9]{1,2}$/)
-                framelength = message.match(/^framesize ([0-9]{1,2})$/)[1].to_i
-                begin
-                  @cli.set_frame_length(framelength)
-                  @cli.text_user(msg.actor, "sending in #{@cli.get_frame_length.to_s} ms frames")
-                  @cli.text_user(msg.actor, "The calculated datarate is #{(1000/ @cli.get_frame_length.to_f * 320 ).to_i + @cli.get_bitrate} bit/s")
+                  @cli.text_user(msg.actor, "Encoding is set to #{@cli.get_bitrate.to_s} bit/s.")
                 rescue
                   @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
                 end
               end
 
-              if message == 'datarate'
+              if message.match(/^bitrate [0-9]{1,3}$/)
+                bitrate = message.match(/^bitrate ([0-9]{1,3})$/)[1].to_i * 1000
                 begin
-                  @cli.text_user(msg.actor, "The calculated datarate is #{(1000/ @cli.get_frame_length.to_f * 320 ).to_i + @cli.get_bitrate} bit/s")
+                  @cli.set_bitrate(bitrate)
+                  @cli.text_user(msg.actor, "Encoding is set now to #{@cli.get_bitrate} bit/s.")
+                  @cli.text_user(msg.actor, "The calculated overall bandwidth is #{get_overall_bandwidth} bit/s.")
                 rescue
+                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
+                end
+              end
+
+              if message == 'framesize'
+                begin
+                  @cli.text_user(msg.actor, "sending in #{@cli.get_frame_length.to_s} ms frames.")
+                rescue
+                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
+                end
+              end
+
+              if message.match(/^framesize [0-9]{1,2}$/)
+                framelength = message.match(/^framesize ([0-9]{1,2})$/)[1].to_i
+                begin
+                  @cli.set_frame_length(framelength)
+                  @cli.text_user(msg.actor, "Sending now in #{@cli.get_frame_length.to_s} ms frames.")
+                  @cli.text_user(msg.actor, "The calculated overall bandwidth is #{get_overall_bandwidth} bit/s.")
+                rescue
+                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
+                end
+              end
+
+              if message == 'bandwidth'
+                begin
+                   @cli.text_user(msg.actor, "<br /><u>Current bandwidth related settings:</u><br />
+                                              The calculated overall bandwidth (audio + overhead): #{get_overall_bandwidth} bit/s<br />
+                                              Audio encoding bandwidth: #{@cli.get_bitrate.to_s} bit/s<br />
+                                              Framesize: #{@cli.get_frame_length.to_s} ms")
+                rescue
+                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
                 end
               end
               if message == 'plugins'
@@ -434,16 +441,16 @@ class MumbleMPD
                 help += "<b>#{cc}about</b> Get information about this bot.<br />"
                 help += "<b>#{cc}settings</b> display current settings.<br />"
                 help += "<b>#{cc}set <i>variable=value</i></b> Set variable to value.<br />"
-                help += "<b>#{cc}bind</b> Bind Bot to a user. (some functions will only work if bot is bound).<br />"
-                help += "<b>#{cc}unbind</b> Unbind Bot.<br />"
+                help += "<b>#{cc}bind</b> Bind bot to a user. (some functions will only work if bot is bound).<br />"
+                help += "<b>#{cc}unbind</b> Unbind bot.<br />"
                 help += "<b>#{cc}reset</b> Reset variables to default value. Needs binding!<br />"
                 help += "<b>#{cc}restart</b> Restart Bot. Needs binding.<br />"
                 help += "<b>#{cc}blacklist <i>username</i></b> Add user to blacklist. Needs binding.<br />"
                 help += "<b>#{cc}register</b> Let the bot register itself on the current server. Works only if server allows it. If it doesn't work ask an administrator of your Mumble server. Be aware that after registration only an administrator can change the name of the bot.<br />"
-                help += "<b>#{cc}ducking</b> toggle voice ducking on/off.<br />"
-                help += "<b>#{cc}duckvol <i>volume</i></b> set the ducking volume (% of normal volume).<br />"
+                help += "<b>#{cc}ducking</b> Toggle voice ducking on/off.<br />"
+                help += "<b>#{cc}duckvol <i>volume</i></b> Set the ducking volume (% of normal volume).<br />"
                 help += "<b>#{cc}duckvol</b> Show current ducking volume.<br />"
-                help += "<b>#{cc}bitrate <i>rate in kbit/s</i> set audio encoding rate"
+                help += "<b>#{cc}bitrate <i>rate in kbit/s</i></b> Set audio encoding rate. Note that the bot needs additional bandwidth for overhead so the overall bandwidth is higher than this bitrate."
 
                 @cli.text_user(msg.actor, help)
               end
