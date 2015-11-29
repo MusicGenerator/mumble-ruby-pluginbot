@@ -450,7 +450,8 @@ class MumbleMPD
                 help += "<b>#{cc}ducking</b> Toggle voice ducking on/off.<br />"
                 help += "<b>#{cc}duckvol <i>volume</i></b> Set the ducking volume (% of normal volume).<br />"
                 help += "<b>#{cc}duckvol</b> Show current ducking volume.<br />"
-                help += "<b>#{cc}bitrate <i>rate in kbit/s</i></b> Set audio encoding rate. Note that the bot needs additional bandwidth for overhead so the overall bandwidth is higher than this bitrate."
+                help += "<b>#{cc}bitrate <i>rate in kbit/s</i></b> Set audio encoding rate. Note that the bot needs additional bandwidth for overhead so the overall bandwidth is higher than this bitrate.<br />"
+                help += "<b>#{cc}bandwidth</b> Show information about the overall bandwidth, audo bandwidth (bitrate) and framesize."
 
                 @cli.text_user(msg.actor, help)
               end
