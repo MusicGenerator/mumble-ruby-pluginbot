@@ -91,5 +91,5 @@ Then take a look into the logfile within $HOME/logs/.
 
 Also make sure to run this script as user botmaster if you used the official installation documentation and DO NOT RUN THIS SCRIPT AS root.
 
-Also please reread the official documentation at http://wiki.natenom.com/w/Mumble-Ruby-Pluginbot
+Also please reread the official documentation at https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot
 EOF
