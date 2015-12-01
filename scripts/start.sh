@@ -85,11 +85,13 @@ Your bot(s) should now be connected to the configured Mumble server.
 Have fun with mumble-ruby-pluginbot :)
 
 If something doesn't work, start this script with the additional parameter debug:
-~/src/mumble-ruby-pluginbot/start.sh debug
+~/src/mumble-ruby-pluginbot/scripts/start.sh debug
 
 Then take a look into the logfile within $HOME/logs/.
 
 Also make sure to run this script as user botmaster if you used the official installation documentation and DO NOT RUN THIS SCRIPT AS root.
+
+If you want to update the pluginbot please run ~/src/mumble-ruby-pluginbot/scripts/updater.sh
 
 Also please reread the official documentation at https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot
 EOF
