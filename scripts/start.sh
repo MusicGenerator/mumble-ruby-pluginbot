@@ -82,16 +82,35 @@ cat <<EOF
 
 
 Your bot(s) should now be connected to the configured Mumble server.
-Have fun with mumble-ruby-pluginbot :)
 
-If something doesn't work, start this script with the additional parameter debug:
-~/src/mumble-ruby-pluginbot/scripts/start.sh debug
 
-Then take a look into the logfile within $HOME/logs/.
+_LOGGING/DEBUGGING_
+  If something doesn't work, start this script with the additional parameter debug:
+  ~/src/mumble-ruby-pluginbot/scripts/start.sh debug
 
-Also make sure to run this script as user botmaster if you used the official installation documentation and DO NOT RUN THIS SCRIPT AS root.
+  Then take a look into the logfile within $HOME/logs/.
 
-If you want to update the pluginbot please run ~/src/mumble-ruby-pluginbot/scripts/updater.sh
 
-Also please reread the official documentation at https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot
+_START AS APPROPRIATE USER_
+  Make sure to run this script as user botmaster if you used the official
+  installation documentation and DO NOT RUN THIS SCRIPT AS root.
+  The official documentation can be found at https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot
+
+
+_UPDATE THE BOT (AND ITS DEPENDENCIES)_
+  If you want to update the Mumble-Ruby-Pluginbot (and its dependencies) please
+  run ~/src/mumble-ruby-pluginbot/scripts/updater.sh
+
+
+_OFFICIAL DOCUMENTATION_
+  Also please reread the official documentation at https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot
+  if you have further problems :)
+  
+
+_BUGS/WISHES/IDEAS_
+  If you think you found a bug, have a wish for the bot or some ideas please don't
+  hesitate to create an issue at https://github.com/dafoxia/mumble-ruby-pluginbot/issues
+  
+  
+Have fun with the Mumble-Ruby-Pluginbot :)
 EOF
