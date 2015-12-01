@@ -440,7 +440,7 @@ class Mpd < Plugin
     end
 
     if message == 'status' 
-      out = "<table border='1'>"
+      out = "<table>"
       @@bot[:mpd].status.each do |key, value|
 
         case
