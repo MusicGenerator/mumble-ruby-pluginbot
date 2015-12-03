@@ -33,7 +33,7 @@ function update_youtubedl() {
 
 function update_celt-gem() {
     cd ~/src/celt-ruby
-    git pull
+    git pull origin master
     rvm use @bots
     gem build celt-ruby.gemspec
     rvm @bots do gem install celt-ruby
@@ -42,7 +42,7 @@ function update_celt-gem() {
 
 function update_opus-gem() {
     cd ~/src/opus-ruby
-    git pull
+    git pull origin master
     rvm use @bots
     gem build opus-ruby.gemspec
     rvm @bots do gem install opus-ruby
@@ -51,7 +51,7 @@ function update_opus-gem() {
 
 function update_mumble-ruby-gem() {
     cd ~/src/mumble-ruby
-    git pull
+    git pull origin master
     rvm use @bots
     gem build mumble-ruby.gemspec
     rvm @bots do gem install mumble-ruby-*.gem
@@ -65,7 +65,7 @@ function update_mumble-mpd-gem() {
 
 function update_celt-libs() {
     cd ~/src/celt-0.7.0
-    git pull
+    git pull origin master
     ./autogen.sh
     ./configure --prefix=$HOME/src/celt
     make
