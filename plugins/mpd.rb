@@ -6,7 +6,7 @@ class Mpd < Plugin
     super
     @@bot = init
     #init default template
-    @infotemplate = "send #{@@bot[:controlstring]}help or #{@@bot[:controlstring]}about for more information over me."
+    @infotemplate = "send <b>#{@@bot[:controlstring]}help</b> or <b>#{@@bot[:controlstring]}about</b> for more information about me."
 
     if ( @@bot[:messages] != nil ) && ( @@bot[:mpd] == nil ) then
       @@bot[:mpd] = MPD.new @@bot[:mpd_host], @@bot[:mpd_port].to_i
