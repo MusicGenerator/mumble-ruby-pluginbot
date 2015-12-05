@@ -24,99 +24,100 @@ class MumbleMPD
   attr_reader :run
 
   def initialize
-      # load all plugins
-      require './plugin'
-      Dir["./plugins/*.rb"].each do |f| 
-          require f 
-          puts "Plugin #{f} loaded."
+    # load all plugins
+    require './plugin'
+    Dir["./plugins/*.rb"].each do |f| 
+      require f 
+      puts "Plugin #{f} loaded."
+    end
+    @plugin = Array.new
+    @settings = Hash.new()
+    #Initialize default values
+
+    #Read config file if available 
+    begin
+      require_relative 'pluginbot_conf.rb'
+      std_config()
+    rescue
+      puts "Config could not be loaded! Using default configuration."
+    end
+
+    #Try to reinit extra config (only on success on restarts)
+    begin
+      ext_config()
+      puts "restarting bot"
+    rescue
+    end
+
+    OptionParser.new do |opts|
+      opts.banner = "Usage: pluginbot.rb [options]"
+
+      opts.on("--config=", "(Relative) path and filename to config") do |v|
+      puts "parse extra config"
+        if File.exist? v
+          begin
+            require_relative v
+            ext_config()
+          rescue
+            puts "Your config could not be loaded!"
+          end
+        else
+          puts "Config path- and/or filename is wrong!"
+          puts "used #{v}"
+          puts "Config not loaded!"
+        end
       end
-      @plugin = Array.new
-      @settings = Hash.new()
-      #Initialize default values
-
-      #Read config file if available 
-      begin
-          require_relative 'pluginbot_conf.rb'
-          std_config()
-      rescue
-          puts "Config could not be loaded! Using default configuration."
+      
+      opts.on("--mumblehost=", "IP or Hostname of mumbleserver") do |v|
+        @settings[:mumbleserver_host] = v
       end
 
-      #Try to reinit extra config (only on success on restarts
-      begin
-        ext_config()
-        puts "restarting bot"
-      rescue
+      opts.on("--mumbleport=", "Port of Mumbleserver") do |v|
+        @settings[:mumbleserver_port] = v
       end
 
-      OptionParser.new do |opts|
-          opts.banner = "Usage: pluginbot.rb [options]"
+      opts.on("--name=", "The Bot's Nickname") do |v|
+        @settings[:mumbleserver_username] = v
+      end
 
-          opts.on("--config=", "(Relative) path and filename to config") do |v|
-          puts "parse extra config"
-              if File.exist? v
-                  begin
-                      require_relative v
-                      ext_config()
-                  rescue
-                      puts "Your config could not be loaded!"
-                  end
-              else
-                  puts "Config path- and/or filename is wrong!"
-                  puts "used #{v}"
-                  puts "Config not loaded!"
-              end
-          end
-          
-          opts.on("--mumblehost=", "IP or Hostname of mumbleserver") do |v|
-              @settings[:mumbleserver_host] = v
-          end
+      opts.on("--userpass=", "Password if required for user") do |v|
+        @settings[:mumbleserver_userpassword] = v
+      end
 
-          opts.on("--mumbleport=", "Port of Mumbleserver") do |v|
-              @settings[:mumbleserver_port] = v
-          end
+      opts.on("--targetchannel=", "Channel to be joined after connect") do |v|
+        @settings[:mumbleserver_targetchannel] = v
+      end
 
-          opts.on("--name=", "The Bot's Nickname") do |v|
-              @settings[:mumbleserver_username] = v
-          end
+      opts.on("--bitrate=", "Desired audio bitrate") do |v|
+        @settings[:quality_bitrate] = v.to_i
+      end
 
-          opts.on("--userpass=", "Password if required for user") do |v|
-              @settings[:mumbleserver_userpassword] = v
-          end
+      opts.on("--fifo=", "Path to fifo") do |v|
+        @settings[:mpd_fifopath] = v.to_s
+      end
 
-          opts.on("--targetchannel=", "Channel to be joined after connect") do |v|
-              @settings[:mumbleserver_targetchannel] = v
-          end
+      opts.on("--mpdhost=", "MPD's Hostname") do |v|
+        @settings[:mpd_host] = v
+      end
 
-          opts.on("--bitrate=", "Desired audio bitrate") do |v|
-              @settings[:quality_bitrate] = v.to_i
-          end
+      opts.on("--mpdport=", "MPD's Port") do |v|
+        @settings[:mpd_port] = v.to_i
+      end
 
-          opts.on("--fifo=", "Path to fifo") do |v|
-              @settings[:mpd_fifopath] = v.to_s
-          end
+      opts.on("--controllable=", "true if bot should be controlled from chatcommands") do |v|
+        @settings[:controllable] = v.to_bool
+      end
 
-          opts.on("--mpdhost=", "MPD's Hostname") do |v|
-              @settings[:mpd_host] = v
-          end
-
-          opts.on("--mpdport=", "MPD's Port") do |v|
-              @settings[:mpd_port] = v.to_i
-          end
-
-          opts.on("--controllable=", "true if bot should be controlled from chatcommands") do |v|
-              @settings[:controllable] = v.to_bool
-          end
-
-          opts.on("--certdir=", "path to cert") do |v|
-              @settings[:certdirectory] = v
-          end
-      end.parse! 
-      @settings[:ducking_volume] = 20 if @settings[:ducking_volume].nil?
-      @configured_settings = @settings.clone 
+      opts.on("--certdir=", "path to cert") do |v|
+        @settings[:certdirectory] = v
+      end
+    end.parse! 
+    @settings[:ducking_volume] = 20 if @settings[:ducking_volume].nil?
+    @configured_settings = @settings.clone 
   end
     
   def init_settings
+    @run = false
     @cli = nil
     @cli = Mumble::Client.new(@settings[:mumbleserver_host], @settings[:mumbleserver_port]) do |conf|
       conf.username = @settings[:mumbleserver_username]
@@ -131,8 +132,13 @@ class MumbleMPD
     @cli.disconnect if @cli.connected?
   end
   
+  def calc_overall_bandwidth(framelength, bitrate)
+    ( 1000 / framelength.to_f * 320 ).to_i + bitrate
+  end
+  
   def get_overall_bandwidth
-    ( 1000/ @cli.get_frame_length.to_f * 320 ).to_i + @cli.get_bitrate
+    #( 1000/ @cli.get_frame_length.to_f * 320 ).to_i + @cli.get_bitrate
+    calc_overall_bandwidth(@cli.get_frame_length, @cli.get_bitrate)
   end
   
   def mumble_start
@@ -150,85 +156,96 @@ class MumbleMPD
     end
 
     @cli.connect
+    max_connecting_time = 10 
     while not @cli.connected? do
       sleep(0.5)
       puts "Connecting to the server is still ongoing." if @settings[:debug]
+      max_connecting_time -= 1
+      if max_connecting_time < 1
+        puts "Connection timed out" if @settings[:debug]
+        @cli.disconnect
+        break
+      end
     end
-    puts "connected"
-    begin
-      @cli.join_channel(@settings[:mumbleserver_targetchannel])
-    rescue
-      puts "[joincannel]#{$1} Can't join #{@settings[:mumbleserver_targetchannel]}!" if @settings[:debug]
-    end
+    if @cli.connected?
+      puts "connected"
+      begin
+        @cli.join_channel(@settings[:mumbleserver_targetchannel])
+      rescue
+        puts "[joincannel]#{$1} Can't join #{@settings[:mumbleserver_targetchannel]}!" if @settings[:debug]
+      end
 
-    begin
-      Thread.kill(@duckthread)
-    rescue
-      puts "[killduckthread] can't kill because #{$!}" if @settings[:debug]
-    end
+      begin
+        Thread.kill(@duckthread)
+      rescue
+        puts "[killduckthread] can't kill because #{$!}" if @settings[:debug]
+      end
 
-    #Start duckthread
-    @duckthread = Thread.new do
-      while (true == true)
-        while (@cli.player.volume != 100)
-          @cli.player.volume += 2 if @cli.player.volume < 100
-          sleep 0.02
+      #Start duckthread
+      @duckthread = Thread.new do
+        while (true == true)
+          while (@cli.player.volume != 100)
+            @cli.player.volume += 2 if @cli.player.volume < 100
+            sleep 0.02
+          end
+          Thread.stop
         end
-        Thread.stop
       end
-    end
 
-    begin
-      @cli.set_comment("")
-      @settings[:set_comment_available] = true
-    rescue NoMethodError
-      puts "[displaycomment]#{$!}" if @settings[:debug]
-      @settings[:set_comment_available] = false 
-    end
-
-    @cli.on_user_state do |msg|
-      handle_user_state_changes(msg)
-    end
-
-    @cli.on_text_message do |msg|
-      handle_text_message(msg)
-    end
-
-    @cli.on_udp_tunnel do |udp|
-      if @settings[:ducking] == true
-        @cli.player.volume = ( @settings[:ducking_volume] |  0x1 ) - 1
-        @duckthread.run if @duckthread.stop?
+      begin
+        @cli.set_comment("")
+        @settings[:set_comment_available] = true
+      rescue NoMethodError
+        puts "[displaycomment]#{$!}" if @settings[:debug]
+        @settings[:set_comment_available] = false 
       end
-    end
 
-    @run = true
-    @cli.player.stream_named_pipe(@settings[:mpd_fifopath]) 
+      @cli.on_user_state do |msg|
+        handle_user_state_changes(msg)
+      end
 
-    #init all plugins
-    init = @settings.clone
-    init[:cli] = @cli
+      @cli.on_text_message do |msg|
+        handle_text_message(msg)
+      end
 
-    puts "initplugins"
-    Plugin.plugins.each do |plugin_class|
-      @plugin << plugin_class.new
-    end
+      @cli.on_udp_tunnel do |udp|
+        if @settings[:ducking] == true
+          @cli.player.volume = ( @settings[:ducking_volume] |  0x1 ) - 1
+          @duckthread.run if @duckthread.stop?
+        end
+      end
 
-    maxcount = @plugin.length 
-    allok = 0
-    while allok != @plugin.length do
+      @run = true
+      @cli.player.stream_named_pipe(@settings[:mpd_fifopath]) 
+
+      #init all plugins
+      init = @settings.clone
+      init[:cli] = @cli
+
+      puts "initplugins"
+      Plugin.plugins.each do |plugin_class|
+        @plugin << plugin_class.new
+      end
+
+      maxcount = @plugin.length 
       allok = 0
-      @plugin.each do |plugin|
-        init = plugin.init(init)
-        if plugin.name != "false"
-          allok += 1
+      while allok != @plugin.length do
+        allok = 0
+        @plugin.each do |plugin|
+          init = plugin.init(init)
+          if plugin.name != "false"
+            allok += 1
+          end
         end
+        maxcount -= 1
+        break if maxcount <= 0 
       end
-      maxcount -= 1
-      break if maxcount <= 0 
+      puts "maybe not all plugin functional!" if maxcount <= 0
     end
-    puts "maybe not all plugin functional!" if maxcount <= 0
   end
 
+  private 
+  
   def handle_user_state_changes(msg)
     #msg.actor = session_id of user who did something on someone, if self done, both is the same.
     #msg.session = session_id of the target
@@ -409,6 +426,7 @@ class MumbleMPD
                   @cli.set_frame_length(framelength)
                   @cli.text_user(msg.actor, "Sending now in #{@cli.get_frame_length.to_s} ms frames.")
                   @cli.text_user(msg.actor, "The calculated overall bandwidth is #{get_overall_bandwidth} bit/s.")
+                  @cli.text_user(msg.actor, "Server settings #{@cli.max_bandwidth} bit/s.")
                 rescue
                   @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
                 end
@@ -505,9 +523,10 @@ class MumbleMPD
   end
 end
 
+
 while true == true
-    puts "pluginbot is starting..." 
     client = MumbleMPD.new
+    puts "pluginbot is starting..." 
     client.init_settings
     puts "start"
     client.mumble_start
@@ -518,11 +537,12 @@ while true == true
         end
     rescue
         puts "An error occurred: #{$!}"
+        puts "Backtrace: #{$@}"
         client.disconnect
     end
+    puts " "
     puts "----------------------------------------------"
-    puts "-- Restart                                 ---"
+    puts "-- Restart                                  --"
     puts "----------------------------------------------"
     sleep 0.5
 end
-
