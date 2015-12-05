@@ -26,10 +26,12 @@ class Control < Plugin
         userstate(msg)
       end
     end
-    
+
+    state_handling_if_alone
+
     return @@bot
   end
-  
+
   def name
     if @@bot[:mpd] == nil
       "false"
@@ -65,6 +67,44 @@ class Control < Plugin
     end
   end
 
+  def state_handling_if_alone()
+    me = @@bot[:cli].me
+
+    # Count users in my channel ...
+    user_count = 0
+    me_in = 0
+    me_in = me.channel_id
+    @@bot[:cli].users.values.select do |user|
+      user_count += 1 if ( user.channel_id == me_in ) 
+    end
+    # if i'm alone
+    if ( user_count < 2 ) && ( @@bot[:control_automute] == true )
+      # if I'm playing then pause play and save that I've stopped myself
+
+      #During bot start there is no mpd plugin loaded yet...
+      if @@bot[:mpd] != nil
+        if @@bot[:mpd].paused? == false 
+          @@bot[:mpd].pause = true
+          @playing = false
+        end
+      end
+      # mute myself and save that I've done it myself
+      me.mute true 
+      @muted = true
+    else
+      # only unmute me if I've muted myself before
+      if @muted == true
+        me.mute false 
+        @muted = false
+      end
+      # start playing only I've stopped myself
+      if @playing == false
+        @@bot[:mpd].pause = false
+        @playing = true
+      end
+    end
+  end
+
   def userstate(msg)
     #msg.session = session_id of the target
     #msg.actor = session_id of user who did something on someone, if self done, both is the same.
@@ -92,38 +132,10 @@ class Control < Plugin
         @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, "<span style='color:red;'>An unregistered user currently joined or is acting in our channel. I stopped/paused the music.</span>")
       end
 
-      # Count users in my channel ...
-      user_count = 0
-      me_in = 0
-      me_in = me.channel_id
-      @@bot[:cli].users.values.select do |user|
-        user_count += 1 if ( user.channel_id == me_in ) 
-      end
-      # if i'm alone
-      if ( user_count < 2 ) && ( @@bot[:control_automute] == true )
-        # if I'm playing then pause play and save that I've stopped myself
-        if @@bot[:mpd].paused? == false 
-          @@bot[:mpd].pause = true
-          @playing = false
-        end
-        # mute myself and save that I've done it myself
-        me.mute true 
-        @muted = true
-      else
-        # only unmute me if I've muted myself before
-        if @muted == true
-          me.mute false 
-          @muted = false
-        end
-        # start playing only I've stopped myself
-        if @playing == false
-          @@bot[:mpd].pause = false
-          @playing = true
-        end
-      end
+      state_handling_if_alone
     end
   end
-  
+
   def handle_chat(msg, message)
     super
     # Put message in Messagehistory and pop old's if size exceeds max. historysize.
