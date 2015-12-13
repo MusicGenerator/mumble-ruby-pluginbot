@@ -42,7 +42,7 @@ class Youtube < Plugin
     h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
     h += "<b>#{@@bot[:controlstring]}ytlink <i>URL</i></b> - Will try to download the music from the given URL.<br>"
     h += "<b>#{@@bot[:controlstring]}yts keywords</b> - Will search on Youtube for one or more keywords and print the results to you.<br>"
-    h += "<b>#{@@bot[:controlstring]}yta <i>number</i> <i>number2</i> <i>number3</i></b> - Let the bot download the given song(s) from the list you got via <i>#{@@bot[:controlstring]}yts</i>.<br>Instead of a specific numer, write <b>#{@@bot[:controlstring]}yta <i>all</i></b> to let the bot download all found songs.<br>"
+    h += "<b>#{@@bot[:controlstring]}yta <i>number</i> <i>number2</i> <i>number3</i></b> - Let the bot download the given song(s) from the list you got via <i>#{@@bot[:controlstring]}yts</i>.<br>Instead of a specific number or multiple numbers, write <b>#{@@bot[:controlstring]}yta <i>all</i></b> to let the bot download all found songs.<br>"
     h += "<b>#{@@bot[:controlstring]}ytdl-version</b> - print used download helper version"
   end
 
