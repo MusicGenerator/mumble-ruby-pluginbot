@@ -9,13 +9,6 @@ then
     mkdir $HOME/logs
 fi
 
-### Kill all running mpd instances (of the user botmaster) ... ###
-echo "Killing running mpd instances of user $USER"
-killall mpd > /dev/null 2>&1
-sleep 2
-killall mpd > /dev/null 2>&1
-
-
 ### Start needed mpd instances for botmaster ###
 mpd $HOME/mpd1/mpd.conf
 #mpd $HOME/mpd2/mpd.conf
@@ -34,6 +27,14 @@ echo "Killing running ruby scripts of user $USER"
 killall ruby > /dev/null 2>&1
 sleep 1
 killall ruby > /dev/null 2>&1
+
+
+### Kill all running mpd instances (of the user botmaster) ... ###
+echo "Killing running mpd instances of user $USER"
+killall mpd > /dev/null 2>&1
+sleep 2
+killall mpd > /dev/null 2>&1
+
 
 source ~/.rvm/scripts/rvm
 rvm use @bots
