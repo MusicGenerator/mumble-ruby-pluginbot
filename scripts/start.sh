@@ -9,11 +9,6 @@ then
     mkdir $HOME/logs
 fi
 
-### Start needed mpd instances for botmaster ###
-mpd $HOME/mpd1/mpd.conf
-#mpd $HOME/mpd2/mpd.conf
-#mpd $HOME/mpd3/mpd.conf
-
 
 # Do an update of youtube-dl on every start as there are very often updates.
 if [ -f $HOME/src/youtube-dl ]; then
@@ -34,6 +29,12 @@ echo "Killing running mpd instances of user $USER"
 killall mpd > /dev/null 2>&1
 sleep 2
 killall mpd > /dev/null 2>&1
+
+
+### Start needed mpd instances for botmaster ###
+mpd $HOME/mpd1/mpd.conf
+#mpd $HOME/mpd2/mpd.conf
+#mpd $HOME/mpd3/mpd.conf
 
 
 source ~/.rvm/scripts/rvm
