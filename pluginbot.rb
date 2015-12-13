@@ -310,7 +310,7 @@ class MumbleMPD
                 out = "<br />Hi, I am the Mumble-Ruby-Pluginbot.<br />
                 <ul>
                     <li><a href='https://github.com/dafoxia/mumble-ruby-pluginbot'>Get my source code</a></li>
-                    <li><a href='http://wiki.natenom.com/w/Mumble-Ruby-Pluginbot'>Read my documentation</a></li>
+                    <li><a href='https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot'>Read my documentation</a></li>
                     <li>I am licensed by the <a href='https://github.com/dafoxia/mumble-ruby-pluginbot/blob/master/LICENSE'>MIT license</a></li>
                     <li>If you have any issues, bugs or ideas please tell us on <a href='https://github.com/dafoxia/mumble-ruby-pluginbot/issues'>https://github.com/dafoxia/mumble-ruby-pluginbot/issues</a></li>
                 </ul>"
@@ -491,7 +491,7 @@ class MumbleMPD
                   @cli.text_user(msg.actor, help)
                 else #Send default help text.
                     help = "<br />\
-                            Hi, I am a <a href='http://wiki.natenom.com/w/Mumble-Ruby-Pluginbot'>Mumble-Ruby-Pluginbot</a> and YOU can control me through text commands.<br /><br />
+                            Hi, I am a <a href='https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot'>Mumble-Ruby-Pluginbot</a> and YOU can control me through text commands.<br /><br />
                     I will give you a good start with the basic commands you need to control the music I have to offer :) - if you send me the following command:<br />\
                     <b>#{cc}help mpd</b><br />
                     <br />\

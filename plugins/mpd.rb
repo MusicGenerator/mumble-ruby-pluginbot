@@ -239,7 +239,7 @@ class Mpd < Plugin
       end
       status = @@bot[:mpd].status
       begin
-        #Code from http://stackoverflow.com/questions/19595840/rails-get-the-time-difference-in-hours-minutes-and-seconds
+        #Code from https://stackoverflow.com/questions/19595840/rails-get-the-time-difference-in-hours-minutes-and-seconds
         now_mm, now_ss = status[:time][0].divmod(60) #Minutes and seconds of current time within the song.
         now_hh, now_mm = now_mm.divmod(60)
         total_mm, total_ss = status[:time][1].divmod(60) #Minutes and seconds of total time of the song.
@@ -517,7 +517,7 @@ class Mpd < Plugin
           out += "<tr><td>Current songid:</td><td>#{value}</td></tr>"
         when key.to_s == 'time'
           begin
-            #Code from http://stackoverflow.com/questions/19595840/rails-get-the-time-difference-in-hours-minutes-and-seconds
+            #Code from https://stackoverflow.com/questions/19595840/rails-get-the-time-difference-in-hours-minutes-and-seconds
             now_mm, now_ss = value[0].divmod(60) #Minutes and seconds of current time within the song.
             now_hh, now_mm = now_mm.divmod(60)
             total_mm, total_ss = value[1].divmod(60) #Minutes and seconds of total time of the song.
