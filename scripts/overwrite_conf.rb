@@ -5,6 +5,7 @@ def ext_config()
                     mumbleserver_port: 64738,
                     mumbleserver_username: "Name_of_your_bot",
                     mumbleserver_targetchannel: "Bottest",
+                    mumbleserver_userpassword: "",
                     quality_bitrate: 72000,
                     stop_on_unregistered_users: true,
                     mpd_fifopath: "/home/botmaster/mpd1/mpd.fifo",
