@@ -31,8 +31,7 @@ class Radiostream < Plugin
   def handle_chat(msg, message)
     super
     if message.start_with?("radiostream <a href=") || message.start_with?("<a href=")
-      link = msg.message[msg.message.index('>') + 1 .. -1]
-      link = link[0..link.index('<')-1]
+      link = msg.message.match(/http[s]?:\/\/(.+?)\"/).to_s.chop
       messageto(msg.actor, add_link(link, msg.actor))
     end
     
@@ -85,6 +84,7 @@ class Radiostream < Plugin
           if line.include? ".pls"
             add_link line, user 
           else
+            puts line.strip
             links.push(line.strip)
             #@@bot[:mpd].add(line.strip)
             #added += line.strip + "<br>"

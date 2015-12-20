@@ -50,8 +50,7 @@ class Soundcloud < Plugin
     end
 
     if message.start_with?("soundcloud <a href=") || message.start_with?("<a href=") then
-      link = msg.message[msg.message.index('>') + 1 .. -1]
-      link = link[0..link.index('<')-1]
+      link = msg.message.match(/http[s]?:\/\/(.+?)\"/).to_s.chop
       workingdownload = Thread.new {
         #local variables for this thread!
         actor = msg.actor
