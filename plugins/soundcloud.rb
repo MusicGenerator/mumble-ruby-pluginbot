@@ -50,39 +50,32 @@ class Soundcloud < Plugin
     end
 
     if message.start_with?("soundcloud <a href=") || message.start_with?("<a href=") then
-      link = msg.message.match(/http[s]?:\/\/(.+?)\"/).to_s.chop
-      workingdownload = Thread.new {
-        #local variables for this thread!
-        actor = msg.actor
-        messageto(actor, "Soundcloud is inspecting link: " + link + "...")
-        get_song link
-        if ( @songlist.size > 0 ) then
-          @@bot[:mpd].update(@@bot[:soundcloud_downloadsubdir].gsub(/\//,"")) 
-          messageto(actor, "Waiting for database update complete...")
-          
-          begin
-            #Caution! following command needs patched ruby-mpd!
-            @@bot[:mpd].idle("update")
-            # find this lines in ruby-mpd/plugins/information.rb (actual 47-49)
-            # def idle(*masks)
-            #  send_command(:idle, *masks)
-            # end
-            # and uncomment it there, then build gem new.
-          rescue
-            puts "[soundcloud-plugin] [info] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds." if @@bot[:debug]
-            sleep 10
+      link = msg.message.match(/http[s]?:\/\/soundcloud(.+?)\"/).to_s.chop
+      if link != "" then
+        workingdownload = Thread.new {
+          #local variables for this thread!
+          actor = msg.actor
+          messageto(actor, "Soundcloud is inspecting link: " + link + "...")
+          get_song link
+          if ( @songlist.size > 0 ) then
+            @@bot[:mpd].update(@@bot[:soundcloud_downloadsubdir].gsub(/\//,"")) 
+            messageto(actor, "Waiting for database update complete...")
+            
+            while @@bot[:mpd].status[:updating_db] != nil do
+              sleep 0.5
+            end          
+            
+            messageto(actor, "Update done.")
+            while @songlist.size > 0 
+              song = @songlist.pop
+              messageto(actor, song)
+              @@bot[:mpd].add(@@bot[:soundcloud_downloadsubdir]+song)
+            end
+          else
+            messageto(actor, "Soundcloud: The link contains nothing interesting.") if @@bot[:soundcloud_stream] == nil
           end
-              
-          messageto(actor, "Update done.")
-          while @songlist.size > 0 
-            song = @songlist.pop
-            messageto(actor, song)
-            @@bot[:mpd].add(@@bot[:soundcloud_downloadsubdir]+song)
-          end
-        else
-          messageto(actor, "Soundcloud: The link contains nothing interesting.") if @@bot[:soundcloud_stream] == nil
-        end
-      }
+        }
+      end
     end
   end
 

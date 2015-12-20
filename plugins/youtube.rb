@@ -56,40 +56,33 @@ class Youtube < Plugin
     
     if message.start_with?("ytlink <a href=") || message.start_with?("<a href=") then
       link = msg.message.match(/http[s]?:\/\/(.+?)\"/).to_s.chop
-      workingdownload = Thread.new {
-        #local variables for this thread!
-        actor = msg.actor
-        messageto(actor, "Youtube is inspecting link: " + link + "...")
-        get_song(link).each do |error|
-          messageto(actor, error)
-        end
-        if ( @songlist.size > 0 ) then
-          @@bot[:mpd].update(@@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
-          messageto(actor, "Waiting for database update complete...")
+      if ( link.include? "www.youtube.com/" ) || ( link.include? "www.youtu.be/" ) || ( link.include? "m.youtube.com/" ) then
+        workingdownload = Thread.new {
+          #local variables for this thread!
+          actor = msg.actor
+          messageto(actor, "Youtube is inspecting link: " + link + "...")
+          get_song(link).each do |error|
+            messageto(actor, error)
+          end
+          if ( @songlist.size > 0 ) then
+            @@bot[:mpd].update(@@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
+            messageto(actor, "Waiting for database update complete...")
+            
+            while @@bot[:mpd].status[:updating_db] != nil do
+              sleep 0.5
+            end
           
-          begin
-            #Caution! following command needs patched ruby-mpd!
-            @@bot[:mpd].idle("update")
-            # find this lines in ruby-mpd/plugins/information.rb (actual 47-49)
-            # def idle(*masks)
-            #  send_command(:idle, *masks)
-            # end
-            # and uncomment it there, then build gem new.
-          rescue
-            puts "[youtube-plugin] [info] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds." if @@bot[:debug]
-            sleep 10
+            messageto(actor, "Update done.")
+            while @songlist.size > 0 
+              song = @songlist.pop
+              messageto(actor, song)
+              @@bot[:mpd].add(@@bot[:youtube_downloadsubdir]+song)
+            end
+          else
+            messageto(actor, "Youtube: The link contains nothing interesting.") if @@bot[:youtube_stream] == nil
           end
-              
-          messageto(actor, "Update done.")
-          while @songlist.size > 0 
-            song = @songlist.pop
-            messageto(actor, song)
-            @@bot[:mpd].add(@@bot[:youtube_downloadsubdir]+song)
-          end
-        else
-          messageto(actor, "Youtube: The link contains nothing interesting.") if @@bot[:youtube_stream] == nil
-        end
-      }
+        }
+      end
     end
     
     if message.split[0] == 'yts'
@@ -161,20 +154,13 @@ class Youtube < Plugin
           @@bot[:mpd].update(@@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
           messageto(actor, "Waiting for database update complete...")
           
-          begin
-            #Caution! following command needs patched ruby-mpd!
-            @@bot[:mpd].idle("update")
-            # find this lines in ruby-mpd/plugins/information.rb (actual 47-49)
-            # def idle(*masks)
-            #  send_command(:idle, *masks)
-            # end
-            # and uncomment it there, then build gem new.
-          rescue
-            puts "[youtube-plugin] [info] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds." if @@bot[:debug]
-            sleep 10
+          while @@bot[:mpd].status[:updating_db] != nil do
+            sleep 0.5
           end
+          
           messageto(actor, "Update done.")
           out = "<b>Added:</b><br>"
+
           while @songlist.size > 0 
             song = @songlist.pop
             begin
@@ -191,7 +177,9 @@ class Youtube < Plugin
       }
     end
   end
-
+  
+  private 
+  
   def find_youtube_song song
     songlist = []
     songs = `nice -n20 #{@@bot[:youtube_youtubedl]} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
