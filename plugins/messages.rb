@@ -14,21 +14,6 @@ class Messages < Plugin
     if @@bot[:messages] == nil
       @priv_notify = {}
       @@bot[:messages] = self
-      #@mqueue = Queue.new
-      #@uqueue = Queue.new
-      #@lastmessage = Time.now
-      #@messagecount = 0
-      #domessages = Thread.new {
-      #    while true == true 
-      #        if ( @messagecount < 10 ) && ( @mqueue.length > 0 ) 
-      #            @@bot[:cli].text_user(@uqueue.pop,@mqueue.pop) 
-      #            @messagecount += 1 if ( ( Time.now - @lastmessage ) < 10 )
-      #            @lastmessage = Time.now
-      #        end
-      #        @messagecount = 0 if ( Time.now - @lastmessage ) > 11
-      #        sleep (0.1)
-      #    end
-      #}
     end
     return @@bot
   end
@@ -99,7 +84,7 @@ class Messages < Plugin
   end
   
   def sendmessage (message, messagetype)
-    channelmessgage( message) if ( @@bot[:chan_notify] & messagetype) != 0
+    channelmessage( message) if ( @@bot[:chan_notify] & messagetype) != 0
     if !@priv_notify.nil?
       @priv_notify.each do |user, notify| 
         begin
@@ -111,8 +96,4 @@ class Messages < Plugin
     end
   end
   
-  #def text (user, message)
-  #    @mqueue << message
-  #    @uqueue << user
-  #end
 end

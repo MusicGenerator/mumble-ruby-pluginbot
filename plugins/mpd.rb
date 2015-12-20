@@ -32,6 +32,7 @@ class Mpd < Plugin
         channelmessage( "Random mode is now: #{random}.") if (@@bot[:chan_notify] & 0x04) != 0
       end
 
+
       @@bot[:mpd].on :state  do |state|
         if @@bot[:chan_notify] & 0x80 != 0 then
           channelmessage( "Music paused.") if  state == :pause 
@@ -78,6 +79,10 @@ class Mpd < Plugin
       end
 
       @@bot[:mpd].on :song do |current|
+      end
+      
+      @@bot[:mpd].on :player do |player|
+        puts player
       end
 
       @@bot[:cli].player.stream_named_pipe(@@bot[:mpd_fifopath]) 
