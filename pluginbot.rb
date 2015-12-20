@@ -474,6 +474,24 @@ class MumbleMPD
                 help += "<br /><b>#{cc}help <i>pluginname</i></b> Get the help text for the specific plugin.<br /><br />For example send the following text to get some basic control commands of the bot:<br /><b>#{cc}help mpd</b><br />"
                 @cli.text_user(msg.actor, help)
               end
+     
+  
+         
+              # early in development, not documented now until it works :)
+              if message == "working"
+                output = ""
+                Thread.list.each do |t|  
+                  if t["process"]!=nil
+                    if t["user"]==msg.actor
+                      output << "#{t["process"]} is in state #{t.status.to_s} for you<br>"
+                    else
+                      output << "#{t["process"]} is in state #{t.status.to_s} for user #{msg.actor}<br>"
+                    end
+                  end
+                  @cli.text_user(msg.actor, output)  
+                end
+              end
+
               
               if message == 'internals'
                 help = "<br /><span style='color:red;'><b>Internal commands</b></span><br />"

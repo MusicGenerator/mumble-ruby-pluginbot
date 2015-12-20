@@ -60,6 +60,9 @@ class Youtube < Plugin
         workingdownload = Thread.new {
           #local variables for this thread!
           actor = msg.actor
+          Thread.current["actor"]=user
+          Thread.current["process"]="youtube (download)"
+
           messageto(actor, "Youtube is inspecting link: " + link + "...")
           get_song(link).each do |error|
             messageto(actor, error)
@@ -89,6 +92,9 @@ class Youtube < Plugin
       search = message[4..-1]
       if !(( search == nil ) || ( search == "" ))
         Thread.new do
+          Thread.current["user"]=msg.actor
+          Thread.current["process"]="youtube (yts)"
+        
           messageto(msg.actor, "searching for \"#{search}\", please be patient...")    
           songs = find_youtube_song(CGI.escape(search))
           @keylist[msg.actor] = songs
@@ -142,6 +148,9 @@ class Youtube < Plugin
       workingdownload = Thread.new {
         #local variables for this thread!
         actor = msg.actor
+        Thread.current["user"]=actor
+        Thread.current["process"]="youtube (yta)"
+
         messageto(actor, "do #{link.length.to_s} time(s)...")    
         link.each do |l| 
             messageto(actor, "fetch and convert")

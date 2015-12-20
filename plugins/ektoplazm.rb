@@ -44,6 +44,9 @@ class Ektoplazm < Plugin
       workingdownload = Thread.new {
         #local variables for this thread!
         actor = msg.actor
+        Thread.current["user"]=actor
+        Thread.current["process"]="radiostream"
+
         if ( link.include? "www.ektoplazm.com/files" ) then
           messageto(actor, "ektoplazm is inspecting link: " + link + "...")
           link.gsub!(/<\/?[^>]*>/, '')

@@ -206,6 +206,8 @@ class Control < Plugin
       currentuser = msg.actor
       @following = Thread.new {
       begin
+        Thread.current["user"]=currentuser
+        Thread.current["process"]="control (following)"
         while @follow == true do
           if (@@bot[:cli].me.current_channel != @@bot[:cli].users[currentuser].channel_id)
             @@bot[:cli].join_channel(@@bot[:cli].users[currentuser].channel_id) 
@@ -260,6 +262,9 @@ class Control < Plugin
       @alreadysticky = true
       channeluserisin = @@bot[:cli].users[msg.actor].channel_id
       @sticked = Thread.new {
+      Thread.current["user"]=msg.actor
+      Thread.current["process"]="bandcamp"
+      
       while @sticky == true do
         if @@bot[:cli].me.current_channel == channeluserisin
           sleep(1)

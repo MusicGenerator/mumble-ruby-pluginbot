@@ -36,7 +36,7 @@ class Radiostream < Plugin
       Thread.new do
         user = msg.actor
         Thread.current["user"]=user
-        Thread.current["process"]="radiostream-fetch"
+        Thread.current["process"]="radiostream"
         add_link( link, user )
         results = (@keylist.count { |key| key[:user] == msg.actor })
         if results > 1 then
@@ -56,11 +56,6 @@ class Radiostream < Plugin
       end
     end
     
-    message == "working"
-      Thread.list.each do |thread|
-        puts thread["user"]
-      end
-    end
     
     if message == "choose"
       counter = 0

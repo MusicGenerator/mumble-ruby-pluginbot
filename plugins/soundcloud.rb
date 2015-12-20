@@ -55,6 +55,8 @@ class Soundcloud < Plugin
         Thread.new do
           #local variables for this thread!
           actor = msg.actor
+          Thread.current["user"]=actor
+          Thread.current["process"]="soundcloud"
           messageto(actor, "Soundcloud is inspecting link: " + link + "...")
           get_song link
           if ( @songlist.size > 0 ) then
