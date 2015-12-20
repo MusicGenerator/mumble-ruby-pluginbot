@@ -69,7 +69,3 @@ class Plugin
 end
  
 
- 
-#Plugin.plugins.each do |plugin_class|
-#  plugin_class.new.handle_command('test')
-#end

@@ -88,7 +88,7 @@ class Youtube < Plugin
     if message.split[0] == 'yts'
       search = message[4..-1]
       if !(( search == nil ) || ( search == "" ))
-        workingsearch = Thread.new {
+        Thread.new do
           messageto(msg.actor, "searching for \"#{search}\", please be patient...")    
           songs = find_youtube_song(CGI.escape(search))
           @keylist[msg.actor] = songs
@@ -104,21 +104,20 @@ class Youtube < Plugin
           end
           out +="</table>"
           messageto(msg.actor, out)    
-        }
+        end
       else    
         messageto(msg.actor, "won't search for nothing!")    
       end
     end
 
     if message.split[0] == 'yta'
-     begin
-       out = "<br>Going to download the following songs:<br />"
+      begin
+        out = "<br>Going to download the following songs:<br />"
         msg_parameters = message.split[1..-1].join(" ")
         link = []
 
         if msg_parameters.match(/(?:[\d{1,3}\ ?])+/) # User gave us at least one id or multiple ids to download.
           id_list = msg_parameters.match(/(?:[\d{1,3}\ ?])+/)[0].split
-
           id_list.each do |id|
             downloadid = @keylist[msg.actor][id.to_i]
             puts downloadid.inspect

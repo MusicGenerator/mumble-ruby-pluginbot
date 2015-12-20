@@ -39,8 +39,8 @@ class Radiostream < Plugin
       counter = 0
       begin
         output = "You can choose from <br><table>"
-        @keylist[msg.actor].each do |link|
-          output << ("<tr><td>#{counter.to_s}</td><td>#{link}</td></tr>")
+        @keylist[msg.actor].each do |lnk|
+          output << ("<tr><td>#{counter.to_s}</td><td>#{lnk}</td></tr>")
           counter += 1
         end
         output << "</table>"
@@ -53,7 +53,7 @@ class Radiostream < Plugin
     if message.match (/choose [0-9]{1,2}/)
       begin
         msg_parameters = message.split[1..-1].join(" ")
-        id_list = msg_parameters.match(/(?:[\d{1,3}\ ?])+/)[0].split
+        id_list = msg_parameters.match(/[0-9]+/)[0].split
         id_list.each do |id|
           @@bot[:mpd].add(@keylist[msg.actor][id.to_i])
           messageto(msg.actor, "Added #{@keylist[msg.actor][id.to_i]}")
@@ -86,8 +86,6 @@ class Radiostream < Plugin
           else
             puts line.strip
             links.push(line.strip)
-            #@@bot[:mpd].add(line.strip)
-            #added += line.strip + "<br>"
           end
         end
       end

@@ -53,7 +53,7 @@ class Bandcamp < Plugin
     if message.start_with?("bandcamp <a href=") || message.start_with?("<a href=") then
       link = msg.message.match(/http[s]?:\/\/(.+?)\"/).to_s.chop
       if link.include? "bandcamp" then
-        workingdownload = Thread.new {
+        Thread.new do
           #local variables for this thread!
           actor = msg.actor
           messageto(actor, "Bandcamp is inspecting link: " + link + "...")
@@ -75,7 +75,7 @@ class Bandcamp < Plugin
           else
             messageto(actor, "Bandcamp: The link contains nothing interesting.") if @@bot[:bandcamp_stream] == nil
           end
-        }
+        end
       end
     end
   end
