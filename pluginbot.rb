@@ -241,10 +241,27 @@ class MumbleMPD
         break if maxcount <= 0 
       end
       puts "maybe not all plugin functional!" if maxcount <= 0
+      
+      ## Enable Ticktimer Thread
+      @ticktimer = Thread.new do
+        timertick
+      end
+      
     end
   end
 
   private 
+  
+  def timertick
+    ticktime = ( @settings[:ticks_per_hour] || 3600 )
+    while (true==true)
+      sleep(3600/ticktime)
+      time = Time.now
+      @plugin.each do |plugin|
+        plugin.ticks(time)
+      end
+    end
+  end
   
   def handle_user_state_changes(msg)
     #msg.actor = session_id of user who did something on someone, if self done, both is the same.

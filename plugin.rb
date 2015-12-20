@@ -27,6 +27,10 @@ class Plugin
     text << "#{self.class.name} does'nt implement a help"
   end
   
+  def ticks(time)
+    #enable periodic timer for plugins
+  end
+  
   def init(init)
     @@bot = init
   end
