@@ -7,7 +7,7 @@ class Radiostream < Plugin
       @@bot[:radiostream] = self
     end
       
-    @keylist = Array.new
+    @keylist = Array.new 
     return @@bot
   end
   
@@ -30,23 +30,49 @@ class Radiostream < Plugin
  
   def handle_chat(msg, message)
     super
-    if message.start_with?("radiostream <a href=") || message.start_with?("<a href=")
+    if message.start_with?("radiostream <a href=") || message.start_with?("<a href=") 
       link = msg.message.match(/http[s]?:\/\/(.+?)\"/).to_s.chop
-      messageto(msg.actor, add_link(link, msg.actor))
+      @keylist.delete_if { |key| key[:user] == msg.actor }              #delete last search for this user
+      Thread.new do
+        user = msg.actor
+        Thread.current["user"]=user
+        Thread.current["process"]="radiostream-fetch"
+        add_link( link, user )
+        results = (@keylist.count { |key| key[:user] == msg.actor })
+        if results > 1 then
+          messageto(msg.actor, "There are #{results} results, please choose with choose command")
+        else
+          add = ""
+          @keylist.each do |key|
+            if key[:user]==user then
+              add = key[:link]
+            end
+          end
+          if add != "" then
+            @@bot[:mpd].add(add) 
+            messageto(msg.actor, "Added: #{add}")
+          end
+        end
+      end
+    end
+    
+    message == "working"
+      Thread.list.each do |thread|
+        puts thread["user"]
+      end
     end
     
     if message == "choose"
       counter = 0
-      begin
-        output = "You can choose from <br><table>"
-        @keylist[msg.actor].each do |lnk|
-          output << ("<tr><td>#{counter.to_s}</td><td>#{lnk}</td></tr>")
+      output = "You can choose from <br><table>"
+      @keylist.each do |key|
+        if key[:user] == msg.actor then
+          output << ("<tr><td>#{counter.to_s}</td><td>#{key[:link]}</td></tr>")
           counter += 1
         end
-        output << "</table>"
-      rescue
-        output = "There is nothing where you can choose from!"
       end
+      output << "</table>"
+      output = "There is nothing where you can choose from!" if counter == 0
       messageto(msg.actor, output)
     end
     
@@ -54,72 +80,70 @@ class Radiostream < Plugin
       begin
         msg_parameters = message.split[1..-1].join(" ")
         id_list = msg_parameters.match(/(?:[\d{1,3}\ ?])+/)[0].split
-        id_list.each do |id|
-          @@bot[:mpd].add(@keylist[msg.actor][id.to_i])
-          messageto(msg.actor, "Added #{@keylist[msg.actor][id.to_i]}")
+        
+        chooselist = Array.new                                          #generate chooselist first
+        @keylist.each do |key|                                          
+          if key[:user] == msg.actor then
+            chooselist << key[:link]
+          end
         end
+        
+        id_list.each do |id|
+          @@bot[:mpd].add(chooselist[id.to_i])
+          messageto(msg.actor, "Added #{chooselist[id.to_i]}")
+        end
+        
       rescue
         messageto(msg.actor, "Does not exist. :(")
       end
     end
   end
   
+  
+  private
+  
   def add_link(link, user)
-    added = ""
-    file = `curl -L --max-time 3 "#{link}" `
-    links = []
-    
-    if file[0..9] == "[playlist]"
-      # seems to be an .pls link
-      file.each_line do |line|
-        puts line
-        if line.match (/File[0-9]{1,2}=.+/)
-          links.push(line.sub(/File[0-9]{1,2}=/, '').strip)
-        end
-      end
-    else
-      file.each_line do |line|
-        # check if it is a m3u playlistlinkfile
-        if ( line.start_with? "http://" ) || ( line.start_with? "https://")
-          if line.include? ".pls"
-            add_link line, user 
-          else
-            puts line.strip
-            links.push(line.strip)
-          end
-        end
-      end
-      
-      # finally check if source is direct stream
-      streaminfo = StreamCheck.new
-      info = streaminfo.checkmp3(file)
-      if info[:verified] != nil then
-        @@bot[:mpd].add(link)
-        added << link
-        info.each do |key, value|
-          added << ( '<br>' + key.to_s.upcase + ": " + value.to_s.upcase )
-        end
-      end
 
-      info = streaminfo.checkopus(file)
-      if info[:verified] != nil then
-        @@bot[:mpd].add(link)
-        added << link
-        info.each do |key, value|
-          added << ( '<br>' + key.to_s.upcase + ": " + value.to_s.upcase )
+    decoded = false
+
+    file = `curl -L --max-time 3 "#{link}" `                #Load some data from link
+    streaminfo = StreamCheck.new                            #init StreamCheck
+    
+    info = streaminfo.checkmp3(file)                        #check if mp3
+    if info[:verified] != nil then                          #is mp3-stream?
+      info[:link] = link                                    #add link to info
+      decoded = true                                        #set decoded to true to prevent other checks    
+    end
+
+    if !decoded                                             #if it is no mp3 stream
+      info = streaminfo.checkopus(file)                     #check if ogg
+      if info[:verified] != nil then                        #is ogg-stream?
+        info[:link] = link                                  #add link to info
+        decoded = true                                      #set decodet to true to prevent other checks
+      end  
+    end
+    
+    if ( file[0..9] == "[playlist]" ) && !decoded           #if still not decoded check if is a .pls link
+                                                            # seems to be an .pls link
+      file.each_line do |line|                              
+        if line.match (/File[0-9]{1,2}=.+/)                 #if a link found run check recursive
+          add_link(line.sub(/File[0-9]{1,2}=/, '').strip, user)
         end
       end
     end
-    if links.size == 1 then
-      added += "Added #{links[0]}"
-      @@bot[:mpd].add(links[0])
+
+    if !decoded                                             #if still not decoded test as m3u link
+      file.each_line do |line|
+        if ( line.start_with? "http://" ) || ( line.start_with? "https://")
+          add_link(line.strip, user)                        #if it contains links in m3u manner
+        end
+      end
     end
-    if links.size > 1 then
-      added += "There are #{links.size} links in remote playlist, choose one with choose command."
-      @keylist[user] = links
-    end
-    return added
-  end
     
+    if ( decoded == true )                                  #if decoded add info to keylist
+      info[:user]=user
+      @keylist << info 
+    end
+  end
 end
 

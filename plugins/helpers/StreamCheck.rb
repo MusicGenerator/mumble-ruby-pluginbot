@@ -190,8 +190,4 @@ end
 
 
 
-begin
-  test = StreamCheck.new
-  #puts test.testurl("http://stream.radioreklama.bg:80/nrj.ogg") 
-  puts test.testurl("http://onair-ha1.krone.at/kronehit-fresh.mp3")
-end
+
