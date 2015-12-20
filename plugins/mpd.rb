@@ -174,6 +174,7 @@ class Mpd < Plugin
     h += "<b>#{@@bot[:controlstring]}status</b> - Print current status of MPD.<br>"
     h += "<b>#{@@bot[:controlstring]}playlists</b> - Print the available playlists from MPD.<br>"
     h += "<b>#{@@bot[:controlstring]}add <i>searchstring</i></b> - Find song(s) by searchstring and print matches.<br>"
+    h += "<b>#{@@bot[:controlstring]}delete <i>ID</i></b> - Delete an entry from the current queue. Use #{@@bot[:controlstring]}queue to get the IDs of all songs in the current queue.<br>"
     h += "<b>#{@@bot[:controlstring]}where <i>searchstring</i></b> - Find song(s) by searchstring and print matches.<br>"
     h += "<b>#{@@bot[:controlstring]}queue</b> - Print the current play queue.<br>"
     h += "<b>#{@@bot[:controlstring]}stats</b> - Print some interesing MPD statistics.<br>"
