@@ -169,6 +169,8 @@ class Control < Plugin
       begin
         Thread.kill(@following)
         @alreadyfollowing = false
+        Thread.kill(@sticked)
+        @alreadysticky = false
       rescue
       end
     else
