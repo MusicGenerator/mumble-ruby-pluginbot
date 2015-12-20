@@ -50,7 +50,7 @@ class Radiostream < Plugin
       messageto(msg.actor, output)
     end
     
-    if message.match (/choose [0-9]{1,2}/)
+    if message.match (/choose (?:[\d{1,3}\ ?])+/)
       begin
         msg_parameters = message.split[1..-1].join(" ")
         id_list = msg_parameters.match(/(?:[\d{1,3}\ ?])+/)[0].split
