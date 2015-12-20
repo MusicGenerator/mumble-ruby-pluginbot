@@ -81,14 +81,11 @@ class Mpd < Plugin
       @@bot[:mpd].on :song do |current|
       end
       
-      @@bot[:mpd].on :player do |player|
-        puts player
-      end
 
       @@bot[:cli].player.stream_named_pipe(@@bot[:mpd_fifopath]) 
       @@bot[:mpd].connect true #without true bot does not @@bot[:cli].text_channel messages other than for !status
       
-      main = Thread.new do
+      Thread.new do
         mpd =@@bot[:mpd]
         lastcurrent = nil
         init = true
@@ -124,7 +121,7 @@ class Mpd < Plugin
                 end
               else
                 if current.artist.nil? && current.title.nil? && current.album.nil?
-                  channelmessage( "#{current.file}") if @@bot[:chan_notify] && 0x80
+                  channelmessage( "#{current.file}") if ( @@bot[:chan_notify] && 0x80 ) == true
                 else
                   channelmessage( "#{current.artist} - #{current.title} (#{current.album})") if (@@bot[:chan_notify] && 0x80) != 0
                 end
@@ -425,8 +422,8 @@ class Mpd < Plugin
     if message == 'playlists'
       text_out = ""
       counter = 0
-      @@bot[:mpd].playlists.each do |playlist|
-        text_out = text_out + "#{counter} - #{playlist.name}<br/>"
+      @@bot[:mpd].playlists.each do |pl|
+        text_out = text_out + "#{counter} - #{pl.name}<br/>"
         counter += 1
       end
       privatemessage( "I know the following playlists:<br>#{text_out}")
