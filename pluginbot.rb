@@ -478,7 +478,7 @@ class MumbleMPD
   
          
               # early in development, not documented now until it works :)
-              if message == "working"
+              if message == "jobs"
                 output = ""
                 Thread.list.each do |t|  
                   if t["process"]!=nil
