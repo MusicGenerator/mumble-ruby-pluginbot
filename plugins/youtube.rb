@@ -59,7 +59,7 @@ class Youtube < Plugin
         workingdownload = Thread.new {
           #local variables for this thread!
           actor = msg.actor
-          Thread.current["actor"]=user
+          Thread.current["actor"]=actor
           Thread.current["process"]="youtube (download)"
 
           messageto(actor, "Youtube is inspecting link: " + link + "...")
