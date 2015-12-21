@@ -1,16 +1,16 @@
 require_relative './helpers/StreamCheck.rb'
 class Radiostream < Plugin
-  
+
   def init(init)
     super
     if ( @@bot[:mpd] != nil ) && ( @@bot[:messages] != nil ) && ( @@bot[:radiostream] == nil )
       @@bot[:radiostream] = self
     end
-      
+
     @keylist = Array.new 
     return @@bot
   end
-  
+
   def name
     if ( @@bot[:mpd] == nil ) || ( @@bot[:messages] == nil ) || ( @@bot[:radiostream] == nil)
       "false"
@@ -18,7 +18,7 @@ class Radiostream < Plugin
       self.class.name
     end
   end
-  
+
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
     h << "<b>#{@@bot[:controlstring]}radiostream URL</b> - Will try to forward the radio stream.<br>"
@@ -27,7 +27,7 @@ class Radiostream < Plugin
     h << "   This early version understand URLs that end with .pls or such that are in fact .pls files."
     h << "   Some .m3u links or direct URLs get also in function now."
   end
- 
+
   def handle_chat(msg, message)
     super
     if message.start_with?("radiostream <a href=") || message.start_with?("<a href=") 
@@ -55,8 +55,7 @@ class Radiostream < Plugin
         end
       end
     end
-    
-    
+
     if message == "choose"
       counter = 0
       output = "You can choose from <br><table>"
@@ -70,40 +69,39 @@ class Radiostream < Plugin
       output = "There is nothing where you can choose from!" if counter == 0
       messageto(msg.actor, output)
     end
-    
+
     if message.match (/choose (?:[\d{1,3}\ ?])+/)
       begin
         msg_parameters = message.split[1..-1].join(" ")
         id_list = msg_parameters.match(/(?:[\d{1,3}\ ?])+/)[0].split
-        
+
         chooselist = Array.new                                          #generate chooselist first
         @keylist.each do |key|                                          
           if key[:user] == msg.actor then
             chooselist << key[:link]
           end
         end
-        
+
         id_list.each do |id|
           @@bot[:mpd].add(chooselist[id.to_i])
           messageto(msg.actor, "Added #{chooselist[id.to_i]}")
         end
-        
+
       rescue
         messageto(msg.actor, "Does not exist. :(")
       end
     end
   end
-  
-  
+
   private
-  
+
   def add_link(link, user)
 
     decoded = false
 
     file = `curl -L --max-time 3 "#{link}" `                #Load some data from link
     streaminfo = StreamCheck.new                            #init StreamCheck
-    
+
     info = streaminfo.checkmp3(file)                        #check if mp3
     if info[:verified] != nil then                          #is mp3-stream?
       info[:link] = link                                    #add link to info
@@ -117,10 +115,10 @@ class Radiostream < Plugin
         decoded = true                                      #set decodet to true to prevent other checks
       end  
     end
-    
+
     if ( file[0..9] == "[playlist]" ) && !decoded           #if still not decoded check if is a .pls link
                                                             # seems to be an .pls link
-      file.each_line do |line|                              
+      file.each_line do |line|
         if line.match (/File[0-9]{1,2}=.+/)                 #if a link found run check recursive
           add_link(line.sub(/File[0-9]{1,2}=/, '').strip, user)
         end
@@ -134,11 +132,10 @@ class Radiostream < Plugin
         end
       end
     end
-    
+
     if ( decoded == true )                                  #if decoded add info to keylist
       info[:user]=user
       @keylist << info 
     end
   end
 end
-

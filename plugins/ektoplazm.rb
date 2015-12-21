@@ -6,7 +6,7 @@ class Ektoplazm < Plugin
       begin
         @ektoplazmfolder = @@bot[:mpd_musicfolder] + @@bot[:ektoplazm_downloadsubdir]
         @tempektoplazmfolder = @@bot[:main_tempdir] + @@bot[:ektoplazm_tempsubdir]
-        
+
         Dir.mkdir(@ektoplazmfolder) unless File.exists?(@ektoplazmfolder)
         Dir.mkdir(@tempektoplazmfolder) unless File.exists?(@tempektoplazmfolder)
       rescue
@@ -73,7 +73,7 @@ class Ektoplazm < Plugin
           if ( @songlist.size > 0 ) then
             @@bot[:mpd].update(@@bot[:ektoplazm_downloadsubdir].gsub(/\//,"")) 
             messageto(actor, "Waiting for database update complete...")
-            
+
             begin
               #Caution! following command needs patched ruby-mpd!
               @@bot[:mpd].idle("update")
@@ -102,5 +102,5 @@ class Ektoplazm < Plugin
       }
     end
   end
-  
+
 end

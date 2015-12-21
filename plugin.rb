@@ -2,39 +2,39 @@ class Plugin
   def self.plugins
     @plugins ||= []
   end
-  
+
   def self.inherited(klass)
     @plugins ||= []
-    
+
     @plugins << klass
   end
-  
+
   # Usually a good idea for debugging if you have lots of methods
   def handle_chat(msg, message)
     @user = msg.actor
     #raise "#{self.class.name} doesn't implement `handle_chat`!"
   end
-  
+
   def handle_command(command)
     #raise "#{self.class.name} doesn't implement `handle_command`!"
   end
-  
+
   def handle_response
     #
   end
-  
+
   def handle_help(text)
     text << "#{self.class.name} does'nt implement a help"
   end
-  
+
   def ticks(time)
     #enable periodic timer for plugins
   end
-  
+
   def init(init)
     @@bot = init
   end
-  
+
   private
   def prozessmessage(message)
     # count lines
@@ -64,8 +64,5 @@ class Plugin
       puts "Sending message to channel #{@@bot[:cli].me.current_channel} failed. ->should never happen<-" 
     end
   end
-  
-  
-end
- 
 
+end

@@ -8,7 +8,7 @@ class Youtube < Plugin
       begin
         @youtubefolder = @@bot[:mpd_musicfolder] + @@bot[:youtube_downloadsubdir]
         @tempyoutubefolder = @@bot[:main_tempdir] + @@bot[:youtube_tempsubdir]
-        
+
         Dir.mkdir(@youtubefolder) unless File.exists?(@youtubefolder)
         Dir.mkdir(@tempyoutubefolder) unless File.exists?(@tempyoutubefolder)
       rescue
@@ -33,7 +33,7 @@ class Youtube < Plugin
   def name
     if ( @@bot[:mpd] == nil ) || ( @@bot[:youtube] == nil)
       "false"
-    else    
+    else
       self.class.name
     end
   end
@@ -53,7 +53,6 @@ class Youtube < Plugin
         privatemessage("Youtube uses youtube-dl " + `#{@@bot[:youtube_youtubedl]} --version`) 
     end
 
-    
     if message.start_with?("ytlink <a href=") || message.start_with?("<a href=") then
       link = msg.message.match(/http[s]?:\/\/(.+?)\"/).to_s.chop
       if ( link.include? "www.youtube.com/" ) || ( link.include? "www.youtu.be/" ) || ( link.include? "m.youtube.com/" ) then
@@ -70,11 +69,11 @@ class Youtube < Plugin
           if ( @songlist.size > 0 ) then
             @@bot[:mpd].update(@@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
             messageto(actor, "Waiting for database update complete...")
-            
+
             while @@bot[:mpd].status[:updating_db] != nil do
               sleep 0.5
             end
-          
+
             messageto(actor, "Update done.")
             while @songlist.size > 0 
               song = @songlist.pop
@@ -87,14 +86,14 @@ class Youtube < Plugin
         }
       end
     end
-    
+
     if message.split[0] == 'yts'
       search = message[4..-1]
       if !(( search == nil ) || ( search == "" ))
         Thread.new do
           Thread.current["user"]=msg.actor
           Thread.current["process"]="youtube (yts)"
-        
+
           messageto(msg.actor, "searching for \"#{search}\", please be patient...")    
           songs = find_youtube_song(CGI.escape(search))
           @keylist[msg.actor] = songs
@@ -161,11 +160,11 @@ class Youtube < Plugin
         if ( @songlist.size > 0 ) then
           @@bot[:mpd].update(@@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
           messageto(actor, "Waiting for database update complete...")
-          
+
           while @@bot[:mpd].status[:updating_db] != nil do
             sleep 0.5
           end
-          
+
           messageto(actor, "Update done.")
           out = "<b>Added:</b><br>"
 
@@ -185,9 +184,9 @@ class Youtube < Plugin
       }
     end
   end
-  
+
   private 
-  
+
   def find_youtube_song song
     songlist = []
     songs = `nice -n20 #{@@bot[:youtube_youtubedl]} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`

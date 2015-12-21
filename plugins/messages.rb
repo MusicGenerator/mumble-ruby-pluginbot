@@ -82,7 +82,7 @@ class Messages < Plugin
       @@bot[:cli].text_user(msg.actor, send)
     end
   end
-  
+
   def sendmessage (message, messagetype)
     channelmessage( message) if ( @@bot[:chan_notify] & messagetype) != 0
     if !@priv_notify.nil?
@@ -90,10 +90,10 @@ class Messages < Plugin
         begin
           @@bot[:cli].text_user(user,message) if ( notify & messagetype) != 0
         rescue
-        
+
         end
       end
     end
   end
-  
+
 end

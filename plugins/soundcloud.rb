@@ -6,7 +6,7 @@ class Soundcloud < Plugin
       begin
         @soundcloudfolder = @@bot[:mpd_musicfolder] + @@bot[:soundcloud_downloadsubdir]
         @tempsoundcloudfolder = @@bot[:main_tempdir] + @@bot[:soundcloud_tempsubdir]
-        
+
         Dir.mkdir(@soundcloudfolder) unless File.exists?(@soundcloudfolder)
         Dir.mkdir(@tempsoundcloudfolder) unless File.exists?(@tempsoundcloudfolder)
       rescue
@@ -62,11 +62,11 @@ class Soundcloud < Plugin
           if ( @songlist.size > 0 ) then
             @@bot[:mpd].update(@@bot[:soundcloud_downloadsubdir].gsub(/\//,"")) 
             messageto(actor, "Waiting for database update complete...")
-            
+
             while @@bot[:mpd].status[:updating_db] != nil do
               sleep 0.5
-            end          
-            
+            end
+
             messageto(actor, "Update done.")
             while @songlist.size > 0 
               song = @songlist.pop
@@ -106,5 +106,5 @@ class Soundcloud < Plugin
       end
     end
   end
-  
+
 end

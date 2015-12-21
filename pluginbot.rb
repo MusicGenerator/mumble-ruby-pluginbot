@@ -3,13 +3,11 @@
 require './plugin'
 Dir["./plugins/*.rb"].each { |f| require f }
 
-
 require 'mumble-ruby'
 require 'rubygems'
 require 'ruby-mpd'
 require 'thread'
 require 'optparse'
-
 
 # copy@paste from https://gist.github.com/erskingardner/1124645#file-string_ext-rb
 class String
@@ -67,7 +65,7 @@ class MumbleMPD
           puts "Config not loaded!"
         end
       end
-      
+
       opts.on("--mumblehost=", "IP or Hostname of mumbleserver") do |v|
         @settings[:mumbleserver_host] = v
       end
@@ -115,7 +113,7 @@ class MumbleMPD
     @settings[:ducking_volume] = 20 if @settings[:ducking_volume].nil?
     @configured_settings = @settings.clone 
   end
-    
+
   def init_settings
     @run = false
     @cli = nil
@@ -127,22 +125,22 @@ class MumbleMPD
       conf.ssl_cert_opts[:cert_dir] = File.expand_path(@settings[:certdirectory])
     end
   end
-  
+
   def disconnect
     @cli.disconnect if @cli.connected?
   end
-  
+
   def calc_overall_bandwidth(framelength, bitrate)
     ( 1000 / framelength.to_f * 320 ).to_i + bitrate
   end
-  
+
   def get_overall_bandwidth
     #( 1000/ @cli.get_frame_length.to_f * 320 ).to_i + @cli.get_bitrate
     calc_overall_bandwidth(@cli.get_frame_length, @cli.get_bitrate)
   end
-  
+
   def mumble_start
-  
+
     @cli.on_server_config do |serverconfig|
       @settings[:mumbleserver_imagelength] = serverconfig.image_message_length
       @settings[:mumbleserver_messagelength] = serverconfig.message_length
@@ -241,17 +239,17 @@ class MumbleMPD
         break if maxcount <= 0 
       end
       puts "maybe not all plugin functional!" if maxcount <= 0
-      
+
       ## Enable Ticktimer Thread
       @ticktimer = Thread.new do
         timertick
       end
-      
+
     end
   end
 
   private 
-  
+
   def timertick
     ticktime = ( @settings[:ticks_per_hour] || 3600 )
     while (true==true)
@@ -262,7 +260,7 @@ class MumbleMPD
       end
     end
   end
-  
+
   def handle_user_state_changes(msg)
     #msg.actor = session_id of user who did something on someone, if self done, both is the same.
     #msg.session = session_id of the target
@@ -470,13 +468,11 @@ class MumbleMPD
                   help << plugin.name + "<br />"
                 end
                 help << "</b></span>"
-                
+
                 help << "<br /><b>#{cc}help <i>pluginname</i></b> Get the help text for the specific plugin.<br /><br />For example send the following text to get some basic control commands of the bot:<br /><b>#{cc}help mpd</b><br />"
                 @cli.text_user(msg.actor, help)
               end
-     
-  
-         
+
               # early in development, not documented now until it works :)
               if message == "jobs"
                 output = ""
@@ -492,7 +488,6 @@ class MumbleMPD
                 end
               end
 
-              
               if message == 'internals'
                 help = "<br /><span style='color:red;'><b>Internal commands</b></span><br />"
                 help << "<b>superpassword+restart</b> will restart the bot.<br />"
@@ -561,7 +556,6 @@ class MumbleMPD
     end
   end
 end
-
 
 while true == true
     client = MumbleMPD.new

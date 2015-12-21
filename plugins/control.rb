@@ -15,12 +15,12 @@ class Control < Plugin
       @muted = false
       @playing  = !@@bot[:mpd].paused?
       @@bot[:cli].mute false
- 
+
       # Register for permission denied messages
       @@bot[:cli].on_permission_denied do |msg|
         nopermission(msg)
       end
-  
+
       # Register for user state changes
       @@bot[:cli].on_user_state do |msg|
         userstate(msg)
@@ -264,7 +264,7 @@ class Control < Plugin
       @sticked = Thread.new {
       Thread.current["user"]=msg.actor
       Thread.current["process"]="bandcamp"
-      
+
       while @sticky == true do
         if @@bot[:cli].me.current_channel == channeluserisin
           sleep(1)
@@ -301,7 +301,7 @@ class Control < Plugin
         end
       end
     end
-      
+
     if message == 'history'
       history = @history.clone
       out = "<table><tr><th>Command</th><th>by User</th></tr>"
@@ -313,7 +313,7 @@ class Control < Plugin
       out << "</table>"
       privatemessage( out)
     end
-    
+
     if message == 'automute'
       if @@bot[:control_automute] == false
         privatemessage( "Automute is now activated")

@@ -1,7 +1,7 @@
 # a pluginbot plugin
 
 class Mpd < Plugin
-  
+
   def init(init)
     super
     @@bot = init
@@ -31,7 +31,6 @@ class Mpd < Plugin
         end
         channelmessage( "Random mode is now: #{random}.") if (@@bot[:chan_notify] & 0x04) != 0
       end
-
 
       @@bot[:mpd].on :state  do |state|
         if @@bot[:chan_notify] & 0x80 != 0 then
@@ -80,11 +79,10 @@ class Mpd < Plugin
 
       @@bot[:mpd].on :song do |current|
       end
-      
 
       @@bot[:cli].player.stream_named_pipe(@@bot[:mpd_fifopath]) 
       @@bot[:mpd].connect true #without true bot does not @@bot[:cli].text_channel messages other than for !status
-      
+
       Thread.new do
         mpd =@@bot[:mpd]
         lastcurrent = nil
@@ -111,9 +109,6 @@ class Mpd < Plugin
                   output << "<tr><td>Artist:</td><td>#{current.artist}</td></tr>" if !current.artist.nil?
                   output << "<tr><td>Title:</td><td>#{current.title}</td></tr>" if !current.title.nil?
                   output << "<tr><td>Album:</td><td>#{current.album}</td></tr>" if !current.album.nil?
-                  
-                  
-                  
                   output << "<tr><td>Source:</td><td>#{current.file}</td></tr>" if ( !current.file.nil? ) && ( current.album.nil? ) && ( current.artist.nil? )
                   output << "</table><br>" + @infotemplate
                   @@bot[:cli].set_comment(image+output)
@@ -144,7 +139,7 @@ class Mpd < Plugin
 
     return @@bot
   end
-  
+
   def name
     if @@bot[:messages] == nil
       "false"
@@ -201,7 +196,7 @@ class Mpd < Plugin
     if message == 'helpmpd'
         privatemessage( help(""))
     end
-    
+
     if message[0..3] == 'seek'
       seekto = case message.count ":"
         when 0 then         # Seconds
@@ -280,7 +275,7 @@ class Mpd < Plugin
         privatemessage( "Sorry, could not delete.")
       end
     end
-    
+
     if message == 'random'
       @@bot[:mpd].random = !@@bot[:mpd].random?
     end
@@ -350,7 +345,7 @@ class Mpd < Plugin
       if @@bot[:mpd].queue.length > 0
         text_out ="<table><th><td>#</td><td>Name</td></th>"
         songnr = 0
-    
+
         @@bot[:mpd].queue.each do |song|
           if song.title.to_s.empty?
             text_out << "<tr><td>#{songnr}</td><td>No ID / Stream? Source: #{song.file}</td></tr>"
@@ -363,10 +358,10 @@ class Mpd < Plugin
       else
         text_out = "The queue is empty."
       end
-      
+
       privatemessage( text_out)
     end
-    
+
     if message[0,12] == 'saveplaylist'
       name = message.gsub("saveplaylist", "").lstrip
       if name != ""
@@ -584,7 +579,7 @@ class Mpd < Plugin
 
     if message.match(/^v [0-9]{1,3}$/)
       volume = message.match(/^v ([0-9]{1,3})$/)[1].to_i
-      
+
       if (volume >=0 ) && (volume <= 100)
         @@bot[:mpd].volume = volume
       else
@@ -616,7 +611,7 @@ class Mpd < Plugin
       @@bot[:mpd].update
       privatemessage( "running database update.")
     end
-    
+
     if message == 'displayinfo'
       begin
         if @@bot[:use_comment_for_status_display] == true
@@ -634,7 +629,7 @@ class Mpd < Plugin
         end
       end
     end
-    
+
     if message == 'mpdconfig'
       begin
         config = @@bot[:mpd].config

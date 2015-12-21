@@ -7,7 +7,7 @@ class Bandcamp < Plugin
       begin
         @bandcampfolder = @@bot[:mpd_musicfolder] + @@bot[:bandcamp_downloadsubdir]
         @tempbandcampfolder = @@bot[:main_tempdir] + @@bot[:bandcamp_tempsubdir]
-          
+
         Dir.mkdir(@bandcampfolder) unless File.exists?(@bandcampfolder)
         Dir.mkdir(@tempbandcampfolder) unless File.exists?(@tempbandcampfolder)
       rescue
@@ -64,11 +64,11 @@ class Bandcamp < Plugin
           if ( @songlist.size > 0 ) then
             @@bot[:mpd].update(@@bot[:bandcamp_downloadsubdir].gsub(/\//,"")) 
             messageto(actor, "Waiting for database update complete...")
-            
+
             while @@bot[:mpd].status[:updating_db] != nil do
               sleep 0.5
-            end          
-                      
+            end
+
             messageto(actor, "Update done.")
             while @songlist.size > 0 
               song = @songlist.pop
@@ -87,23 +87,23 @@ class Bandcamp < Plugin
     if ( site.include? "bandcamp.com/" ) then
       site.gsub!(/<\/?[^>]*>/, '')
       site.gsub!("&amp;", "&")
-      
+
       is_album = false
-      
+
       if site.match(/album\/(.*)/)
         is_album = true
         albumname = site.match(/album\/(.*)/)[1]
         albumname.gsub!(" ", "_")
-        
+
         finaldirectory = "#{@bandcampfolder}/#{albumname}"
         Dir.mkdir(finaldirectory) unless File.exists?(finaldirectory)
       else #no album
         albumname = ""
         finaldirectory = "#{@bandcampfolder}"
       end
-      
+
       puts site
-      
+
       filename = `#{@@bot[:bandcamp_youtubedl]} --get-filename #{@ytdloptions} -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
       output =`nice -n20 #{@consoleaddition} #{@@bot[:bandcamp_youtubedl]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@tempbandcampfolder}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
       filename.split("\n").each do |name|
@@ -111,9 +111,9 @@ class Bandcamp < Plugin
           if File.exist?("#{@tempbandcampfolder}#{name}.#{ending}")
             system ("nice -n20 #{@consoleaddition} convert \"#{@tempbandcampfolder}#{name}.jpg\" -resize 320x240 \"#{@bandcampfolder}#{name}.jpg\" ")
             # Mixin tags without recode on standard
-            
+
             system ("nice -n20 #{@consoleaddition} cp \"#{@tempbandcampfolder}#{name}.#{ending}\" \"#{finaldirectory}/#{name}.#{ending}\"") if !File.exist?("#{finaldirectory}/#{name}.#{ending}")
-            
+
             if is_album
               @songlist << albumname + "/" + name.split("/")[-1] + ".#{ending}"
             else
