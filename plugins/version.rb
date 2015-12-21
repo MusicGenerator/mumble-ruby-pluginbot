@@ -12,8 +12,8 @@ class Version < Plugin
   end
   
   def help(h)
-    h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h += "<b>#{@@bot[:controlstring]}version</b> - Show the used Bot version.<br>"
+    h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
+    h << "<b>#{@@bot[:controlstring]}version</b> - Show the used Bot version.<br>"
     h
   end
  

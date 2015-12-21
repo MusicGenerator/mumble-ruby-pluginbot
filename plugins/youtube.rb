@@ -39,11 +39,11 @@ class Youtube < Plugin
   end
 
   def help(h)
-    h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h += "<b>#{@@bot[:controlstring]}ytlink <i>URL</i></b> - Will try to download the music from the given URL.<br>"
-    h += "<b>#{@@bot[:controlstring]}yts keywords</b> - Will search on Youtube for one or more keywords and print the results to you.<br>"
-    h += "<b>#{@@bot[:controlstring]}yta <i>number</i> <i>number2</i> <i>number3</i></b> - Let the bot download the given song(s) from the list you got via <i>#{@@bot[:controlstring]}yts</i>.<br>Instead of a specific number or multiple numbers, write <b>#{@@bot[:controlstring]}yta <i>all</i></b> to let the bot download all found songs.<br>"
-    h += "<b>#{@@bot[:controlstring]}ytdl-version</b> - print used download helper version"
+    h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
+    h << "<b>#{@@bot[:controlstring]}ytlink <i>URL</i></b> - Will try to download the music from the given URL.<br>"
+    h << "<b>#{@@bot[:controlstring]}yts keywords</b> - Will search on Youtube for one or more keywords and print the results to you.<br>"
+    h << "<b>#{@@bot[:controlstring]}yta <i>number</i> <i>number2</i> <i>number3</i></b> - Let the bot download the given song(s) from the list you got via <i>#{@@bot[:controlstring]}yts</i>.<br>Instead of a specific number or multiple numbers, write <b>#{@@bot[:controlstring]}yta <i>all</i></b> to let the bot download all found songs.<br>"
+    h << "<b>#{@@bot[:controlstring]}ytdl-version</b> - print used download helper version"
   end
 
   def handle_chat(msg, message)
@@ -105,10 +105,10 @@ class Youtube < Plugin
               messageto(msg.actor, out + "</table>") if index != 0   
               out = "<table><tr><td><b>Index</b></td><td>Title</td></tr>"
             end
-            out += "<tr><td><b>#{index}</b></td><td>#{title}</td></tr>"
+            out << "<tr><td><b>#{index}</b></td><td>#{title}</td></tr>"
             index += 1
           end
-          out +="</table>"
+          out << "</table>"
           messageto(msg.actor, out)    
         end
       else    
@@ -127,7 +127,7 @@ class Youtube < Plugin
           id_list.each do |id|
             downloadid = @keylist[msg.actor][id.to_i]
             puts downloadid.inspect
-            out += "ID: #{id}, Name: \"#{downloadid[1]}\"<br>"
+            out << "ID: #{id}, Name: \"#{downloadid[1]}\"<br>"
             link << "https://www.youtube.com/watch?v="+downloadid[0]
           end
 
@@ -136,7 +136,7 @@ class Youtube < Plugin
 
         if msg_parameters == "all"
           @keylist[msg.actor].each do |downloadid|
-            out += "Name: \"#{downloadid[1]}\"<br>"
+            out << "Name: \"#{downloadid[1]}\"<br>"
             link << "https://www.youtube.com/watch?v="+downloadid[0]
           end
           messageto(msg.actor, out)
@@ -173,9 +173,9 @@ class Youtube < Plugin
             song = @songlist.pop
             begin
               @@bot[:mpd].add(@@bot[:youtube_downloadsubdir]+song)
-              out += song + "<br>"
+              out << song + "<br>"
             rescue
-              out += "fixme: " + song + " not found!<br>"
+              out << "fixme: " + song + " not found!<br>"
             end
           end
           messageto(actor, out)

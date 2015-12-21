@@ -341,9 +341,9 @@ class MumbleMPD
               if message == 'settings' 
                 out = "<table>"
                 @settings.each do |key, value|
-                  out += "<tr><td>#{key}</td><td>#{value}</td></tr>" if key != :logo
+                  out << "<tr><td>#{key}</td><td>#{value}</td></tr>" if key != :logo
                 end
-                out += "</table>"
+                out << "</table>"
                 @cli.text_user(msg.actor, out)
               end
 
@@ -467,11 +467,11 @@ class MumbleMPD
               if message == 'plugins'
                 help = "<br /><span style='color:red;'>Loaded plugins:<br /><b>"
                 @plugin.each do |plugin|
-                  help += plugin.name + "<br />"
+                  help << plugin.name + "<br />"
                 end
-                help += "</b></span>"
+                help << "</b></span>"
                 
-                help += "<br /><b>#{cc}help <i>pluginname</i></b> Get the help text for the specific plugin.<br /><br />For example send the following text to get some basic control commands of the bot:<br /><b>#{cc}help mpd</b><br />"
+                help << "<br /><b>#{cc}help <i>pluginname</i></b> Get the help text for the specific plugin.<br /><br />For example send the following text to get some basic control commands of the bot:<br /><b>#{cc}help mpd</b><br />"
                 @cli.text_user(msg.actor, help)
               end
      
@@ -495,22 +495,22 @@ class MumbleMPD
               
               if message == 'internals'
                 help = "<br /><span style='color:red;'><b>Internal commands</b></span><br />"
-                help += "<b>superpassword+restart</b> will restart the bot.<br />"
-                help += "<b>superpassword+reset</b> will reset variables to start values.<br />"
-                help += "<b>#{cc}about</b> Get information about this bot.<br />"
-                help += "<b>#{cc}settings</b> display current settings.<br />"
-                help += "<b>#{cc}set <i>variable=value</i></b> Set variable to value.<br />"
-                help += "<b>#{cc}bind</b> Bind bot to a user. (some functions will only work if bot is bound).<br />"
-                help += "<b>#{cc}unbind</b> Unbind bot.<br />"
-                help += "<b>#{cc}reset</b> Reset variables to default value. Needs binding!<br />"
-                help += "<b>#{cc}restart</b> Restart Bot. Needs binding.<br />"
-                help += "<b>#{cc}blacklist <i>username</i></b> Add user to blacklist. Needs binding.<br />"
-                help += "<b>#{cc}register</b> Let the bot register itself on the current server. Works only if server allows it. If it doesn't work ask an administrator of your Mumble server. Be aware that after registration only an administrator can change the name of the bot.<br />"
-                help += "<b>#{cc}ducking</b> Toggle voice ducking on/off.<br />"
-                help += "<b>#{cc}duckvol <i>volume</i></b> Set the ducking volume (% of normal volume).<br />"
-                help += "<b>#{cc}duckvol</b> Show current ducking volume.<br />"
-                help += "<b>#{cc}bitrate <i>rate in kbit/s</i></b> Set audio encoding rate. Note that the bot needs additional bandwidth for overhead so the overall bandwidth is higher than this bitrate.<br />"
-                help += "<b>#{cc}bandwidth</b> Show information about the overall bandwidth, audo bandwidth (bitrate) and framesize."
+                help << "<b>superpassword+restart</b> will restart the bot.<br />"
+                help << "<b>superpassword+reset</b> will reset variables to start values.<br />"
+                help << "<b>#{cc}about</b> Get information about this bot.<br />"
+                help << "<b>#{cc}settings</b> display current settings.<br />"
+                help << "<b>#{cc}set <i>variable=value</i></b> Set variable to value.<br />"
+                help << "<b>#{cc}bind</b> Bind bot to a user. (some functions will only work if bot is bound).<br />"
+                help << "<b>#{cc}unbind</b> Unbind bot.<br />"
+                help << "<b>#{cc}reset</b> Reset variables to default value. Needs binding!<br />"
+                help << "<b>#{cc}restart</b> Restart Bot. Needs binding.<br />"
+                help << "<b>#{cc}blacklist <i>username</i></b> Add user to blacklist. Needs binding.<br />"
+                help << "<b>#{cc}register</b> Let the bot register itself on the current server. Works only if server allows it. If it doesn't work ask an administrator of your Mumble server. Be aware that after registration only an administrator can change the name of the bot.<br />"
+                help << "<b>#{cc}ducking</b> Toggle voice ducking on/off.<br />"
+                help << "<b>#{cc}duckvol <i>volume</i></b> Set the ducking volume (% of normal volume).<br />"
+                help << "<b>#{cc}duckvol</b> Show current ducking volume.<br />"
+                help << "<b>#{cc}bitrate <i>rate in kbit/s</i></b> Set audio encoding rate. Note that the bot needs additional bandwidth for overhead so the overall bandwidth is higher than this bitrate.<br />"
+                help << "<b>#{cc}bandwidth</b> Show information about the overall bandwidth, audo bandwidth (bitrate) and framesize."
 
                 @cli.text_user(msg.actor, help)
               end

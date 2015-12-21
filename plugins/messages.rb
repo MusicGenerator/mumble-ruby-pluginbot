@@ -27,13 +27,13 @@ class Messages < Plugin
   end
 
   def help(h)
-    h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h += "<b>#{@@bot[:controlstring]}+ #(<i>Hashtag</i>)</b> - Subscribe to a notification.<br>"
-    h += "<b>#{@@bot[:controlstring]}- #(<i>Hashtag</i>)</b> - Unsubscribe from a notification.<br>"
-    h += "You can choose one or more of the following values:<br>"
-    h += "volume, random, update, single, xfade, consume, repeat, state<br>"
-    h += "<b>#{@@bot[:controlstring]}*</b> - List subscribed notifications.<br>"
-    h += "<br /><b>Example:</b> To get a message when the repeat mode changes send the command \"#{@@bot[:controlstring]}+ #repeat\""
+    h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
+    h << "<b>#{@@bot[:controlstring]}+ #(<i>Hashtag</i>)</b> - Subscribe to a notification.<br>"
+    h << "<b>#{@@bot[:controlstring]}- #(<i>Hashtag</i>)</b> - Unsubscribe from a notification.<br>"
+    h << "You can choose one or more of the following values:<br>"
+    h << "volume, random, update, single, xfade, consume, repeat, state<br>"
+    h << "<b>#{@@bot[:controlstring]}*</b> - List subscribed notifications.<br>"
+    h << "<br /><b>Example:</b> To get a message when the repeat mode changes send the command \"#{@@bot[:controlstring]}+ #repeat\""
   end
 
   def handle_chat(msg, message)
@@ -67,17 +67,17 @@ class Messages < Plugin
     end
     if message == '*' && !@priv_notify[msg.actor].nil?
       send = ""
-      send += " #volume" if (@priv_notify[msg.actor] & Cvolume) > 0
-      send += " #update" if (@priv_notify[msg.actor] & Cupdating_db) > 0
-      send += " #random" if (@priv_notify[msg.actor] & Crandom) > 0
-      send += " #single" if (@priv_notify[msg.actor] & Csingle) > 0
-      send += " #xfade" if (@priv_notify[msg.actor] & Cxfade) > 0
-      send += " #repeat" if (@priv_notify[msg.actor] & Crepeat) > 0
-      send += " #state" if (@priv_notify[msg.actor] & Cstate) > 0
+      send << " #volume" if (@priv_notify[msg.actor] & Cvolume) > 0
+      send << " #update" if (@priv_notify[msg.actor] & Cupdating_db) > 0
+      send << " #random" if (@priv_notify[msg.actor] & Crandom) > 0
+      send << " #single" if (@priv_notify[msg.actor] & Csingle) > 0
+      send << " #xfade" if (@priv_notify[msg.actor] & Cxfade) > 0
+      send << " #repeat" if (@priv_notify[msg.actor] & Crepeat) > 0
+      send << " #state" if (@priv_notify[msg.actor] & Cstate) > 0
       if send != ""
         send = "You listen to following MPD-Channels:" + send + "." 
       else
-        send += "You listen to no MPD-Channels"
+        send << "You listen to no MPD-Channels"
       end
       @@bot[:cli].text_user(msg.actor, send)
     end

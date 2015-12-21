@@ -41,17 +41,17 @@ class Control < Plugin
   end
 
   def help(h)
-    h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h += "<b>#{@@bot[:controlstring]}ch</b> - The bot will enter your channel if he has permission to.<br>"
-    h += "<b>#{@@bot[:controlstring]}debug</b> - Probe command.<br>"
-    h += "<b>#{@@bot[:controlstring]}gotobed</b> - Bot sleeps in less then 1 second :)<br>"
-    h += "<b>#{@@bot[:controlstring]}wakeup</b> - Bot is under adrenalin again.<br>"
-    h += "<b>#{@@bot[:controlstring]}follow</b> - Bot will start to follow you.<br>"
-    h += "<b>#{@@bot[:controlstring]}unfollow</b> - Bot transforms from a dog into a lazy cat :).<br>"
-    h += "<b>#{@@bot[:controlstring]}stick</b> - Jail bot into channel.<br>"
-    h += "<b>#{@@bot[:controlstring]}unstick</b> - Free the bot.<br>"
-    h += "<b>#{@@bot[:controlstring]}history</b> - Print last #{@historysize} commanding users with command given.<br>"
-    h += "<b>#{@@bot[:controlstring]}automute</b> - Toggles auto muting system. If active and if the bot is alone in a channel it instantly mutes himself and pauses the current song until a user joins the channel. Then it unmutes and starts playing the paused song. This helps to save much bandwidth on your server :)"
+    h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
+    h << "<b>#{@@bot[:controlstring]}ch</b> - The bot will enter your channel if he has permission to.<br>"
+    h << "<b>#{@@bot[:controlstring]}debug</b> - Probe command.<br>"
+    h << "<b>#{@@bot[:controlstring]}gotobed</b> - Bot sleeps in less then 1 second :)<br>"
+    h << "<b>#{@@bot[:controlstring]}wakeup</b> - Bot is under adrenalin again.<br>"
+    h << "<b>#{@@bot[:controlstring]}follow</b> - Bot will start to follow you.<br>"
+    h << "<b>#{@@bot[:controlstring]}unfollow</b> - Bot transforms from a dog into a lazy cat :).<br>"
+    h << "<b>#{@@bot[:controlstring]}stick</b> - Jail bot into channel.<br>"
+    h << "<b>#{@@bot[:controlstring]}unstick</b> - Free the bot.<br>"
+    h << "<b>#{@@bot[:controlstring]}history</b> - Print last #{@historysize} commanding users with command given.<br>"
+    h << "<b>#{@@bot[:controlstring]}automute</b> - Toggles auto muting system. If active and if the bot is alone in a channel it instantly mutes himself and pauses the current song until a user joins the channel. Then it unmutes and starts playing the paused song. This helps to save much bandwidth on your server :)"
   end
 
   def nopermission(msg)
@@ -308,9 +308,9 @@ class Control < Plugin
       loop do 
         break if history.empty?
         histmessage = history.shift
-        out += "<tr><td>#{histmessage.message}</td><td>#{histmessage.username}</td></tr>"
+        out << "<tr><td>#{histmessage.message}</td><td>#{histmessage.username}</td></tr>"
       end
-      out += "</table>"
+      out << "</table>"
       privatemessage( out)
     end
     

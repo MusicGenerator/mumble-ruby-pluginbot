@@ -20,12 +20,12 @@ class Radiostream < Plugin
   end
   
   def help(h)
-    h += "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h += "<b>#{@@bot[:controlstring]}radiostream URL</b> - Will try to forward the radio stream.<br>"
-    h += "<b>#{@@bot[:controlstring]}choose shows list if remote playlist has more choices. (You will get informed if you can use this command).<br>"
-    h += "<b>#{@@bot[:controlstring]}choose <i>number</i> choose stream.<br>"
-    h += "   This early version understand URLs that end with .pls or such that are in fact .pls files."
-    h += "   Some .m3u links or direct URLs get also in function now."
+    h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
+    h << "<b>#{@@bot[:controlstring]}radiostream URL</b> - Will try to forward the radio stream.<br>"
+    h << "<b>#{@@bot[:controlstring]}choose shows list if remote playlist has more choices. (You will get informed if you can use this command).<br>"
+    h << "<b>#{@@bot[:controlstring]}choose <i>number</i> choose stream.<br>"
+    h << "   This early version understand URLs that end with .pls or such that are in fact .pls files."
+    h << "   Some .m3u links or direct URLs get also in function now."
   end
  
   def handle_chat(msg, message)
