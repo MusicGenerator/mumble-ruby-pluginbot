@@ -557,25 +557,25 @@ class MumbleMPD
   end
 end
 
-while true == true
-    client = MumbleMPD.new
-    puts "pluginbot is starting..." 
-    client.init_settings
-    puts "start"
-    client.mumble_start
-    sleep 3
-    begin
-        while client.run == true
-            sleep 0.5
-        end
-    rescue
-        puts "An error occurred: #{$!}"
-        puts "Backtrace: #{$@}"
-        client.disconnect
+loop do #https://github.com/bbatsov/ruby-style-guide#infinite-loop
+  client = MumbleMPD.new
+  puts "pluginbot is starting..." 
+  client.init_settings
+  puts "start"
+  client.mumble_start
+  sleep 3
+  begin
+    while client.run == true
+        sleep 0.5
     end
-    puts " "
-    puts "----------------------------------------------"
-    puts "-- Restart                                  --"
-    puts "----------------------------------------------"
-    sleep 0.5
+  rescue
+    puts "An error occurred: #{$!}"
+    puts "Backtrace: #{$@}"
+    client.disconnect
+  end
+  puts " "
+  puts "----------------------------------------------"
+  puts "-- Restart                                  --"
+  puts "----------------------------------------------"
+  sleep 0.5
 end
