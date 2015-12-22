@@ -13,6 +13,7 @@ class Control < Plugin
       end
       @history = Array.new 
       @muted = false
+      @stopped_because_unregisterd = false                              #used to determine if bot should get back in playstate
       @playing  = !@@bot[:mpd].paused?
       @@bot[:cli].mute false
 
@@ -37,6 +38,21 @@ class Control < Plugin
       "false"
     else    
       self.class.name
+    end
+  end
+  
+  # Timer Method called by Main
+  def ticks(time)
+    if @stopped_because_unregisterd == true                             #if bot is stopped itself
+      me= @@bot[:cli].me
+      allregistered = true
+      @@bot[:cli].users.values.find do |u| 
+        allregistered = false if ( u.channel_id == me.channel_id ) && (u.user_id.nil?) && (u.name != me.name)
+      end                                                               #check if a unregisterd user is still in channel
+      if allregistered == true                                          #if all users registerd
+        @@bot[:mpd].play                                                #start to play
+        @stopped_because_unregisterd = false                            #clear flag
+      end
     end
   end
 
@@ -108,7 +124,7 @@ class Control < Plugin
   def userstate(msg)
     #msg.session = session_id of the target
     #msg.actor = session_id of user who did something on someone, if self done, both is the same.
-
+    puts msg
     me = @@bot[:cli].me
     msg_target = @@bot[:cli].users[msg.session]
     if ( me.current_channel != nil ) && ( msg.channel_id != nil )         
@@ -120,16 +136,17 @@ class Control < Plugin
       end
 
       # If user is in my channel and is unregistered then pause playing if stop_on_unregistered_users is enabled.
-      if ( me.current_channel.channel_id == msg_target.channel_id ) && ( @@bot[:stop_on_unregistered_users] == true) && ( sender_is_registered == false )  
+      if ( me.current_channel.channel_id == msg_target.channel_id ) && ( @@bot[:stop_on_unregistered_users] == true ) && ( sender_is_registered == false )  && ( @@bot[:mpd].playing? == true )
         current = @@bot[:mpd].current_song
         if current.file.include? "://" #If yes, it is probably some kind of a stream.
           @@bot[:mpd].stop
         else
-          if @@bot[:mpd].paused? == false
+          #if @@bot[:mpd].paused? == false
             @@bot[:mpd].pause = true
-          end
+          #end
         end
         @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, "<span style='color:red;'>An unregistered user currently joined or is acting in our channel. I stopped/paused the music.</span>")
+        @stopped_because_unregisterd = true
       end
 
       state_handling_if_alone
