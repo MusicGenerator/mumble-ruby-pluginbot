@@ -296,6 +296,25 @@ class Mpd < Plugin
       @@bot[:cli].me.mute false if @@bot[:cli].me.muted?
     end
 
+    if message == 'play first'
+      begin
+        @@bot[:mpd].play 0
+        privatemessage("Playing first song in the queue (0).")
+      rescue
+        privatemessage("There is no title in the queue, cant play the first entry.")
+      end
+    end
+
+    if message == 'play last'
+      if @@bot[:mpd].queue.length > 0
+        lastsongid = @@bot[:mpd].queue.length.to_i - 1
+        @@bot[:mpd].play (lastsongid)
+        privatemessage("Playing last song in the queue (#{lastsongid}).")
+      else 
+        privatemessage("There is no title in the queue, cant play the first entry.")
+      end
+    end
+
     if message.match(/^play [0-9]{1,3}$/)
       tracknumber = message.match(/^play ([0-9]{1,3})$/)[1].to_i
       begin
