@@ -165,6 +165,8 @@ class Mpd < Plugin
     h << "<b>#{@@bot[:controlstring]}pp</b> - Toggle pause/play.<br>"
     h << "<b>#{@@bot[:controlstring]}stop</b> - Stop playing.<br>"
     h << "<b>#{@@bot[:controlstring]}play</b> - Start playing.<br>"
+    h << "<b>#{@@bot[:controlstring]}play first</b> - Play the first song in the queue.<br>"
+    h << "<b>#{@@bot[:controlstring]}play last</b> - Play the last song in the queue.<br>"
     h << "<b>#{@@bot[:controlstring]}play <i>number</i></b> - Play title on position <i>number</i> in queue.<br>"
     h << "<b>#{@@bot[:controlstring]}songlist</b> - Print the list of ALL songs in the MPD collection.<br>"
     h << "<b>#{@@bot[:controlstring]}playlist <i>id</i></b> - Load the playlist referenced by the id.<br>"
