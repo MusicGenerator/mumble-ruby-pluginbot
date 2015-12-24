@@ -201,7 +201,7 @@ class Mpd < Plugin
     
     if message == 'seek'
       # seek command without a value...
-      channelmessage( "Now on position #{timedecode @@bot[:mpd].status[:time][0]}/#{timedecode @@bot[:mpd].status[:time][1]}.")
+      privatemessage("Now on position #{timedecode @@bot[:mpd].status[:time][0]}/#{timedecode @@bot[:mpd].status[:time][1]}.")
     end
 
     if message[0..3] == 'seek'
@@ -245,7 +245,6 @@ class Mpd < Plugin
         # mpd is old and knows no seek commands
         puts "[mpd-plugin] [error] seek without success, maybe mpd version < 0.17 installed"
       end
-      status = @@bot[:mpd].status
       channelmessage( "Now on position #{timedecode @@bot[:mpd].status[:time][0]}/#{timedecode @@bot[:mpd].status[:time][1]}.")
     end
 
@@ -333,7 +332,6 @@ class Mpd < Plugin
       out = ""
       @@bot[:mpd].songs.each do |song|
         if block >= 50
-          #messageto(msg.actor, out.to_s)
           privatemessage(out.to_s)
           out = ""
           block = 0
@@ -341,14 +339,22 @@ class Mpd < Plugin
         out << "<br/>" + song.file.to_s
         block += 1
       end
-      #messageto(msg.actor, out.to_s)
       privatemessage(out.to_s)    
     end
 
     if message == 'stats'
       out = "<table>"
       @@bot[:mpd].stats.each do |key, value|
-        out << "<tr><td>#{key}</td><td>#{value}</td></tr>"
+        case
+        when key.to_s == 'uptime'
+          out << "<tr><td>#{key}</td><td>#{timedecode(value)}</td></tr>"
+        when key.to_s == 'playtime'
+          out << "<tr><td>#{key}</td><td>#{timedecode(value)}</td></tr>"
+        when key.to_s == 'db_playtime'
+          out << "<tr><td>#{key}</td><td>#{timedecode(value)}</td></tr>"
+        else
+          out << "<tr><td>#{key}</td><td>#{value}</td></tr>"
+        end
       end
       out << "</table>"
       privatemessage( out)    
@@ -499,7 +505,7 @@ class Mpd < Plugin
           #  out << "<tr><td>Current playlist:</td><td>#{value}</td></tr>"
           #end
         when key.to_s == 'playlistlength'
-          out << "<tr><td>Song count in current queue/playlist:</td><td valign='bottom'>#{value}</td></tr>"
+          out << "<tr><td>Song count in current queue/playlist:</td><td valign='bottom'>#{timedecode(value)}</td></tr>"
         when key.to_s == 'mixrampdb'
           out << "<tr><td>Mixramp db:</td><td>#{value}</td></tr>"
         when key.to_s == 'state'
@@ -530,25 +536,9 @@ class Mpd < Plugin
           #out << "<tr><td>Current songid:</td><td>#{current_song}</td></tr>"
           out << "<tr><td>Current songid:</td><td>#{value}</td></tr>"
         when key.to_s == 'time'
-          begin
-            #Code from https://stackoverflow.com/questions/19595840/rails-get-the-time-difference-in-hours-minutes-and-seconds
-            now_mm, now_ss = value[0].divmod(60) #Minutes and seconds of current time within the song.
-            now_hh, now_mm = now_mm.divmod(60)
-            total_mm, total_ss = value[1].divmod(60) #Minutes and seconds of total time of the song.
-            total_hh, total_mm = total_mm.divmod(60)
-
-            now = "%02d:%02d:%02d" % [now_hh, now_mm, now_ss]
-            total = "%02d:%02d:%02d" % [total_hh, total_mm, total_ss]
-
-            out << "<tr><td>Current position:</td><td>#{now}/#{total}</td></tr>"
-          rescue
-            out << "<tr><td>Current position:</td><td>Unknown stream position.</td></tr>"
-          end
+            out << "<tr><td>Current position:</td><td>#{timedecode(now)}/#{timedecode(total)}</td></tr>"
         when key.to_s == 'elapsed'
-          now_mm, now_ss = value.divmod(60) #Minutes and seconds of current time within the song.
-          now_hh, now_mm = now_mm.divmod(60)
-          now = "%02d:%02d:%02d" % [now_hh, now_mm, now_ss]
-          out << "<tr><td>Elapsed:</td><td>#{now}</td></tr>"
+          out << "<tr><td>Elapsed:</td><td>#{timedecode(now)}</td></tr>"
         when key.to_s == 'bitrate'
           out << "<tr><td>Current song bitrate:</td><td>#{value}</td></tr>"
         when key.to_s == 'audio'
@@ -705,10 +695,15 @@ class Mpd < Plugin
   def timedecode(time)
     begin
       #Code from https://stackoverflow.com/questions/19595840/rails-get-the-time-difference-in-hours-minutes-and-seconds
-      now_mm, now_ss = time.divmod(60) 
+      now_mm, now_ss = time.to_i.divmod(60) 
       now_hh, now_mm = now_mm.divmod(60)
-      now = "%02d:%02d:%02d" % [now_hh, now_mm, now_ss]
-   rescue
+      if ( now_hh < 24 )
+        now = "%02d:%02d:%02d" % [now_hh, now_mm, now_ss]
+      else
+        now_dd, now_hh = now_hh.divmod(24)
+        now = "%04d days %02d:%02d:%02d" % [now_dd, now_hh, now_mm, now_ss]
+      end
+    rescue
       now "unknown"
     end
   end
