@@ -124,7 +124,6 @@ class Control < Plugin
   def userstate(msg)
     #msg.session = session_id of the target
     #msg.actor = session_id of user who did something on someone, if self done, both is the same.
-    puts msg
     me = @@bot[:cli].me
     msg_target = @@bot[:cli].users[msg.session]
     if ( me.current_channel != nil ) && ( msg.channel_id != nil )         
