@@ -5,8 +5,11 @@ class Radiostream < Plugin
     super
     if ( @@bot[:mpd] != nil ) && ( @@bot[:messages] != nil ) && ( @@bot[:radiostream] == nil )
       @@bot[:radiostream] = self
-      @xspf = require 'crack'         #parse xspf playlists only if crack gem is installed
-      puts "if you install crack gem radiostream plugin also can parse xspf stream playlists." if @xspf == false 
+      begin
+        @xspf = require 'crack'         #parse xspf playlists only if crack gem is installed
+      rescue
+        puts "if you install crack gem radiostream plugin also can parse xspf stream playlists." if @xspf == false 
+      end
       @keylist = Array.new 
     end
     return @@bot

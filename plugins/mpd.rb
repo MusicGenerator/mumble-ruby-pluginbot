@@ -622,7 +622,11 @@ class Mpd < Plugin
 
     if message == 'update'
       @@bot[:mpd].update
-      privatemessage( "running database update.")
+      privatemessage("Running database update...")
+        while @@bot[:mpd].status[:updating_db] != nil do
+        sleep 0.5
+      end
+      privatemessage("Done.")
     end
 
     if message == 'displayinfo'
