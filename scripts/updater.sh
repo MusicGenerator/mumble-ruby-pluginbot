@@ -79,6 +79,12 @@ function update_celt-libs() {
     return 0
 }
 
+function update_dependencies() {
+    cd ~/src
+    rvm use @bots
+    rvm @bots do gem install crack
+}
+
 while true
 do
     dialog --clear --menu "Select Option" 15 50 12\
@@ -106,6 +112,7 @@ do
                 update_mumble-ruby-gem
                 update_mumble-mpd-gem
                 update_celt-libs
+                update_dependencies
             ;;
             1)
                 update_pluginbot
