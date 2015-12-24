@@ -5,9 +5,10 @@ class Radiostream < Plugin
     super
     if ( @@bot[:mpd] != nil ) && ( @@bot[:messages] != nil ) && ( @@bot[:radiostream] == nil )
       @@bot[:radiostream] = self
+      @xspf = require 'crack'         #parse xspf playlists only if crack gem is installed
+      puts "if you install crack gem radiostream plugin also can parse xspf stream playlists." if @xspf == false 
+      @keylist = Array.new 
     end
-
-    @keylist = Array.new 
     return @@bot
   end
 
@@ -98,8 +99,8 @@ class Radiostream < Plugin
   def add_link(link, user)
 
     decoded = false
-
-    file = `curl -L --max-time 3 "#{link}" `                #Load some data from link
+    puts link
+    file = `curl -g -L --max-time 3 "#{link}" `                #Load some data from link
     streaminfo = StreamCheck.new                            #init StreamCheck
 
     info = streaminfo.checkmp3(file)                        #check if mp3
@@ -122,6 +123,22 @@ class Radiostream < Plugin
         if line.match (/File[0-9]{1,2}=.+/)                 #if a link found run check recursive
           add_link(line.sub(/File[0-9]{1,2}=/, '').strip, user)
         end
+      end
+    end
+    
+    if ( file[0..4] == "<?xml" ) && ( @xspf == true ) && !decoded                
+                                                            #if still not decoded check if it is an xml file and crack gem is installed
+      begin
+        tracks = Crack::XML.parse(file)["playlist"]["trackList"]["track"]
+        if tracks.size > 1
+          tracks.each do |track|
+            add_link(track["location"], user)
+          end
+        else
+          add_link(tracks["location"], user)
+        end
+      rescue
+        # no xspf!
       end
     end
 
