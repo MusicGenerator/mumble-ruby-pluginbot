@@ -125,6 +125,11 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
   # In this case the command would only write to the filesystem if no
   # other process is writing, so only if the filesystem is idle.
   
+  @settings[:youtube_maxresults] = 200
+  # Limits results for the .yts command to the given number because
+  # depending on the search string the plugin may run for a very
+  # long time and return several thousand results.
+  
   ###########################
   # Soundcloud plugin: ######
   ###########################

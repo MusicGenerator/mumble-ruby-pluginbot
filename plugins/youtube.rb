@@ -189,7 +189,7 @@ class Youtube < Plugin
 
   def find_youtube_song song
     songlist = []
-    songs = `nice -n20 #{@@bot[:youtube_youtubedl]} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
+    songs = `nice -n20 #{@@bot[:youtube_youtubedl]} --max-downloads #{@@bot[:youtube_maxresults]} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
     temp = songs.split(/\n/)
     while (temp.length >= 2 )
       songlist << [temp.pop , temp.pop]
