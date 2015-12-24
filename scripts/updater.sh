@@ -9,6 +9,12 @@ if [ ! -f "$(which dialog 2>/dev/null)" ]; then
     exit 1
 fi
 
+function update_error() {
+    echo -ne "\n\n\nERROR: Something went wrong, please verify the updates via the commandline.\n\n\n\n"
+    echo -ne "\nThe error occured while updating \"${1}\\n\n"
+    exit 127
+}
+
 function done_wait() {
     echo -en "\n\n\nUpdate done; press enter to continue..."
     read _a
@@ -18,17 +24,17 @@ function update_pluginbot() {
     echo "Updating the mumble-ruby-pluginbot from github..."
     cd ~/src/mumble-ruby-pluginbot/
     git pull origin master
-    done_wait
+    return 0
 }
 
 function update_mpd() {
     echo -en "Not yet implemented :)\nThough in most cases not needed because we use the distributions mpd package."
-    done_wait
+    return 0
 }
 
 function update_youtubedl() {
     ~/src/youtube-dl -U
-    done_wait
+    return 0
 }
 
 function update_celt-gem() {
@@ -37,7 +43,7 @@ function update_celt-gem() {
     rvm use @bots
     gem build celt-ruby.gemspec
     rvm @bots do gem install celt-ruby
-    done_wait
+    return 0
 }
 
 function update_opus-gem() {
@@ -46,7 +52,7 @@ function update_opus-gem() {
     rvm use @bots
     gem build opus-ruby.gemspec
     rvm @bots do gem install opus-ruby
-    done_wait
+    return 0
 }
 
 function update_mumble-ruby-gem() {
@@ -55,12 +61,12 @@ function update_mumble-ruby-gem() {
     rvm use @bots
     gem build mumble-ruby.gemspec
     rvm @bots do gem install mumble-ruby-*.gem
-    done_wait
+    return 0
 }
 
 function update_mumble-mpd-gem() {
     rvm @bots do gem install ruby-mpd
-    done_wait
+    return 0
 }
 
 function update_celt-libs() {
@@ -70,7 +76,7 @@ function update_celt-libs() {
     ./configure --prefix=$HOME/src/celt
     make
     make install
-    done_wait
+    return 0
 }
 
 while true
