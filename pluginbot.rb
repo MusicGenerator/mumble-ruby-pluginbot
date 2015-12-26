@@ -8,6 +8,8 @@ require 'rubygems'
 require 'ruby-mpd'
 require 'thread'
 require 'optparse'
+require 'i18n'
+
 
 # copy@paste from https://gist.github.com/erskingardner/1124645#file-string_ext-rb
 class String
@@ -112,6 +114,11 @@ class MumbleMPD
     end.parse! 
     @settings[:ducking_volume] = 20 if @settings[:ducking_volume].nil?
     @configured_settings = @settings.clone 
+    
+    # set up language
+    I18n.load_path = Dir["languages/*.yml"]
+    @configured_settings[:language] ||= :en
+    I18n.default_locale=@configured_settings[:language]
   end
 
   def init_settings
@@ -326,14 +333,7 @@ class MumbleMPD
               end
 
               if message == 'about'
-                out = "<br />Hi, I am the Mumble-Ruby-Pluginbot.<br />
-                <ul>
-                    <li><a href='https://github.com/dafoxia/mumble-ruby-pluginbot'>Get my source code</a></li>
-                    <li><a href='https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot'>Read my documentation</a></li>
-                    <li>I am licensed by the <a href='https://github.com/dafoxia/mumble-ruby-pluginbot/blob/master/LICENSE'>MIT license</a></li>
-                    <li>If you have any issues, bugs or ideas please tell us on <a href='https://github.com/dafoxia/mumble-ruby-pluginbot/issues'>https://github.com/dafoxia/mumble-ruby-pluginbot/issues</a></li>
-                </ul>"
-                @cli.text_user(msg.actor, out)
+                @cli.text_user(msg.actor, I18n.t('about'))
               end
 
               if message == 'settings' 
@@ -381,10 +381,10 @@ class MumbleMPD
                 if @settings[:boundto] == msg_userid
                   if @cli.find_user(message.split[1..-1].join(" ")) != nil
                     @settings[@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym] = message.split[1..-1].join(" ")
-                    @cli.text_user(msg.actor, "This ban is active until the bot restarts. To permaban add following line to your configuration:")
+                    @cli.text_user(msg.actor, I18n.t("ban.active"))
                     @cli.text_user(msg.actor, "@settings[#{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}] = \"#{message.split[1..-1].join(" ")}\"")
                   else
-                    @cli.text_user(msg.actor, "User #{message.split[1..-1].join(" ")} not found.")
+                    @cli.text_user(msg.actor, I18n.t("user.not.found", :user => message.split[1..-1].join(" ")))
                   end
                 end
               end
@@ -392,31 +392,36 @@ class MumbleMPD
               if message == 'ducking'
                 @settings[:ducking] = !@settings[:ducking]
                 if @settings[:ducking] == false 
-                  @cli.text_user(msg.actor, "Music ducking is off.")
+                  @cli.text_user(msg.actor, I18n.t("ducking._off"))
                 else
-                  @cli.text_user(msg.actor, "Music ducking is on.")
+                  @cli.text_user(msg.actor, I18n.t("ducking._on"))
                 end
               end
 
               if message == 'duckvol'
-                @cli.text_user(msg.actor, "Ducking volume is set to #{@settings[:ducking_volume]}% of normal volume. Ducking itself it set to: #{@settings[:ducking]}.")
+                @cli.text_user(msg.actor, I18n.t("ducking.volume.settings", :volume_relative => @settings[:ducking_volume]))
+                if @settings[:ducking] == false 
+                  @cli.text_user(msg.actor, I18n.t("ducking._off"))
+                else
+                  @cli.text_user(msg.actor, I18n.t("ducking._on"))
+                end
               end
 
               if message.match(/^duckvol [0-9]{1,3}$/)
                 volume = message.match(/^duckvol ([0-9]{1,3})$/)[1].to_i 
                 if (volume >=0 ) && (volume <= 100)
                   @settings[:ducking_volume] = volume
-                  @cli.text_user(msg.actor, "ducking is set to #{volume}% of normal volume.")
+                  @cli.text_user(msg.actor, I18n.t("ducking.volume.set", :volume => volume))
                 else
-                  @cli.text_user(msg.actor, "Volume can be within a range of 0 to 100.")
+                  @cli.text_user(msg.actor, I18n.t("ducking.volume.out_of_range"))
                 end
               end
 
               if message == 'bitrate'
                 begin
-                  @cli.text_user(msg.actor, "Encoding is set to #{@cli.get_bitrate.to_s} bit/s.")
+                  @cli.text_user(msg.actor, I18n.t("bitrate.set", :bitrate => @cli.get_bitrate.to_s))
                 rescue
-                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
+                  @cli.text_user(msg.actor, "bitrate.error")
                 end
               end
 
@@ -424,18 +429,18 @@ class MumbleMPD
                 bitrate = message.match(/^bitrate ([0-9]{1,3})$/)[1].to_i * 1000
                 begin
                   @cli.set_bitrate(bitrate)
-                  @cli.text_user(msg.actor, "Encoding is set now to #{@cli.get_bitrate} bit/s.")
-                  @cli.text_user(msg.actor, "The calculated overall bandwidth is #{get_overall_bandwidth} bit/s.")
+                  @cli.text_user(msg.actor, I18n.t("bitrate.set", :bitrate => @cli.get_bitrate))
+                  @cli.text_user(msg.actor, I18n.t("bandwidth.set", :bandwidth => get_overall_bandwidth))
                 rescue
-                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
+                  @cli.text_user(msg.actor, I18n.t("bitrate.error"))
                 end
               end
 
               if message == 'framesize'
                 begin
-                  @cli.text_user(msg.actor, "sending in #{@cli.get_frame_length.to_s} ms frames.")
+                  @cli.text_user(msg.actor, I18n.t("framesize.set", :framesize => @cli.get_frame_length.to_s))
                 rescue
-                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
+                  @cli.text_user(msg.actor, I18n.t("framesize.error"))
                 end
               end
 
@@ -443,33 +448,30 @@ class MumbleMPD
                 framelength = message.match(/^framesize ([0-9]{1,2})$/)[1].to_i
                 begin
                   @cli.set_frame_length(framelength)
-                  @cli.text_user(msg.actor, "Sending now in #{@cli.get_frame_length.to_s} ms frames.")
-                  @cli.text_user(msg.actor, "The calculated overall bandwidth is #{get_overall_bandwidth} bit/s.")
-                  @cli.text_user(msg.actor, "Server settings #{@cli.max_bandwidth} bit/s.")
+                  @cli.text_user(msg.actor, I18n.t("framesize.set", :framesize => @cli.get_frame_length.to_s))
+                  @cli.text_user(msg.actor, I18n.t("bandwidth.set", :bandwidth => get_overall_bandwidth))
+                  @cli.text_user(msg.actor, I18n.t("bandwidth.max", :bandwidth => @cli.max_bandwidth))
                 rescue
-                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
+                  @cli.text_user(msg.actor, I18n.t("bitrate.error"))
                 end
               end
 
               if message == 'bandwidth'
                 begin
-                   @cli.text_user(msg.actor, "<br /><u>Current bandwidth related settings:</u><br />
-                                              The calculated overall bandwidth (audio + overhead): #{get_overall_bandwidth} bit/s<br />
-                                              Audio encoding bandwidth: #{@cli.get_bitrate.to_s} bit/s<br />
-                                              Framesize: #{@cli.get_frame_length.to_s} ms")
+                   @cli.text_user(msg.actor, I18n.t("bandwidth.settings", :overall => get_overall_bandwidth, :audio => @cli.get_bitrate.to_s , :framesize => @cli.get_frame_length.to_s))
                 rescue
-                  @cli.text_user(msg.actor, "You really need Dafoxia's mumble-ruby!")
+                  @cli.text_user(msg.actor, "bitrate.error")
                 end
               end
 
               if message == 'plugins'
-                help = "<br /><span style='color:red;'>Loaded plugins:<br /><b>"
+                help = I18n.t("plugins.loaded._shead")
                 @plugin.each do |plugin|
                   help << plugin.name + "<br />"
                 end
-                help << "</b></span>"
+                help << I18n.t("plugins.loaded._ehead")
 
-                help << "<br /><b>#{cc}help <i>pluginname</i></b> Get the help text for the specific plugin.<br /><br />For example send the following text to get some basic control commands of the bot:<br /><b>#{cc}help mpd</b><br />"
+                help << I18n.t("plugins.general_help", :control => @settings[:controlstring])
                 @cli.text_user(msg.actor, help)
               end
 
@@ -478,36 +480,14 @@ class MumbleMPD
                 output = ""
                 Thread.list.each do |t|  
                   if t["process"]!=nil
-                    if t["user"]==msg.actor
-                      output << "#{t["process"]} is in state #{t.status.to_s} for you<br>"
-                    else
-                      output << "#{t["process"]} is in state #{t.status.to_s} for user #{msg.actor}<br>"
-                    end
+                      output << I18n.t("jobs.status", :process => t["process"], :status => t.status.to_s, :name=> t.user.name)
                   end
                   @cli.text_user(msg.actor, output)  
                 end
               end
 
               if message == 'internals'
-                help = "<br /><span style='color:red;'><b>Internal commands</b></span><br />"
-                help << "<b>superpassword+restart</b> will restart the bot.<br />"
-                help << "<b>superpassword+reset</b> will reset variables to start values.<br />"
-                help << "<b>#{cc}about</b> Get information about this bot.<br />"
-                help << "<b>#{cc}settings</b> display current settings.<br />"
-                help << "<b>#{cc}set <i>variable=value</i></b> Set variable to value.<br />"
-                help << "<b>#{cc}bind</b> Bind bot to a user. (some functions will only work if bot is bound).<br />"
-                help << "<b>#{cc}unbind</b> Unbind bot.<br />"
-                help << "<b>#{cc}reset</b> Reset variables to default value. Needs binding!<br />"
-                help << "<b>#{cc}restart</b> Restart Bot. Needs binding.<br />"
-                help << "<b>#{cc}blacklist <i>username</i></b> Add user to blacklist. Needs binding.<br />"
-                help << "<b>#{cc}register</b> Let the bot register itself on the current server. Works only if server allows it. If it doesn't work ask an administrator of your Mumble server. Be aware that after registration only an administrator can change the name of the bot.<br />"
-                help << "<b>#{cc}ducking</b> Toggle voice ducking on/off.<br />"
-                help << "<b>#{cc}duckvol <i>volume</i></b> Set the ducking volume (% of normal volume).<br />"
-                help << "<b>#{cc}duckvol</b> Show current ducking volume.<br />"
-                help << "<b>#{cc}bitrate <i>rate in kbit/s</i></b> Set audio encoding rate. Note that the bot needs additional bandwidth for overhead so the overall bandwidth is higher than this bitrate.<br />"
-                help << "<b>#{cc}bandwidth</b> Show information about the overall bandwidth, audo bandwidth (bitrate) and framesize."
-
-                @cli.text_user(msg.actor, help)
+                @cli.text_user(msg.actor, I18n.t("help.internal", :cc => @settings[:controlstring]))
               end
 
               if message.split[0] == 'help'
@@ -524,25 +504,7 @@ class MumbleMPD
 
                   @cli.text_user(msg.actor, help)
                 else #Send default help text.
-                    help = "<br />\
-                            Hi, I am a <a href='https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot'>Mumble-Ruby-Pluginbot</a> and YOU can control me through text commands.<br /><br />
-                    I will give you a good start with the basic commands you need to control the music I have to offer :) - if you send me the following command:<br />\
-                    <b>#{cc}help mpd</b><br />
-                    <br />\
-                    If you are more interested in who/what I am, send to me:<br />\
-                    <b>#{cc}about</b><br />\
-                    <br />\
-                    <b><u>Commands for advanced users:</b></u><br />\
-                    <b>#{cc}plugins</b> - Get a list of available plugins.<br />\
-                    <br />\
-                    Note: Every plugin has its own help text; to get it send the command:<br />\
-                    <b>#{cc}help name_of_the_plugin</b><br />\
-                    For example:<br />\
-                    <b>#{cc}help mpd</b><br />
-                    <br />\
-                    <b><u>Commands for experts only:</b></u><br />\
-                    <b>#{cc}internals</b> - See my internal commands.<br />"
-                    @cli.text_user(msg.actor, help)
+                    @cli.text_user(msg.actor, I18n.t("help.default", :cc=> @settings[:controlstring]))
                 end
               end
             end
