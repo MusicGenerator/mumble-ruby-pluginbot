@@ -2,7 +2,7 @@
 config:
   version: 2.1
 main:
-  tempdir: "/home/reinhard/temp/"
+  tempdir: "/home/botmaster/temp/"
   ducking: false
   automute: true
   channel_notify: 0
@@ -20,7 +20,7 @@ main:
   need_binding: false
   bound: nobody
   certfolder: "certs/"
-  fifo: "/home/reinhard/mpd1/mpd.fifo"
+  fifo: "/home/botmaster/mpd1/mpd.fifo"
   logo: "logo/logo.html"
   timer:
     ticks:  3600
@@ -40,7 +40,7 @@ plugin:
       volume: 65
       host: localhost
       port: 7701
-      musicfolder: "/home/reinhard/music/"  
+      musicfolder: "/home/botmaster/music/"  
       template:
         comment:
           disabled: "<b>Artist: </b>DISABLED<br /><b>Title: </b>DISABLED<br/><b>Album: </b>DISABLED<br /><br /><b>Write %shelp to me, to get a list of my commands!"
@@ -52,7 +52,7 @@ plugin:
         temp: youtubeplugin/
       stream: 
       youtube_dl:
-        path: "/home/reinhard/src/youtube-dl"
+        path: "/home/botmaster/src/youtube-dl"
         options: ''
         prefixes: ''
         maxresults: 200
@@ -63,7 +63,7 @@ plugin:
         download: downloadedfromsc/
         temp: soundcloudplugin/
       youtube_dl:
-        path: "/home/reinhard/src/youtube-dl"
+        path: "/home/botmaster/src/youtube-dl"
         options: ''
         prefixes: ''
       to_mp3: 
@@ -73,7 +73,7 @@ plugin:
         download: downloadedfrombc/
         temp: bandcampplugin/
       youtube-dl:
-        path: "/home/reinhard/src/youtube-dl"
+        path: "/home/botmaster/src/youtube-dl"
         options: ''
         prefixes: ''
       to_mp3: 
