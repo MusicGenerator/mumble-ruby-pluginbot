@@ -4,8 +4,8 @@ class Ektoplazm < Plugin
     super
     if ( @@bot[:mpd] != nil ) && ( @@bot[:messages] != nil ) && ( @@bot[:ektoplazm] == nil )
       begin
-        @ektoplazmfolder = @@bot[:mpd_musicfolder] + @@bot[:ektoplazm_downloadsubdir]
-        @tempektoplazmfolder = @@bot[:main_tempdir] + @@bot[:ektoplazm_tempsubdir]
+        @ektoplazmfolder = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["ektoplazm"]["folder"]["download"]
+        @tempektoplazmfolder = @@bot["main"]["tempdir"] + @@bot["plugin"]["ektoplazm"]["folder"]["temp"]
 
         Dir.mkdir(@ektoplazmfolder) unless File.exists?(@ektoplazmfolder)
         Dir.mkdir(@tempektoplazmfolder) unless File.exists?(@tempektoplazmfolder)
@@ -14,7 +14,7 @@ class Ektoplazm < Plugin
         puts "See pluginbot_conf.rb"
       end
       @consoleaddition = "" 
-      @consoleaddition = @@bot[:ektoplazm_commandlineprefixes] if @@bot[:ektoplazm_commandlineprefixes] != nil
+      @consoleaddition = @@bot["plugin"]["ektoplazm"]["prefixes"] if @@bot["plugin"]["ektoplazm"]["prefixes"] != nil
       @songlist = Queue.new
       @keylist = Array.new
       @@bot[:ektoplazm] = self
@@ -32,7 +32,7 @@ class Ektoplazm < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot[:controlstring]}ektoplazm <i>URL</i></b> - Will try to download the music from the given URL.<br />"
+    h << "<b>#{@@bot["main"]["control"]["string"]}ektoplazm <i>URL</i></b> - Will try to download the music from the given URL.<br />"
     h << "<br />Note: This plugins supports only .zip archives from ektoplazm.com which means you can use mp3 or flac archives, not wav archives."
   end
 
@@ -71,7 +71,7 @@ class Ektoplazm < Plugin
             end
           end
           if ( @songlist.size > 0 ) then
-            @@bot[:mpd].update(@@bot[:ektoplazm_downloadsubdir].gsub(/\//,"")) 
+            @@bot[:mpd].update(@@bot["plugin"]["ektoplazm"]["folder"]["download"].gsub(/\//,"")) 
             messageto(actor, "Waiting for database update complete...")
 
             begin
@@ -91,10 +91,10 @@ class Ektoplazm < Plugin
             while @songlist.size > 0 
               song = @songlist.pop
               messageto(actor, song)
-              @@bot[:mpd].add(@@bot[:ektoplazm_downloadsubdir]+song)
+              @@bot[:mpd].add(@@bot["plugin"]["ektoplazm"]["folder"]["download"]+song)
             end
           else
-            messageto(actor, "Ektoplazm: The link contains nothing interesting.") if @@bot[:Ektoplazm_stream] == nil
+            messageto(actor, "Ektoplazm: The link contains nothing interesting.") 
           end
         else
           messageto(actor, "No ektoplazm link!?") if message.start_with?("ektoplazm")

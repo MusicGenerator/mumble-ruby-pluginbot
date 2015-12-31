@@ -9,6 +9,8 @@ require 'ruby-mpd'
 require 'thread'
 require 'optparse'
 require 'i18n'
+require 'yaml'
+require 'cgi'
 
 
 # copy@paste from https://gist.github.com/erskingardner/1124645#file-string_ext-rb
@@ -36,17 +38,9 @@ class MumbleMPD
 
     #Read config file if available 
     begin
-      require_relative 'pluginbot_conf.rb'
-      std_config()
+      @settings = YAML::load_file('pluginbot_conf.yml')
     rescue
       puts "Config could not be loaded! Using default configuration."
-    end
-
-    #Try to reinit extra config (only on success on restarts)
-    begin
-      ext_config()
-      puts "restarting bot"
-    rescue
     end
 
     OptionParser.new do |opts|
@@ -56,8 +50,8 @@ class MumbleMPD
       puts "parse extra config"
         if File.exist? v
           begin
-            require_relative v
-            ext_config()
+            overwrite = YAML::load_file(v)
+            @settings.merge!(overwrite)
           rescue
             puts "Your config could not be loaded!"
           end
@@ -69,50 +63,50 @@ class MumbleMPD
       end
 
       opts.on("--mumblehost=", "IP or Hostname of mumbleserver") do |v|
-        @settings[:mumbleserver_host] = v
+        @settings["mumble"]["host"] = v
       end
 
       opts.on("--mumbleport=", "Port of Mumbleserver") do |v|
-        @settings[:mumbleserver_port] = v
+        @settings["mumble"]["port"] = v
       end
 
       opts.on("--name=", "The Bot's Nickname") do |v|
-        @settings[:mumbleserver_username] = v
+        @settings["mumble"]["name"] = v
       end
 
       opts.on("--userpass=", "Password if required for user") do |v|
-        @settings[:mumbleserver_userpassword] = v
+        @settings["mumble"]["password"] = v
       end
 
       opts.on("--targetchannel=", "Channel to be joined after connect") do |v|
-        @settings[:mumbleserver_targetchannel] = v
+        @settings["mumble"]["channel"] = v
       end
 
       opts.on("--bitrate=", "Desired audio bitrate") do |v|
-        @settings[:quality_bitrate] = v.to_i
+        @settings["mumble"]["bitrate"] = v.to_i
       end
 
       opts.on("--fifo=", "Path to fifo") do |v|
-        @settings[:mpd_fifopath] = v.to_s
+        @settings["main"]["fifo"] = v.to_s
       end
 
       opts.on("--mpdhost=", "MPD's Hostname") do |v|
-        @settings[:mpd_host] = v
+        @settings["mpd"]["host"] = v
       end
 
       opts.on("--mpdport=", "MPD's Port") do |v|
-        @settings[:mpd_port] = v.to_i
+        @settings["mpd"]["port"] = v.to_i
       end
 
       opts.on("--controllable=", "true if bot should be controlled from chatcommands") do |v|
-        @settings[:controllable] = v.to_bool
+        @settings["main"]["controllable"] = v.to_bool
       end
 
       opts.on("--certdir=", "path to cert") do |v|
-        @settings[:certdirectory] = v
+        @settings["main"]["certfolder"] = v
       end
     end.parse! 
-    @settings[:ducking_volume] = 20 if @settings[:ducking_volume].nil?
+    @settings["main"]["duckvol"] ||= 20 
     @configured_settings = @settings.clone 
     
     # set up language
@@ -124,12 +118,12 @@ class MumbleMPD
   def init_settings
     @run = false
     @cli = nil
-    @cli = Mumble::Client.new(@settings[:mumbleserver_host], @settings[:mumbleserver_port]) do |conf|
-      conf.username = @settings[:mumbleserver_username]
-      conf.password = @settings[:mumbleserver_userpassword]
-      conf.bitrate = @settings[:quality_bitrate].to_i
-      conf.vbr_rate = @settings[:use_vbr]
-      conf.ssl_cert_opts[:cert_dir] = File.expand_path(@settings[:certdirectory])
+    @cli = Mumble::Client.new(@settings["mumble"]["host"], @settings["mumble"]["port"]) do |conf|
+      conf.username = @settings["mumble"]["name"]
+      conf.password = @settings["mumble"]["password"]
+      conf.bitrate = @settings["mumble"]["bitrate"].to_i
+      conf.vbr_rate = @settings["mumble"]["use_vbr"]
+      conf.ssl_cert_opts[:cert_dir] = File.expand_path(@settings["main"]["certfolder"])
     end
   end
 
@@ -149,15 +143,15 @@ class MumbleMPD
   def mumble_start
 
     @cli.on_server_config do |serverconfig|
-      @settings[:mumbleserver_imagelength] = serverconfig.image_message_length
-      @settings[:mumbleserver_messagelength] = serverconfig.message_length
-      @settings[:mumbleserver_allow_html] = serverconfig.allow_html
+      @settings["mumble"]["imagelength"] = serverconfig.image_message_length
+      @settings["mumble"]["messagelength"] = serverconfig.message_length
+      @settings["mumble"]["allow_html"] = serverconfig.allow_html
     end
 
     @cli.on_suggest_config do |suggestconfig|
-      @settings[:mumbleserver_version] = suggestconfig.version
-      @settings[:mumbleserver_positional] = suggestconfig.positional
-      @settings[:mumbleserver_push_to_talk] = suggestconfig.push_to_talk
+      @settings["mumble"]["version"] = suggestconfig.version
+      @settings["mumble"]["positional"] = suggestconfig.positional
+      @settings["mumble"]["push_to_talk"] = suggestconfig.push_to_talk
     end
 
     @cli.connect
@@ -175,9 +169,9 @@ class MumbleMPD
     if @cli.connected?
       puts "connected"
       begin
-        @cli.join_channel(@settings[:mumbleserver_targetchannel])
+        @cli.join_channel(@settings["mumble"]["channel"])
       rescue
-        puts "[joincannel]#{$1} Can't join #{@settings[:mumbleserver_targetchannel]}!" if @settings[:debug]
+        puts "[joincannel]#{$1} Can't join #{@settings["mumble"]["channel"]}!" if @settings[:debug]
       end
 
       begin
@@ -198,11 +192,17 @@ class MumbleMPD
       end
 
       begin
-        @cli.set_comment("")
+        @cli.set_comment('Mumble_Ruby_Pluginbot')
         @settings[:set_comment_available] = true
       rescue NoMethodError
         puts "[displaycomment]#{$!}" if @settings[:debug]
-        @settings[:set_comment_available] = false 
+        @settings[:set_comment_available]  = false 
+      end
+      begin
+        @cli.set_avatar(IO.binread('logo/logo.png'))
+        @settings[:set_avatar_available]  = true
+      rescue
+        @settings[:set_avatar_available]  = false
       end
 
       @cli.on_user_state do |msg|
@@ -214,14 +214,14 @@ class MumbleMPD
       end
 
       @cli.on_udp_tunnel do |udp|
-        if @settings[:ducking] == true
-          @cli.player.volume = ( @settings[:ducking_volume] |  0x1 ) - 1
+        if @settings["main"]["ducking"] == true
+          @cli.player.volume = ( @settings["main"]["duckvol"] |  0x1 ) - 1
           @duckthread.run if @duckthread.stop?
         end
       end
 
       @run = true
-      @cli.player.stream_named_pipe(@settings[:mpd_fifopath]) 
+      @cli.player.stream_named_pipe(@settings["main"]["fifo"]) 
 
       #init all plugins
       init = @settings.clone
@@ -258,7 +258,7 @@ class MumbleMPD
   private 
 
   def timertick
-    ticktime = ( @settings[:ticks_per_hour] || 3600 )
+    ticktime = ( @settings["main"]["timer"]["ticks"] || 3600 )
     while (true==true)
       sleep(3600/ticktime)
       time = Time.now
@@ -271,6 +271,9 @@ class MumbleMPD
   def handle_user_state_changes(msg)
     #msg.actor = session_id of user who did something on someone, if self done, both is the same.
     #msg.session = session_id of the target
+    if msg[:texture]
+      IO.binwrite('logo/boot1.rgba',msg[:texture])
+    end
   end
 
   def handle_text_message(msg)
@@ -302,32 +305,32 @@ class MumbleMPD
       # each command adds his own help
       help ="<br />"    # start with empty help
       # the help command should be the last command in this function
-      cc = @settings[:controlstring]
+      cc = @settings["main"]["controlstring"]
 
       #FIXME
       #msg.message.gsub!(/(<[^<^>]*>)/, "") #Strip html tags. #BEFORE doing this we need to ensure that no plugin needs the html source code. For example youtube plugin needs them...
 
-      if msg.message == @superpassword+"restart"
+      if msg.message == @settings["main"]["superpassword"]+"restart"
         @settings = @configured_settings.clone
         @cli.text_channel(@cli.me.current_channel,@superanswer);
         @run = false
         @cli.disconnect
       end
 
-      if msg.message == @superpassword+"reset"
+      if msg.message == @settings["main"]["superpassword"]+"reset"
         @settings = @configured_settings.clone
         @cli.text_channel(@cli.me.current_channel,@superanswer);
       end
 
-      if (sender_is_registered == true) || (@settings[:listen_to_registered_users_only] == false)
+      if (sender_is_registered == true) || (@settings["main"]["control"]["message"]["registered_only"] == false)
         #Check whether message is a private one or was sent to the channel.
         # Private message looks like this:   <Hashie::Mash actor=54 message="#help" session=[119]>
         # Channel message:                   <Hashie::Mash actor=54 channel_id=[530] message="#help">
         # Channel messages don't have a session, so skip them
-        if ( msg.session ) || ( @settings[:listen_to_private_message_only] != true )
-          if @settings[:controllable] == true 
-            if msg.message.start_with?("#{@settings[:controlstring]}") && msg.message.length >@settings[:controlstring].length #Check whether we have a command after the controlstring.
-              message = msg.message.split(@settings[:controlstring])[1 .. -1].join() #Remove @settings[:controlstring]
+        if ( msg.session ) || ( @settings["main"]["control"]["message"]["private_only"] != true )
+          if @settings["main"]["controllable"] == true 
+            if msg.message.start_with?("#{@settings["main"]["control"]["string"]}") && msg.message.length >@settings["main"]["control"]["string"].length #Check whether we have a command after the controlstring.
+              message = msg.message.split(@settings["main"]["control"]["string"])[1 .. -1].join() #Remove @settings[:controlstring]
               @plugin.each do |plugin|
                 plugin.handle_chat(msg, message)
               end
@@ -337,48 +340,51 @@ class MumbleMPD
               end
 
               if message == 'settings' 
-                out = "<table>"
-                @settings.each do |key, value|
-                  out << "<tr><td>#{key}</td><td>#{value}</td></tr>" if key != :logo
-                end
-                out << "</table>"
+                out = "<ul>"
+                out << hash_to_table(@settings)
+                out << "</ul>"
+                #out = "<table>"
+                #@settings.each do |key, value|
+                #  out << "<tr><td>#{key}</td><td>#{value}</td></tr>" 
+                #end
+                #out << "</table>"
                 @cli.text_user(msg.actor, out)
               end
 
               if message.split[0] == 'set' 
-                if !@settings[:need_binding] || @settings[:boundto]==msg_userid
+                if !@settings["main"]["need_binding"] || @settings["main"]["bound"]==msg_userid
                   setting = message.split('=',2)
                   @settings[setting[0].split[1].to_sym] = setting[1] if setting[0].split[1] != nil
                 end
               end
 
               if message == 'bind'
-                @settings[:boundto] = msg_userid if @settings[:boundto] == "nobody"
+                @settings["main"]["bound"] = msg_userid if @settings["main"]["bound"] == "nobody"
               end
 
               if message == 'unbind'
-                @settings[:boundto] = "nobody" if @settings[:boundto] == msg_userid
+                @settings["main"]["bound"] = "nobody" if @settings["main"]["bound"] == msg_userid
               end
 
               if message == 'reset' 
-                @settings = @configured_settings.clone if @settings[:boundto] == msg_userid
+                @settings = @configured_settings.clone if @settings["main"]["bound"] == msg_userid
               end
 
               if message == 'restart'
-                if @settings[:boundto] == msg_userid
+                if @settings["main"]["bound"] == msg_userid
                   @run=false
                   @cli.disconnect
                 end
               end
 
               if message == 'register'
-                if @settings[:boundto] == msg_userid
+                if @settings["main"]["bound"] == msg_userid
                   @cli.me.register
                 end
               end
 
               if message.split(" ")[0] == 'blacklist'
-                if @settings[:boundto] == msg_userid
+                if @settings["main"]["bound"] == msg_userid
                   if @cli.find_user(message.split[1..-1].join(" ")) != nil
                     @settings[@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym] = message.split[1..-1].join(" ")
                     @cli.text_user(msg.actor, I18n.t("ban.active"))
@@ -390,8 +396,8 @@ class MumbleMPD
               end
 
               if message == 'ducking'
-                @settings[:ducking] = !@settings[:ducking]
-                if @settings[:ducking] == false 
+                @settings["main"]["ducking"] = !@settings["main"]["ducking"]
+                if @settings["main"]["ducking"] == false 
                   @cli.text_user(msg.actor, I18n.t("ducking._off"))
                 else
                   @cli.text_user(msg.actor, I18n.t("ducking._on"))
@@ -399,8 +405,8 @@ class MumbleMPD
               end
 
               if message == 'duckvol'
-                @cli.text_user(msg.actor, I18n.t("ducking.volume.settings", :volume_relative => @settings[:ducking_volume]))
-                if @settings[:ducking] == false 
+                @cli.text_user(msg.actor, I18n.t("ducking.volume.settings", :volume_relative => @settings["main"]["duckvol"]))
+                if @settings["main"]["ducking"] == false 
                   @cli.text_user(msg.actor, I18n.t("ducking._off"))
                 else
                   @cli.text_user(msg.actor, I18n.t("ducking._on"))
@@ -410,7 +416,7 @@ class MumbleMPD
               if message.match(/^duckvol [0-9]{1,3}$/)
                 volume = message.match(/^duckvol ([0-9]{1,3})$/)[1].to_i 
                 if (volume >=0 ) && (volume <= 100)
-                  @settings[:ducking_volume] = volume
+                  @settings["main"]["duckvol"] = volume
                   @cli.text_user(msg.actor, I18n.t("ducking.volume.set", :volume => volume))
                 else
                   @cli.text_user(msg.actor, I18n.t("ducking.volume.out_of_range"))
@@ -471,7 +477,7 @@ class MumbleMPD
                 end
                 help << I18n.t("plugins.loaded._ehead")
 
-                help << I18n.t("plugins.general_help", :control => @settings[:controlstring])
+                help << I18n.t("plugins.general_help", :control => @settings["main"]["control"]["string"])
                 @cli.text_user(msg.actor, help)
               end
 
@@ -487,7 +493,7 @@ class MumbleMPD
               end
 
               if message == 'internals'
-                @cli.text_user(msg.actor, I18n.t("help.internal", :cc => @settings[:controlstring]))
+                @cli.text_user(msg.actor, I18n.t("help.internal", :cc => @settings["main"]["control"]["string"]))
               end
 
               if message.split[0] == 'help'
@@ -504,7 +510,7 @@ class MumbleMPD
 
                   @cli.text_user(msg.actor, help)
                 else #Send default help text.
-                    @cli.text_user(msg.actor, I18n.t("help.default", :cc=> @settings[:controlstring]))
+                    @cli.text_user(msg.actor, I18n.t("help.default", :cc=> @settings["main"]["control"]["string"]))
                 end
               end
             end
@@ -516,6 +522,18 @@ class MumbleMPD
         puts "Debug: Not listening because @settings[:listen_to_registered_users_only] is true and sender is unregistered or on a blacklist." if @settings[:debug]
       end
     end
+  end
+  def hash_to_table(hash)
+    return CGI.escapeHTML(hash.to_s) if !hash.kind_of?(Hash)
+    out = "<ul>"
+    hash.each do |key, value|
+      out << "<li>"
+      out << "#{key}: "
+      out << "#{hash_to_table(value)}"
+      out << "</li>"
+    end
+    out << "</ul>"
+    return out
   end
 end
 

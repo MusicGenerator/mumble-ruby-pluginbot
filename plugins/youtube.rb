@@ -6,22 +6,25 @@ class Youtube < Plugin
     super
     if ( @@bot[:mpd] != nil ) && ( @@bot[:messages] != nil ) && ( @@bot[:youtube] == nil )
       begin
-        @youtubefolder = @@bot[:mpd_musicfolder] + @@bot[:youtube_downloadsubdir]
-        @tempyoutubefolder = @@bot[:main_tempdir] + @@bot[:youtube_tempsubdir]
+        @destination = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["youtube"]["folder"]["download"]
+        @temp = @@bot["main"]["tempdir"] + @@bot["plugin"]["youtube"]["folder"]["temp"]
 
-        Dir.mkdir(@youtubefolder) unless File.exists?(@youtubefolder)
-        Dir.mkdir(@tempyoutubefolder) unless File.exists?(@tempyoutubefolder)
+        Dir.mkdir(@destination) unless File.exists?(@destination)
+        Dir.mkdir(@temp) unless File.exists?(@temp)
       rescue
         puts "Error: Youtube-Plugin didn't find settings for mpd music directory and/or your preferred temporary download directory"
         puts "See pluginbot_conf.rb"
       end
       begin
-        @ytdloptions = @@bot[:youtube_youtubedl_options]
+        @ytdloptions = @@bot["plugin"]["youtube"]["options"]
       rescue
         @ytdloptions = "" 
       end
       @consoleaddition = "" 
-      @consoleaddition = @@bot[:youtube_commandlineprefixes] if @@bot[:youtube_commandlineprefixes] != nil
+      @consoleaddition = @@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"] if @@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"] != nil
+      @executeable = "#"
+      @executeable = @@bot["plugin"]["youtube"]["youtube_dl"]["path"] if @@bot["plugin"]["youtube"]["youtube_dl"]["path"] != nil
+
       @songlist = Queue.new
       @keylist = Array.new
       @@bot[:youtube] = self
@@ -40,17 +43,17 @@ class Youtube < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot[:controlstring]}ytlink <i>URL</i></b> - Will try to download the music from the given URL.<br>"
-    h << "<b>#{@@bot[:controlstring]}yts keywords</b> - Will search on Youtube for one or more keywords and print the results to you.<br>"
-    h << "<b>#{@@bot[:controlstring]}yta <i>number</i> <i>number2</i> <i>number3</i></b> - Let the bot download the given song(s) from the list you got via <i>#{@@bot[:controlstring]}yts</i>.<br>Instead of a specific number or multiple numbers, write <b>#{@@bot[:controlstring]}yta <i>all</i></b> to let the bot download all found songs.<br>"
-    h << "<b>#{@@bot[:controlstring]}ytdl-version</b> - print used download helper version"
+    h << "<b>#{@@bot["main"]["control"]["string"]}ytlink <i>URL</i></b> - Will try to download the music from the given URL.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}yts keywords</b> - Will search on Youtube for one or more keywords and print the results to you.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}yta <i>number</i> <i>number2</i> <i>number3</i></b> - Let the bot download the given song(s) from the list you got via <i>#{@@bot["main"]["control"]["string"]}yts</i>.<br>Instead of a specific number or multiple numbers, write <b>#{@@bot["main"]["control"]["string"]}yta <i>all</i></b> to let the bot download all found songs.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}ytdl-version</b> - print used download helper version"
   end
 
   def handle_chat(msg, message)
     super
 
     if message == "ytdl-version"
-        privatemessage("Youtube uses youtube-dl " + `#{@@bot[:youtube_youtubedl]} --version`) 
+        privatemessage("Youtube uses youtube-dl " + `#{@executeable} --version`) 
     end
 
     if message.start_with?("ytlink <a href=") || message.start_with?("<a href=") then
@@ -67,7 +70,7 @@ class Youtube < Plugin
             messageto(actor, error)
           end
           if ( @songlist.size > 0 ) then
-            @@bot[:mpd].update(@@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
+            @@bot[:mpd].update(@@bot["plugin"]["youtube"]["folder"]["download"].gsub(/\//,"")) 
             messageto(actor, "Waiting for database update complete...")
 
             while @@bot[:mpd].status[:updating_db] != nil do
@@ -78,10 +81,10 @@ class Youtube < Plugin
             while @songlist.size > 0 
               song = @songlist.pop
               messageto(actor, song)
-              @@bot[:mpd].add(@@bot[:youtube_downloadsubdir]+song)
+              @@bot[:mpd].add(@@bot["plugin"]["youtube"]["folder"]["download"]+song)
             end
           else
-            messageto(actor, "Youtube: The link contains nothing interesting.") if @@bot[:youtube_stream] == nil
+            messageto(actor, "Youtube: The link contains nothing interesting.") 
           end
         }
       end
@@ -158,7 +161,7 @@ class Youtube < Plugin
             end
         end
         if ( @songlist.size > 0 ) then
-          @@bot[:mpd].update(@@bot[:youtube_downloadsubdir].gsub(/\//,"")) 
+          @@bot[:mpd].update(@@bot["plugin"]["youtube"]["folder"]["download"].gsub(/\//,"")) 
           messageto(actor, "Waiting for database update complete...")
 
           while @@bot[:mpd].status[:updating_db] != nil do
@@ -171,7 +174,7 @@ class Youtube < Plugin
           while @songlist.size > 0 
             song = @songlist.pop
             begin
-              @@bot[:mpd].add(@@bot[:youtube_downloadsubdir]+song)
+              @@bot[:mpd].add(@@bot["plugin"]["youtube"]["folder"]["download"]+song)
               out << song + "<br>"
             rescue
               out << "fixme: " + song + " not found!<br>"
@@ -179,7 +182,7 @@ class Youtube < Plugin
           end
           messageto(actor, out)
         else
-          messageto(actor, "Youtube: The link contains nothing interesting.") if @@bot[:youtube_stream] == nil
+          messageto(actor, "Youtube: The link contains nothing interesting.") 
         end
       }
     end
@@ -189,7 +192,7 @@ class Youtube < Plugin
 
   def find_youtube_song song
     songlist = []
-    songs = `nice -n20 #{@@bot[:youtube_youtubedl]} --max-downloads #{@@bot[:youtube_maxresults]} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
+    songs = `#{@executeable} --max-downloads #{@@bot["plugin"]["youtube"]["youtube_dl"]["maxresults"]} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
     temp = songs.split(/\n/)
     while (temp.length >= 2 )
       songlist << [temp.pop , temp.pop]
@@ -202,33 +205,25 @@ class Youtube < Plugin
     if ( site.include? "www.youtube.com/" ) || ( site.include? "www.youtu.be/" ) || ( site.include? "m.youtube.com/" ) then
       site.gsub!(/<\/?[^>]*>/, '')
       site.gsub!("&amp;", "&")
-      if @@bot[:youtube_stream] == nil
-        filename = `#{@@bot[:youtube_youtubedl]} --get-filename #{@ytdloptions} -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
-        output =`nice -n20 #{@consoleaddition} #{@@bot[:youtube_youtubedl]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@tempyoutubefolder}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
-        output.each_line do |line|
-          error << line if line.include? "ERROR:"
-        end
-        filename.split("\n").each do |name|
-          @filetypes.each do |ending|
-            if File.exist?("#{@tempyoutubefolder}#{name}.#{ending}")
-              system ("nice -n20 #{@consoleaddition} convert \"#{@tempyoutubefolder}#{name}.jpg\" -resize 320x240 \"#{@youtubefolder}#{name}.jpg\" ")
-              if @@bot[:youtube_to_mp3] == nil
-                # Mixin tags without recode on standard
-                system ("nice -n20 #{@consoleaddition} ffmpeg -i \"#{@tempyoutubefolder}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.#{ending}\"") if !File.exist?("#{@youtubefolder}#{name}.#{ending}")
-                @songlist << name.split("/")[-1] + ".#{ending}"
-              else
-                # Mixin tags and recode it to mp3 (vbr 190kBit)
-                system ("nice -n20 #{@consoleaddition} ffmpeg -i \"#{@tempyoutubefolder}#{name}.#{ending}\" -codec:a libmp3lame -qscale:a 2 -metadata title=\"#{name}\" \"#{@youtubefolder}#{name}.mp3\"") if !File.exist?("#{@youtubefolder}#{name}.mp3")
-                @songlist << name.split("/")[-1] + ".mp3"
-              end
+      filename = `#{@executeable} --get-filename #{@ytdloptions} -i -o \"%(title)s\" "#{site}"`
+      output =`#{@consoleaddition} #{@executeable} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"%(title)s.%(ext)s\" \"#{site}\" `     #get icon
+      output.each_line do |line|
+        error << line if line.include? "ERROR:"
+      end
+      filename.split("\n").each do |name|
+        @filetypes.each do |ending|
+          if File.exist?("#{@temp}#{name}.#{ending}")
+            system ("#{@consoleaddition} convert \"#{@temp}#{name}.jpg\" -resize 320x240 \"#{@destination}#{name}.jpg\" ")
+            if @@bot[:youtube_to_mp3] == nil
+              # Mixin tags without recode on standard
+              system ("#{@consoleaddition} ffmpeg -i \"#{@temp}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@destination}#{name}.#{ending}\"") if !File.exist?("#{@destination}#{name}.#{ending}")
+              @songlist << name.split("/")[-1] + ".#{ending}"
+            else
+              # Mixin tags and recode it to mp3 (vbr 190kBit)
+              system ("#{@consoleaddition} ffmpeg -i \"#{@temp}#{name}.#{ending}\" -codec:a libmp3lame -qscale:a 2 -metadata title=\"#{name}\" \"#{@destination}#{name}.mp3\"") if !File.exist?("#{@destination}#{name}.mp3")
+              @songlist << name.split("/")[-1] + ".mp3"
             end
           end
-        end
-      else
-        streams = `#{@@bot[:youtube_youtubedl]} -g "#{site}"`
-        streams.each_line do |line|
-          line.chop!
-          @@bot[:mpd].add line if line.include? "mime=audio/mp4"
         end
       end
     end
