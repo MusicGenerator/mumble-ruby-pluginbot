@@ -20,8 +20,8 @@ class Soundcloud < Plugin
       end
       @consoleaddition = "" 
       @consoleaddition = @@bot["plugin"]["soundcloud"]["prefixes"] if @@bot["plugin"]["soundcloud"]["prefixes"] != nil
-      @executeable = "#"
-      @executeable = @@bot["plugin"]["soundcloud"]["youtube_dl"]["path"] if @@bot["plugin"]["soundcloud"]["youtube_dl"]["path"] != nil
+      @executable = "#"
+      @executable = @@bot["plugin"]["soundcloud"]["youtube_dl"]["path"] if @@bot["plugin"]["soundcloud"]["youtube_dl"]["path"] != nil
       @songlist = Queue.new
       @keylist = Array.new
       @@bot[:soundcloud] = self
@@ -48,7 +48,7 @@ class Soundcloud < Plugin
     super
 
     if message == "ytdl-version"
-      privatemessage("Soundcloud uses youtube-dl " + `#{@executeable} --version`) 
+      privatemessage("Soundcloud uses youtube-dl " + `#{@executable} --version`) 
     end
 
     if message.start_with?("soundcloud <a href=") || message.start_with?("<a href=") then
@@ -62,7 +62,7 @@ class Soundcloud < Plugin
           messageto(actor, "Soundcloud is inspecting link: " + link + "...")
           get_song link
           if ( @songlist.size > 0 ) then
-            @@bot[:mpd].update(@@bot["plugin"]["soundcloud"]["download"].gsub(/\//,"")) 
+            @@bot[:mpd].update(@@bot["plugin"]["soundcloud"]["folder"]["download"].gsub(/\//,"")) 
             messageto(actor, "Waiting for database update complete...")
 
             while @@bot[:mpd].status[:updating_db] != nil do
@@ -73,7 +73,7 @@ class Soundcloud < Plugin
             while @songlist.size > 0 
               song = @songlist.pop
               messageto(actor, song)
-              @@bot[:mpd].add(@@bot["plugin"]["soundcloud"]["download"]+song)
+              @@bot[:mpd].add(@@bot["plugin"]["soundcloud"]["folder"]["download"]+song)
             end
           else
             messageto(actor, "Soundcloud: The link contains nothing interesting.") 
@@ -84,17 +84,22 @@ class Soundcloud < Plugin
   end
 
   def get_song(site)
+    error = Array.new
     if ( site.include? "soundcloud.com/" ) then
       site.gsub!(/<\/?[^>]*>/, '')
       site.gsub!("&amp;", "&")
-      puts site
-      filename = `#{@executeable} --get-filename #{@ytdloptions} -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
-      output =`#{@consoleaddition} #{@executeable} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
+      filename = `#{@executable} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`
+      output =`#{@consoleaddition} #{@executable} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
+      output.each_line do |line|
+        error << line if line.include? "ERROR:"
+      end
       filename.split("\n").each do |name|
+        name.slice! @temp #This is probably a bad hack but name is here for example "/home/botmaster/temp/youtubeplugin//home/botmaster/temp/youtubeplugin/filename.mp3"
         @filetypes.each do |ending|
           if File.exist?("#{@temp}#{name}.#{ending}")
             system ("#{@consoleaddition} convert \"#{@temp}#{name}.jpg\" -resize 320x240 \"#{@destination}#{name}.jpg\" ")
-            if @@bot["plugins"]["soundcloud"]["to_mp3"] == nil
+
+            if @@bot["plugin"]["soundcloud"]["to_mp3"] == nil
               # Mixin tags without recode on standard
               system ("#{@consoleaddition} ffmpeg -i \"#{@temp}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@destination}#{name}.#{ending}\"") if !File.exist?("#{@destination}#{name}.#{ending}")
               @songlist << name.split("/")[-1] + ".#{ending}"

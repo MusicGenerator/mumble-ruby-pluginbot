@@ -19,7 +19,7 @@ main:
     comment: true
   need_binding: false
   bound: nobody
-  certfolder: "certs/"
+  certfolder: "/home/botmaster/certs/"
   fifo: "/home/botmaster/mpd1/mpd.fifo"
   logo: "logo/logo.html"
   timer:

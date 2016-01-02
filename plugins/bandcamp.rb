@@ -103,9 +103,10 @@ class Bandcamp < Plugin
 
       puts site
 
-      filename = `#{@@bot["plugin"]["bandcamp"]["youtube-dl"]} --get-filename #{@ytdloptions} -i -o \"#{@tempdownloadfoler}%(title)s\" "#{site}"`
-      output =`nice -n20 #{@consoleaddition} #{@@bot["plugin"]["bandcamp"]["youtube-dl"]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
+      filename = `#{@@bot["plugin"]["bandcamp"]["youtube-dl"]["path"]} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`
+      output =`nice -n20 #{@consoleaddition} #{@@bot["plugin"]["bandcamp"]["youtube-dl"]["path"]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
       filename.split("\n").each do |name|
+        name.slice! @temp #This is probably a bad hack but name is here for example "/home/botmaster/temp/youtubeplugin//home/botmaster/temp/youtubeplugin/filename.mp3"
         @filetypes.each do |ending|
           if File.exist?("#{@temp}#{name}.#{ending}")
             system ("nice -n20 #{@consoleaddition} convert \"#{@temp}#{name}.jpg\" -resize 320x240 \"#{@destination}#{name}.jpg\" ")

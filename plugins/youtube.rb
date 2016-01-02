@@ -22,8 +22,8 @@ class Youtube < Plugin
       end
       @consoleaddition = "" 
       @consoleaddition = @@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"] if @@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"] != nil
-      @executeable = "#"
-      @executeable = @@bot["plugin"]["youtube"]["youtube_dl"]["path"] if @@bot["plugin"]["youtube"]["youtube_dl"]["path"] != nil
+      @executable = "#"
+      @executable = @@bot["plugin"]["youtube"]["youtube_dl"]["path"] if @@bot["plugin"]["youtube"]["youtube_dl"]["path"] != nil
 
       @songlist = Queue.new
       @keylist = Array.new
@@ -53,7 +53,7 @@ class Youtube < Plugin
     super
 
     if message == "ytdl-version"
-        privatemessage("Youtube uses youtube-dl " + `#{@executeable} --version`) 
+        privatemessage("Youtube uses youtube-dl " + `#{@executable} --version`) 
     end
 
     if message.start_with?("ytlink <a href=") || message.start_with?("<a href=") then
@@ -192,7 +192,7 @@ class Youtube < Plugin
 
   def find_youtube_song song
     songlist = []
-    songs = `#{@executeable} --max-downloads #{@@bot["plugin"]["youtube"]["youtube_dl"]["maxresults"]} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
+    songs = `#{@executable} --max-downloads #{@@bot["plugin"]["youtube"]["youtube_dl"]["maxresults"]} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
     temp = songs.split(/\n/)
     while (temp.length >= 2 )
       songlist << [temp.pop , temp.pop]
@@ -205,16 +205,17 @@ class Youtube < Plugin
     if ( site.include? "www.youtube.com/" ) || ( site.include? "www.youtu.be/" ) || ( site.include? "m.youtube.com/" ) then
       site.gsub!(/<\/?[^>]*>/, '')
       site.gsub!("&amp;", "&")
-      filename = `#{@executeable} --get-filename #{@ytdloptions} -i -o \"%(title)s\" "#{site}"`
-      output =`#{@consoleaddition} #{@executeable} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"%(title)s.%(ext)s\" \"#{site}\" `     #get icon
+      filename = `#{@executable} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`
+      output =`#{@consoleaddition} #{@executable} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
       output.each_line do |line|
         error << line if line.include? "ERROR:"
       end
       filename.split("\n").each do |name|
+        name.slice! @temp #This is probably a bad hack but name is here for example "/home/botmaster/temp/youtubeplugin//home/botmaster/temp/youtubeplugin/filename.mp3"
         @filetypes.each do |ending|
           if File.exist?("#{@temp}#{name}.#{ending}")
             system ("#{@consoleaddition} convert \"#{@temp}#{name}.jpg\" -resize 320x240 \"#{@destination}#{name}.jpg\" ")
-            if @@bot[:youtube_to_mp3] == nil
+            if @@bot["plugin"]["youtube"]["to_mp3"] == nil
               # Mixin tags without recode on standard
               system ("#{@consoleaddition} ffmpeg -i \"#{@temp}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@destination}#{name}.#{ending}\"") if !File.exist?("#{@destination}#{name}.#{ending}")
               @songlist << name.split("/")[-1] + ".#{ending}"
