@@ -13,13 +13,17 @@ fi
 # Check whether this installation is one with deprecated ruby configuration files.
 # If so display a big warning that a manual update must be done for the configuration file of the bot.
 function upgrade_to_yaml() {
-    if [ -f $HOME/src/bot1_conf.yml ] &&  [ -f "${YAML_UPDATE_DONE}" ];
+    if [ -f "$HOME/src/bot1_conf.yml" ] &&  [ -f "${YAML_UPDATE_DONE}" ];
     then
         # Update was already done and new YAML config beside the old .rb config was created
-        # Nothing to do ...
-        echo -en "\n\n\nWARNING: REMOVE the old ruby style configuration file \"$HOME/src/bot1_conf.rb\".\n\n"
-        echo -en "The updater won't run as long as this file was not removed.\n\n"
-        exit 15
+        # Do not continue until the old rb configuration file was removed.
+
+        if [ -f "$HOME/src/bot1_conf.rb" ];
+        then
+            echo -en "\n\n\nWARNING: REMOVE the old ruby style configuration file \"$HOME/src/bot1_conf.rb\".\n\n"
+            echo -en "The updater won't run as long as this file was not removed.\n\n"
+            exit 15
+        fi
     else
         # Neither the new overwrite config bot1_conf.yml does exist nor the YAML_UPDAT_DONE file.
 
