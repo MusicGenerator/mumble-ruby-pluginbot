@@ -36,51 +36,51 @@ mumble:
   channel: Bottest
   
 plugin:
-    mpd:
-      volume: 65
-      host: localhost
-      port: 7701
-      musicfolder: "/home/botmaster/music/"  
-      template:
-        comment:
-          disabled: "<b>Artist: </b>DISABLED<br /><b>Title: </b>DISABLED<br/><b>Album: </b>DISABLED<br /><br /><b>Write %shelp to me, to get a list of my commands!"
-          enabled:  "<b>Artist: </b>%s<br /><b>Title: </b>%s<br /><b>Album: </b>%s<br /><br /><b>Write %shelp to me, to get a list of my commands!</b>"
+  mpd:
+    volume: 65
+    host: localhost
+    port: 7701
+    musicfolder: "/home/botmaster/music/"  
+    template:
+      comment:
+        disabled: "<b>Artist: </b>DISABLED<br /><b>Title: </b>DISABLED<br/><b>Album: </b>DISABLED<br /><br /><b>Write %shelp to me, to get a list of my commands!"
+        enabled:  "<b>Artist: </b>%s<br /><b>Title: </b>%s<br /><b>Album: </b>%s<br /><br /><b>Write %shelp to me, to get a list of my commands!</b>"
 
-    youtube:
-      folder:
-        download: downloadedfromyt/
-        temp: youtubeplugin/
-      stream: 
-      youtube_dl:
-        path: "/home/botmaster/src/youtube-dl"
-        options: ''
-        prefixes: ''
-        maxresults: 200
-      to_mp3: 
-
-    soundcloud:
-      folder: 
-        download: downloadedfromsc/
-        temp: soundcloudplugin/
-      youtube_dl:
-        path: "/home/botmaster/src/youtube-dl"
-        options: ''
-        prefixes: ''
-      to_mp3: 
-
-    bandcamp:
-      folder:
-        download: downloadedfrombc/
-        temp: bandcampplugin/
-      youtube_dl:
-        path: "/home/botmaster/src/youtube-dl"
-        options: ''
-        prefixes: ''
-      to_mp3: 
-
-    ektoplazm:
+  youtube:
+    folder:
+      download: downloadedfromyt/
+      temp: youtubeplugin/
+    stream: 
+    youtube_dl:
+      path: "/home/botmaster/src/youtube-dl"
+      options: ''
       prefixes: ''
-      folder:
-        download: ektoplazm/
-        temp: ektoplazmplugin/
+      maxresults: 200
+    to_mp3: 
+
+  soundcloud:
+    folder: 
+      download: downloadedfromsc/
+      temp: soundcloudplugin/
+    youtube_dl:
+      path: "/home/botmaster/src/youtube-dl"
+      options: ''
+      prefixes: ''
+    to_mp3: 
+
+  bandcamp:
+    folder:
+      download: downloadedfrombc/
+      temp: bandcampplugin/
+    youtube_dl:
+      path: "/home/botmaster/src/youtube-dl"
+      options: ''
+      prefixes: ''
+    to_mp3: 
+
+  ektoplazm:
+    prefixes: ''
+    folder:
+      download: ektoplazm/
+      temp: ektoplazmplugin/
 
