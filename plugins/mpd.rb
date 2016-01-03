@@ -96,20 +96,19 @@ class Mpd < Plugin
               init = false
               if @@bot["main"]["display"]["comment"] == true && @@bot[:set_comment_available] == true
                 begin
-                  image = ""
+                  output = ""
                   #if ( @@bot["plugin"]["youtube"][["download"] != nil ) && ( @@bot["plugin"]["mpd"]["musicfolder"] != nil )
                     if File.exist?(@@bot["plugin"]["mpd"]["musicfolder"]+current.file.to_s.chomp(File.extname(current.file.to_s))+".jpg")
-                      image = @@bot[:cli].get_imgmsg(@@bot["plugin"]["mpd"]["musicfolder"]+current.file.to_s.chomp(File.extname(current.file.to_s))+".jpg")
+                      output = @@bot[:cli].get_imgmsg(@@bot["plugin"]["mpd"]["musicfolder"]+current.file.to_s.chomp(File.extname(current.file.to_s))+".jpg")
                     end
                   #end
-                  output = "<br><table>"
+                  output << "<br><table>"
                   output << "<tr><td>Artist:</td><td>#{current.artist}</td></tr>" if !current.artist.nil?
                   output << "<tr><td>Title:</td><td>#{current.title}</td></tr>" if !current.title.nil?
                   output << "<tr><td>Album:</td><td>#{current.album}</td></tr>" if !current.album.nil?
                   output << "<tr><td>Source:</td><td>#{current.file}</td></tr>" if ( !current.file.nil? ) && ( current.album.nil? ) && ( current.artist.nil? )
                   output << "</table><br>" + @infotemplate
-                  @@bot[:cli].set_comment(image + output)
-                  puts (image+output)
+                  @@bot[:cli].set_comment(output)
                 rescue NoMethodError
                   if @@bot[:debug]
                     puts "#{$!}"

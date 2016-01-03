@@ -152,7 +152,6 @@ class MumbleMPD
       @settings["mumble"]["positional"] = suggestconfig.positional
       @settings["mumble"]["push_to_talk"] = suggestconfig.push_to_talk
     end
-    puts @settings["mumble"]
     @cli.connect
     max_connecting_time = 10 
     while not @cli.connected? do
@@ -270,9 +269,6 @@ class MumbleMPD
   def handle_user_state_changes(msg)
     #msg.actor = session_id of user who did something on someone, if self done, both is the same.
     #msg.session = session_id of the target
-    if msg[:texture]
-      IO.binwrite('logo/boot1.rgba',msg[:texture])
-    end
   end
 
   def handle_text_message(msg)
@@ -304,7 +300,6 @@ class MumbleMPD
       # each command adds his own help
       help ="<br />"    # start with empty help
       # the help command should be the last command in this function
-      cc = @settings["main"]["controlstring"]
 
       #FIXME
       #msg.message.gsub!(/(<[^<^>]*>)/, "") #Strip html tags. #BEFORE doing this we need to ensure that no plugin needs the html source code. For example youtube plugin needs them...
