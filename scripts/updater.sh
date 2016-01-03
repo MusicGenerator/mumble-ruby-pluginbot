@@ -1,13 +1,65 @@
 #!/bin/bash --login
- 
+
 INPUT=/tmp/menu.sh.$$
 OUTPUT=/tmp/output.sh.$$
+YAML_UPDATE_DONE="$HOME/src/.update_to_yaml_done"
 trap "rm $OUTPUT; rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 
 if [ ! -f "$(which dialog 2>/dev/null)" ]; then
     echo -en "\n\nYou must install \"dialog\" on your system in order to use this updater.\n"
     exit 1
 fi
+
+# Check whether this installation is one with deprecated ruby configuration files.
+# If so display a big warning that a manual update must be done for the configuration file of the bot.
+function upgrade_to_yaml() {
+    if [ -f "$HOME/src/bot1_conf.yml" ] &&  [ -f "${YAML_UPDATE_DONE}" ];
+    then
+        # Update was already done and new YAML config beside the old .rb config was created
+        # Do not continue until the old rb configuration file was removed.
+
+        if [ -f "$HOME/src/bot1_conf.rb" ];
+        then
+            echo -en "\n\n\nWARNING: REMOVE the old ruby style configuration file \"$HOME/src/bot1_conf.rb\".\n\n"
+            echo -en "The updater won't run as long as this file was not removed.\n\n"
+            exit 15
+        fi
+    else
+        # Neither the new overwrite config bot1_conf.yml does exist nor the YAML_UPDAT_DONE file.
+
+        # Check whether we have an installation that already has YAML configuration files.
+        if [ -f $HOME/src/mumble-ruby-pluginbot/pluginbot_conf.yml ];
+        then
+            # This installation already has a YAML config file, so it was updated.
+
+            # Create a new overwrite config beside the old .rb config but make sure not to overwrite an existing one.
+            if [ ! -f $HOME/src/bot1_conf.yml ];
+            then
+                cp $HOME/src/mumble-ruby-pluginbot/scripts/overwrite_conf.yml $HOME/src/bot1_conf.yml
+                touch "${YAML_UPDATE_DONE}" # To know later that we already did this ... :)
+            fi
+
+            cat<<EOF
+
+            WARNING: The format for configuration files has been changed from ruby style to YAML style.
+
+            You need to manually adapt the changes from
+                $HOME/src/bot1_conf.rb
+            into
+                $HOME/src/bot1_conf.yml
+
+            When you finished that please remove the file $HOME/src/bot1_conf.rb or rename it.
+
+            Do the same for every additional bot in your installation.
+
+            Then run this updater again and then restart your bot or the complete system.
+EOF
+            exit 15
+        fi
+    fi
+}
+
+upgrade_to_yaml
 
 function update_error() {
     echo -ne "\n\n\nERROR: Something went wrong, please verify the updates via the commandline.\n\n\n\n"
