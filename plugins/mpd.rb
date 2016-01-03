@@ -264,10 +264,13 @@ class Mpd < Plugin
     end
 
     if message[0,6] == 'delete'
-      begin
-        @@bot[:mpd].delete message.split(/ /)[1]
-      rescue
-        privatemessage( "Sorry, could not delete.")
+      list = message.split(/ /)[1..-1].uniq.sort!{|x,y| y.to_i <=> x.to_i}.each do |del|
+        begin
+          @@bot[:mpd].delete del
+          privatemessage( "Deleted Position <b>'#{del}'</b>.")
+        rescue
+          privatemessage( "Sorry, could not delete <b>'#{del}'</b>.")
+        end
       end
     end
 
