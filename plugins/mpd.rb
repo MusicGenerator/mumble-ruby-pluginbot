@@ -366,18 +366,13 @@ class Mpd < Plugin
       if @@bot[:mpd].queue.length > 0
         text_out ="<table><th><td>#</td><td>Name</td></th>"
         songnr = 0
-        playing = @@bot[:mpd].current_song.id
+        playing = -1
+        playing = @@bot[:mpd].current_song.pos if !@@bot[:mpd].current_song.nil?
         @@bot[:mpd].queue.each do |song|
           text_out << "<tr><td>#{songnr}</td><td>" 
-          (songnr + 1) == playing ? text_out << "<b>" : nil
+          songnr == playing ? text_out << "<b>" : nil
           song.title.to_s == "" ? (text_out<<"#{song.file}") : (text_out<<"#{song.title}")
-          (songnr + 1) == playing ? text_out << "</b>" : nil
-          
-          #if song.title.to_s.empty?
-          #  text_out << "<tr><td>#{songnr}</td><td>No ID / Stream? Source: #{song.file}</td></tr>"
-          #else
-          #  text_out << "<tr><td>#{songnr}</td><td>#{song.title}</td></tr>" 
-          #end
+          songnr == playing ? text_out << "</b>" : nil
           songnr += 1
         end
         text_out << "</table>"
