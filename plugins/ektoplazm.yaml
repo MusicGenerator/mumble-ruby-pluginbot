@@ -1,0 +1,9 @@
+---
+  
+plugin:
+  ektoplazm:
+    prefixes: ''
+    folder:
+      download: ektoplazm/
+      temp: ektoplazmplugin/
+

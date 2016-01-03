@@ -1,0 +1,13 @@
+---
+
+  
+plugin:
+  soundcloud:
+    folder: 
+      download: downloadedfromsc/
+      temp: soundcloudplugin/
+    youtube_dl:
+      path: "/home/botmaster/src/youtube-dl"
+      options: ''
+      prefixes: ''
+    to_mp3: 

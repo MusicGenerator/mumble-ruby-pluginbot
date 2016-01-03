@@ -1,0 +1,12 @@
+---
+  
+plugin:
+  bandcamp:
+    folder:
+      download: downloadedfrombc/
+      temp: bandcampplugin/
+    youtube_dl:
+      path: "/home/botmaster/src/youtube-dl"
+      options: ''
+      prefixes: ''
+    to_mp3: 

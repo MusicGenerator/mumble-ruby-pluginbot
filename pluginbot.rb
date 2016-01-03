@@ -35,13 +35,17 @@ class MumbleMPD
     @plugin = Array.new
     @settings = Hash.new()
     #Initialize default values
-
     #Read config file if available 
     begin
       @settings = YAML::load_file('pluginbot_conf.yml')
+      Dir["./plugins/*.yaml"].each do |f| 
+        puts "#{f}"
+        deep_merge!(@settings, YAML::load_file(f))
+      end
     rescue
       puts "Config could not be loaded! Using default configuration."
     end
+    puts @settings
     OptionParser.new do |opts|
       opts.banner = "Usage: pluginbot.rb [options]"
 
@@ -472,7 +476,7 @@ class MumbleMPD
                 output = ""
                 Thread.list.each do |t|  
                   if t["process"]!=nil
-                      output << I18n.t("jobs.status", :process => t["process"], :status => t.status.to_s, :name=> t.user.name)
+                      output << I18n.t("jobs.status", :process => t["process"], :status => t.status.to_s, :name=> t["user"])
                   end
                   @cli.text_user(msg.actor, output)  
                 end
