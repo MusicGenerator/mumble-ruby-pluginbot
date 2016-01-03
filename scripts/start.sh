@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash --login
 
 DEBUG=""
 FIRST_START_FILE="$HOME/src/.first_start_done"
@@ -48,13 +48,13 @@ export HOME=$HOME
 
 ### Start Mumble-Ruby-Bots - MPD instances must already be running. ###
 # Bot 1
-tmux new-session -d -n bot1 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/pluginbot.rb --config=$HOME/src/bot1_conf.rb$DEBUG"
+tmux new-session -d -n bot1 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/pluginbot.rb --config=$HOME/src/bot1_conf.yml$DEBUG"
 
 # Bot 2
-#tmux new-session -d -n bot2 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/pluginbot.rb --config=$HOME/src/bot2_conf.rb$DEBUG"
+#tmux new-session -d -n bot2 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/pluginbot.rb --config=$HOME/src/bot2_conf.yml$DEBUG"
 
 # Bot 3
-#tmux new-session -d -n bot3 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/pluginbot.rb --config=$HOME/src/bot3_conf.rb$DEBUG"
+#tmux new-session -d -n bot3 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/pluginbot.rb --config=$HOME/src/bot3_conf.yml$DEBUG"
 
 
 
@@ -107,12 +107,12 @@ _UPDATE THE BOT (AND ITS DEPENDENCIES)_
 _OFFICIAL DOCUMENTATION_
   Also please reread the official documentation at https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot
   if you have further problems :)
-  
+
 
 _BUGS/WISHES/IDEAS_
   If you think you found a bug, have a wish for the bot or some ideas please don't
   hesitate to create an issue at https://github.com/dafoxia/mumble-ruby-pluginbot/issues
-  
-  
+
+
 Have fun with the Mumble-Ruby-Pluginbot :)
 EOF
