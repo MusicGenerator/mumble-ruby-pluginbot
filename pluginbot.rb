@@ -39,13 +39,11 @@ class MumbleMPD
     begin
       @settings = YAML::load_file('pluginbot_conf.yml')
       Dir["./plugins/*.yaml"].each do |f| 
-        puts "#{f}"
         deep_merge!(@settings, YAML::load_file(f))
       end
     rescue
       puts "Config could not be loaded! Using default configuration."
     end
-    puts @settings
     OptionParser.new do |opts|
       opts.banner = "Usage: pluginbot.rb [options]"
 
