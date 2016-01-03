@@ -42,7 +42,6 @@ class MumbleMPD
     rescue
       puts "Config could not be loaded! Using default configuration."
     end
-
     OptionParser.new do |opts|
       opts.banner = "Usage: pluginbot.rb [options]"
 
@@ -51,7 +50,7 @@ class MumbleMPD
         if File.exist? v
           begin
             overwrite = YAML::load_file(v)
-            @settings.merge!(overwrite)
+            deep_merge!(@settings, overwrite)
           rescue
             puts "Your config could not be loaded!"
           end
@@ -153,7 +152,7 @@ class MumbleMPD
       @settings["mumble"]["positional"] = suggestconfig.positional
       @settings["mumble"]["push_to_talk"] = suggestconfig.push_to_talk
     end
-
+    puts @settings["mumble"]
     @cli.connect
     max_connecting_time = 10 
     while not @cli.connected? do
@@ -340,15 +339,7 @@ class MumbleMPD
               end
 
               if message == 'settings' 
-                out = "<ul>"
-                out << hash_to_table(@settings)
-                out << "</ul>"
-                #out = "<table>"
-                #@settings.each do |key, value|
-                #  out << "<tr><td>#{key}</td><td>#{value}</td></tr>" 
-                #end
-                #out << "</table>"
-                @cli.text_user(msg.actor, out)
+                @cli.text_user(msg.actor, hash_to_table(@settings))
               end
 
               if message.split[0] == 'set' 
@@ -388,7 +379,7 @@ class MumbleMPD
                   if @cli.find_user(message.split[1..-1].join(" ")) != nil
                     @settings[@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym] = message.split[1..-1].join(" ")
                     @cli.text_user(msg.actor, I18n.t("ban.active"))
-                    @cli.text_user(msg.actor, "@settings[#{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}] = \"#{message.split[1..-1].join(" ")}\"")
+                    @cli.text_user(msg.actor, ":#{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}:  #{message.split[1..-1].join(" ")}")
                   else
                     @cli.text_user(msg.actor, I18n.t("user.not.found", :user => message.split[1..-1].join(" ")))
                   end
@@ -523,17 +514,24 @@ class MumbleMPD
       end
     end
   end
+
   def hash_to_table(hash)
     return CGI.escapeHTML(hash.to_s) if !hash.kind_of?(Hash)
     out = "<ul>"
     hash.each do |key, value|
-      out << "<li>"
-      out << "#{key}: "
-      out << "#{hash_to_table(value)}"
-      out << "</li>"
+      Symbol === key ? out << "<li><b>" : out << "<li>"
+      out << "#{key}:" << "#{hash_to_table(value)}" 
+      Symbol === key ? out << "<\b><li>" : out << "<\li>"
     end
     out << "</ul>"
     return out
+  end
+
+  def deep_merge!(target, data)
+    merger = proc{|key, v1, v2|
+      !(Hash === v1) && !(Hash === v2) ? v1 = v2 : v1 = v1
+      Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
+    target.merge! data, &merger
   end
 end
 

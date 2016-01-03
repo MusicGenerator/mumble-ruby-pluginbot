@@ -72,7 +72,7 @@ plugin:
       folder:
         download: downloadedfrombc/
         temp: bandcampplugin/
-      youtube-dl:
+      youtube_dl:
         path: "/home/botmaster/src/youtube-dl"
         options: ''
         prefixes: ''
