@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash --login
 
 DEBUG=""
 FIRST_START_FILE="$HOME/src/.first_start_done"
