@@ -157,6 +157,7 @@ do
     case $menuitem in
             a)
                 update_pluginbot
+                upgrade_to_yaml
                 update_mpd
                 update_youtubedl
                 update_celt-gem
