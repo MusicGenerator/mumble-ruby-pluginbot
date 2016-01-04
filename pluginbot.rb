@@ -222,15 +222,15 @@ class MumbleMPD
           @duckthread.run if @duckthread.stop?
         end
       end
-
+      puts "OK: Waiting for mpd fifo pipe..."
       @run = true
       @cli.player.stream_named_pipe(@settings["main"]["fifo"])
-
+      puts "OK: Fifo pipe is available. Using pipe."
       #init all plugins
       init = @settings.clone
       init[:cli] = @cli
 
-      puts "initplugins"
+      puts "OK: Starting plugins..."
       Plugin.plugins.each do |plugin_class|
         @plugin << plugin_class.new
       end
@@ -248,7 +248,12 @@ class MumbleMPD
         maxcount -= 1
         break if maxcount <= 0
       end
-      puts "maybe not all plugin functional!" if maxcount <= 0
+
+      if maxcount <= 0
+        puts "Warning: Maybe not all plugins are functional!" if maxcount <= 0
+      else
+        puts "OK: All plugins were successfully started."
+      end
 
       ## Enable Ticktimer Thread
       @ticktimer = Thread.new do
@@ -542,12 +547,13 @@ loop do #https://github.com/bbatsov/ruby-style-guide#infinite-loop
   puts "OK: Pluginbot is starting..."
   client.mumble_start
   sleep 3
+  puts "OK: Pluginbot is running."
   begin
     while client.run == true
         sleep 0.5
     end
   rescue
-    puts "Error: An error occurred: #{$!}"
+    puts "Error: Pluginbot could not be started: #{$!}"
     puts "Error: Backtrace: #{$@}"
     client.disconnect
   end
