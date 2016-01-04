@@ -2,7 +2,7 @@
 config:
   version: 2.1
 
-debug: true
+:debug: true
 
 main:
   tempdir: "/home/botmaster/temp/"
