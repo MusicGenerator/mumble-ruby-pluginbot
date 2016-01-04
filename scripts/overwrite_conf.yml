@@ -17,7 +17,7 @@ main:
 mumble:
   use_vbr: 1
   bitrate: 72000
-  host: 127.0.0.1
+  host: m.natenom.com
   port: 64738
   name: MumbleRubyPluginbot
   password: ''
