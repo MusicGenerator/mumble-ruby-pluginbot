@@ -289,7 +289,7 @@ class MumbleMPD
         sender_is_registered = true
       end
 
-      puts "Debug: Got a message from user id: #{msg_userid} (session id: #{msg.actor}). Content: \"#{msg.message}\"" if @settings[:debug]
+      puts "Debug: Got a message from \"#{@cli.users[msg.actor].name}\" (user id: #{msg_userid}, session id: #{msg.actor}). Content: \"#{msg.message}\"" if @settings[:debug]
 
       # check if User is on a blacklist
       begin
