@@ -111,14 +111,13 @@ class MumbleMPD
     end.parse!
     @settings["main"]["duckvol"] ||= 20
     @configured_settings = @settings.clone
+  end
 
+  def init_settings
     # set up language
     I18n.load_path = Dir["languages/*.yml"]
     @configured_settings[:language] ||= :en
     I18n.default_locale=@configured_settings[:language]
-  end
-
-  def init_settings
     @run = false
     @cli = nil
     @cli = Mumble::Client.new(@settings["mumble"]["host"], @settings["mumble"]["port"]) do |conf|
@@ -222,15 +221,15 @@ class MumbleMPD
           @duckthread.run if @duckthread.stop?
         end
       end
-      puts "OK: Waiting for mpd fifo pipe..."
+
       @run = true
       @cli.player.stream_named_pipe(@settings["main"]["fifo"])
-      puts "OK: Fifo pipe is available. Using pipe."
+
       #init all plugins
       init = @settings.clone
       init[:cli] = @cli
 
-      puts "OK: Starting plugins..."
+      puts "initplugins"
       Plugin.plugins.each do |plugin_class|
         @plugin << plugin_class.new
       end
@@ -248,12 +247,7 @@ class MumbleMPD
         maxcount -= 1
         break if maxcount <= 0
       end
-
-      if maxcount <= 0
-        puts "Warning: Maybe not all plugins are functional!" if maxcount <= 0
-      else
-        puts "OK: All plugins were successfully started."
-      end
+      puts "maybe not all plugin functional!" if maxcount <= 0
 
       ## Enable Ticktimer Thread
       @ticktimer = Thread.new do
@@ -540,20 +534,19 @@ class MumbleMPD
   end
 end
 
+client = MumbleMPD.new
 loop do #https://github.com/bbatsov/ruby-style-guide#infinite-loop
-  client = MumbleMPD.new
   puts "OK: Initializing settings..."
   client.init_settings
   puts "OK: Pluginbot is starting..."
   client.mumble_start
   sleep 3
-  puts "OK: Pluginbot is running."
   begin
     while client.run == true
         sleep 0.5
     end
   rescue
-    puts "Error: Pluginbot could not be started: #{$!}"
+    puts "Error: An error occurred: #{$!}"
     puts "Error: Backtrace: #{$@}"
     client.disconnect
   end
