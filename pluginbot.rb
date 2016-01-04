@@ -289,15 +289,17 @@ class MumbleMPD
         sender_is_registered = true
       end
 
+      puts "Debug: Got a message from user id: #{msg_userid} (session id: #{msg.actor}). Content: \"#{msg.message}\"" #if @settings[:debug]
+
       # check if User is on a blacklist
       begin
         if @settings.has_key?(@cli.users[msg.actor].hash.to_sym)
-          sender_is_registered = false
-          puts "user in blacklist!" if @settings[:debug]
-          #(if on blacklist virtually unregister her/him)
+          puts "Debug: User with userid \"#{msg_userid}\" is in blacklist! Ignoring him." if @settings[:debug]
+
+          sender_is_registered = false # If on blacklist handle user as if he was unregistered.
         end
       rescue
-        #catch when user has'nt a hash. (not registerd)
+        #catch when user hasn't a hash. (not registerd)
       end
 
       # generating help message.
