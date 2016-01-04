@@ -28,33 +28,35 @@ class MumbleMPD
   def initialize
     # load all plugins
     require './plugin'
-    Dir["./plugins/*.rb"].each do |f| 
-      require f 
-      puts "Plugin #{f} loaded."
+    Dir["./plugins/*.rb"].each do |f|
+      require f
+      puts "OK: Plugin \"#{f}\" loaded."
     end
     @plugin = Array.new
     @settings = Hash.new()
     #Initialize default values
-    #Read config file if available 
+    #Read config file if available
     begin
       @settings = YAML::load_file('pluginbot_conf.yml')
-      Dir["./plugins/*.yaml"].each do |f| 
+      puts "OK: Main configuration \"pluginbot_conf.yml\" loaded."
+      Dir["./plugins/*.yaml"].each do |f|
         deep_merge!(@settings, YAML::load_file(f))
+        puts "OK: Plugin configuration \"#{f}\" loaded."
       end
     rescue
-      puts "Config could not be loaded! Using default configuration."
+      puts "Warning: Main configuration OR one OR more plugin configurations could not be loaded! Ignoring them and using default configuration."
     end
     OptionParser.new do |opts|
       opts.banner = "Usage: pluginbot.rb [options]"
 
       opts.on("--config=", "(Relative) path and filename to config") do |v|
-      puts "parse extra config"
+      puts "OK: Parsing extra configuration file \"#{v}\" (--config parameter)"
         if File.exist? v
           begin
             overwrite = YAML::load_file(v)
             deep_merge!(@settings, overwrite)
           rescue
-            puts "Your config could not be loaded!"
+            puts "Warning: Your config \"#{v}\" could not be loaded! Using default configuration."
           end
         else
           puts "Config path- and/or filename is wrong!"
@@ -106,10 +108,10 @@ class MumbleMPD
       opts.on("--certdir=", "path to cert") do |v|
         @settings["main"]["certfolder"] = v
       end
-    end.parse! 
-    @settings["main"]["duckvol"] ||= 20 
-    @configured_settings = @settings.clone 
-    
+    end.parse!
+    @settings["main"]["duckvol"] ||= 20
+    @configured_settings = @settings.clone
+
     # set up language
     I18n.load_path = Dir["languages/*.yml"]
     @configured_settings[:language] ||= :en
@@ -155,7 +157,7 @@ class MumbleMPD
       @settings["mumble"]["push_to_talk"] = suggestconfig.push_to_talk
     end
     @cli.connect
-    max_connecting_time = 10 
+    max_connecting_time = 10
     while not @cli.connected? do
       sleep(0.5)
       puts "Connecting to the server is still ongoing." if @settings[:debug]
@@ -167,17 +169,18 @@ class MumbleMPD
       end
     end
     if @cli.connected?
-      puts "connected"
+      puts "OK: Pluginbot successfully connected to \"#{@settings["mumble"]["host"]}:#{@settings["mumble"]["port"]}\"."
       begin
         @cli.join_channel(@settings["mumble"]["channel"])
+        puts "OK: Pluginbot entered configured channel \"#{@settings["mumble"]["channel"]}\"."
       rescue
-        puts "[joincannel]#{$1} Can't join #{@settings["mumble"]["channel"]}!" if @settings[:debug]
+        puts "Error: [joincannel]#{$1} Can't join #{@settings["mumble"]["channel"]}!" if @settings[:debug]
       end
 
       begin
         Thread.kill(@duckthread)
       rescue
-        puts "[killduckthread] can't kill because #{$!}" if @settings[:debug]
+        puts "Error: [killduckthread] can't kill because #{$!}" if @settings[:debug]
       end
 
       #Start duckthread
@@ -196,7 +199,7 @@ class MumbleMPD
         @settings[:set_comment_available] = true
       rescue NoMethodError
         puts "[displaycomment]#{$!}" if @settings[:debug]
-        @settings[:set_comment_available]  = false 
+        @settings[:set_comment_available]  = false
       end
       begin
         @cli.set_avatar(IO.binread('logo/logo.png'))
@@ -221,7 +224,7 @@ class MumbleMPD
       end
 
       @run = true
-      @cli.player.stream_named_pipe(@settings["main"]["fifo"]) 
+      @cli.player.stream_named_pipe(@settings["main"]["fifo"])
 
       #init all plugins
       init = @settings.clone
@@ -232,7 +235,7 @@ class MumbleMPD
         @plugin << plugin_class.new
       end
 
-      maxcount = @plugin.length 
+      maxcount = @plugin.length
       allok = 0
       while allok != @plugin.length do
         allok = 0
@@ -243,7 +246,7 @@ class MumbleMPD
           end
         end
         maxcount -= 1
-        break if maxcount <= 0 
+        break if maxcount <= 0
       end
       puts "maybe not all plugin functional!" if maxcount <= 0
 
@@ -255,7 +258,7 @@ class MumbleMPD
     end
   end
 
-  private 
+  private
 
   def timertick
     ticktime = ( @settings["main"]["timer"]["ticks"] || 3600 )
@@ -324,7 +327,7 @@ class MumbleMPD
         # Channel message:                   <Hashie::Mash actor=54 channel_id=[530] message="#help">
         # Channel messages don't have a session, so skip them
         if ( msg.session ) || ( @settings["main"]["control"]["message"]["private_only"] != true )
-          if @settings["main"]["controllable"] == true 
+          if @settings["main"]["controllable"] == true
             if msg.message.start_with?("#{@settings["main"]["control"]["string"]}") && msg.message.length >@settings["main"]["control"]["string"].length #Check whether we have a command after the controlstring.
               message = msg.message.split(@settings["main"]["control"]["string"])[1 .. -1].join() #Remove @settings[:controlstring]
               @plugin.each do |plugin|
@@ -335,11 +338,11 @@ class MumbleMPD
                 @cli.text_user(msg.actor, I18n.t('about'))
               end
 
-              if message == 'settings' 
+              if message == 'settings'
                 @cli.text_user(msg.actor, hash_to_table(@settings))
               end
 
-              if message.split[0] == 'set' 
+              if message.split[0] == 'set'
                 if !@settings["main"]["need_binding"] || @settings["main"]["bound"]==msg_userid
                   setting = message.split('=',2)
                   @settings[setting[0].split[1].to_sym] = setting[1] if setting[0].split[1] != nil
@@ -354,7 +357,7 @@ class MumbleMPD
                 @settings["main"]["bound"] = "nobody" if @settings["main"]["bound"] == msg_userid
               end
 
-              if message == 'reset' 
+              if message == 'reset'
                 @settings = @configured_settings.clone if @settings["main"]["bound"] == msg_userid
               end
 
@@ -385,7 +388,7 @@ class MumbleMPD
 
               if message == 'ducking'
                 @settings["main"]["ducking"] = !@settings["main"]["ducking"]
-                if @settings["main"]["ducking"] == false 
+                if @settings["main"]["ducking"] == false
                   @cli.text_user(msg.actor, I18n.t("ducking._off"))
                 else
                   @cli.text_user(msg.actor, I18n.t("ducking._on"))
@@ -394,7 +397,7 @@ class MumbleMPD
 
               if message == 'duckvol'
                 @cli.text_user(msg.actor, I18n.t("ducking.volume.settings", :volume_relative => @settings["main"]["duckvol"]))
-                if @settings["main"]["ducking"] == false 
+                if @settings["main"]["ducking"] == false
                   @cli.text_user(msg.actor, I18n.t("ducking._off"))
                 else
                   @cli.text_user(msg.actor, I18n.t("ducking._on"))
@@ -402,7 +405,7 @@ class MumbleMPD
               end
 
               if message.match(/^duckvol [0-9]{1,3}$/)
-                volume = message.match(/^duckvol ([0-9]{1,3})$/)[1].to_i 
+                volume = message.match(/^duckvol ([0-9]{1,3})$/)[1].to_i
                 if (volume >=0 ) && (volume <= 100)
                   @settings["main"]["duckvol"] = volume
                   @cli.text_user(msg.actor, I18n.t("ducking.volume.set", :volume => volume))
@@ -472,11 +475,11 @@ class MumbleMPD
               # early in development, not documented now until it works :)
               if message == "jobs"
                 output = ""
-                Thread.list.each do |t|  
+                Thread.list.each do |t|
                   if t["process"]!=nil
                       output << I18n.t("jobs.status", :process => t["process"], :status => t.status.to_s, :name=> t["user"])
                   end
-                  @cli.text_user(msg.actor, output)  
+                  @cli.text_user(msg.actor, output)
                 end
               end
 
@@ -517,7 +520,7 @@ class MumbleMPD
     out = "<ul>"
     hash.each do |key, value|
       Symbol === key ? out << "<li><b>" : out << "<li>"
-      out << "#{key}:" << "#{hash_to_table(value)}" 
+      out << "#{key}:" << "#{hash_to_table(value)}"
       Symbol === key ? out << "<\b><li>" : out << "<\li>"
     end
     out << "</ul>"
@@ -534,9 +537,9 @@ end
 
 loop do #https://github.com/bbatsov/ruby-style-guide#infinite-loop
   client = MumbleMPD.new
-  puts "pluginbot is starting..." 
+  puts "OK: Initializing settings..."
   client.init_settings
-  puts "start"
+  puts "OK: Pluginbot is starting..."
   client.mumble_start
   sleep 3
   begin
@@ -544,8 +547,8 @@ loop do #https://github.com/bbatsov/ruby-style-guide#infinite-loop
         sleep 0.5
     end
   rescue
-    puts "An error occurred: #{$!}"
-    puts "Backtrace: #{$@}"
+    puts "Error: An error occurred: #{$!}"
+    puts "Error: Backtrace: #{$@}"
     client.disconnect
   end
   puts " "
