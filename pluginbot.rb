@@ -39,7 +39,7 @@ class MumbleMPD
     begin
       @settings = YAML::load_file('pluginbot_conf.yml')
       puts "OK: Main configuration \"pluginbot_conf.yml\" loaded."
-      Dir["./plugins/*.yaml"].each do |f|
+      Dir["./plugins/*.yml"].each do |f|
         deep_merge!(@settings, YAML::load_file(f))
         puts "OK: Plugin configuration \"#{f}\" loaded."
       end
