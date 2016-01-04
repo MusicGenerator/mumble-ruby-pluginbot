@@ -8,9 +8,9 @@ class Radiostream < Plugin
       begin
         @xspf = require 'crack'         #parse xspf playlists only if crack gem is installed
       rescue
-        puts "if you install crack gem radiostream plugin also can parse xspf stream playlists." if @xspf == false 
+        puts "if you install crack gem radiostream plugin also can parse xspf stream playlists." if @xspf == false
       end
-      @keylist = Array.new 
+      @keylist = Array.new
     end
     return @@bot
   end
@@ -18,7 +18,7 @@ class Radiostream < Plugin
   def name
     if ( @@bot[:mpd] == nil ) || ( @@bot[:messages] == nil ) || ( @@bot[:radiostream] == nil)
       "false"
-    else    
+    else
       self.class.name
     end
   end
@@ -28,13 +28,13 @@ class Radiostream < Plugin
     h << "<b>#{@@bot[:controlstring]}radiostream URL</b> - Will try to forward the radio stream.<br>"
     h << "<b>#{@@bot[:controlstring]}choose shows list if remote playlist has more choices. (You will get informed if you can use this command).<br>"
     h << "<b>#{@@bot[:controlstring]}choose <i>number</i> choose stream.<br>"
-    h << "   This early version understand URLs that end with .pls or such that are in fact .pls files."
-    h << "   Some .m3u links or direct URLs get also in function now."
+    h << "   This module should be able to handle most Radio stream URLs you can find :)"
+    h << "   If you find anything that does not work don't hesitate to create an issue on GitHub."
   end
 
   def handle_chat(msg, message)
     super
-    if message.start_with?("radiostream <a href=") || message.start_with?("<a href=") 
+    if message.start_with?("radiostream <a href=") || message.start_with?("<a href=")
       link = msg.message.match(/http[s]?:\/\/(.+?)\"/).to_s.chop
       @keylist.delete_if { |key| key[:user] == msg.actor }              #delete last search for this user
       Thread.new do
@@ -53,7 +53,7 @@ class Radiostream < Plugin
             end
           end
           if add != "" then
-            @@bot[:mpd].add(add) 
+            @@bot[:mpd].add(add)
             messageto(msg.actor, "Added: #{add}")
           end
         end
@@ -80,7 +80,7 @@ class Radiostream < Plugin
         id_list = msg_parameters.match(/(?:[\d{1,3}\ ?])+/)[0].split
 
         chooselist = Array.new                                          #generate chooselist first
-        @keylist.each do |key|                                          
+        @keylist.each do |key|
           if key[:user] == msg.actor then
             chooselist << key[:link]
           end
@@ -109,7 +109,7 @@ class Radiostream < Plugin
     info = streaminfo.checkmp3(file)                        #check if mp3
     if info[:verified] != nil then                          #is mp3-stream?
       info[:link] = link                                    #add link to info
-      decoded = true                                        #set decoded to true to prevent other checks    
+      decoded = true                                        #set decoded to true to prevent other checks
     end
 
     if !decoded                                             #if it is no mp3 stream
@@ -117,7 +117,7 @@ class Radiostream < Plugin
       if info[:verified] != nil then                        #is ogg-stream?
         info[:link] = link                                  #add link to info
         decoded = true                                      #set decodet to true to prevent other checks
-      end  
+      end
     end
 
     if ( file[0..9] == "[playlist]" ) && !decoded           #if still not decoded check if is a .pls link
@@ -128,8 +128,8 @@ class Radiostream < Plugin
         end
       end
     end
-    
-    if ( file[0..4] == "<?xml" ) && ( @xspf == true ) && !decoded                
+
+    if ( file[0..4] == "<?xml" ) && ( @xspf == true ) && !decoded
                                                             #if still not decoded check if it is an xml file and crack gem is installed
       begin
         tracks = Crack::XML.parse(file)["playlist"]["trackList"]["track"]
@@ -155,7 +155,7 @@ class Radiostream < Plugin
 
     if ( decoded == true )                                  #if decoded add info to keylist
       info[:user]=user
-      @keylist << info 
+      @keylist << info
     end
   end
 end
