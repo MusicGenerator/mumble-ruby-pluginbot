@@ -18,9 +18,9 @@ class Youtube < Plugin
       begin
         @ytdloptions = @@bot["plugin"]["youtube"]["options"]
       rescue
-        @ytdloptions = "" 
+        @ytdloptions = ""
       end
-      @consoleaddition = "" 
+      @consoleaddition = ""
       @consoleaddition = @@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"] if @@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"] != nil
       @executable = "#"
       @executable = @@bot["plugin"]["youtube"]["youtube_dl"]["path"] if @@bot["plugin"]["youtube"]["youtube_dl"]["path"] != nil
@@ -53,7 +53,7 @@ class Youtube < Plugin
     super
 
     if message == "ytdl-version"
-        privatemessage("Youtube uses youtube-dl " + `#{@executable} --version`) 
+        privatemessage("Youtube uses youtube-dl " + `#{@executable} --version`)
     end
 
     if message.start_with?("ytlink <a href=") || message.start_with?("<a href=") then
@@ -70,7 +70,7 @@ class Youtube < Plugin
             messageto(actor, error)
           end
           if ( @songlist.size > 0 ) then
-            @@bot[:mpd].update(@@bot["plugin"]["youtube"]["folder"]["download"].gsub(/\//,"")) 
+            @@bot[:mpd].update(@@bot["plugin"]["youtube"]["folder"]["download"].gsub(/\//,""))
             messageto(actor, "Waiting for database update complete...")
 
             while @@bot[:mpd].status[:updating_db] != nil do
@@ -78,13 +78,13 @@ class Youtube < Plugin
             end
 
             messageto(actor, "Update done.")
-            while @songlist.size > 0 
+            while @songlist.size > 0
               song = @songlist.pop
               messageto(actor, song)
               @@bot[:mpd].add(@@bot["plugin"]["youtube"]["folder"]["download"]+song)
             end
           else
-            messageto(actor, "Youtube: The link contains nothing interesting.") 
+            messageto(actor, "Youtube: The link contains nothing interesting.")
           end
         }
       end
@@ -97,24 +97,24 @@ class Youtube < Plugin
           Thread.current["user"]=msg.actor
           Thread.current["process"]="youtube (yts)"
 
-          messageto(msg.actor, "searching for \"#{search}\", please be patient...")    
+          messageto(msg.actor, "searching for \"#{search}\", please be patient...")
           songs = find_youtube_song(CGI.escape(search))
           @keylist[msg.actor] = songs
           index = 0
           out = ""
           @keylist[msg.actor].each do |id , title|
             if ( ( index % 30 ) == 0 )
-              messageto(msg.actor, out + "</table>") if index != 0   
+              messageto(msg.actor, out + "</table>") if index != 0
               out = "<table><tr><td><b>Index</b></td><td>Title</td></tr>"
             end
             out << "<tr><td><b>#{index}</b></td><td>#{title}</td></tr>"
             index += 1
           end
           out << "</table>"
-          messageto(msg.actor, out)    
+          messageto(msg.actor, out)
         end
-      else    
-        messageto(msg.actor, "won't search for nothing!")    
+      else
+        messageto(msg.actor, "won't search for nothing!")
       end
     end
 
@@ -153,15 +153,15 @@ class Youtube < Plugin
         Thread.current["user"]=actor
         Thread.current["process"]="youtube (yta)"
 
-        messageto(actor, "do #{link.length.to_s} time(s)...")    
-        link.each do |l| 
+        messageto(actor, "do #{link.length.to_s} time(s)...")
+        link.each do |l|
             messageto(actor, "fetch and convert")
             get_song(l).each do |error|
                 @@bot[:messages.text(actor, error)]
             end
         end
         if ( @songlist.size > 0 ) then
-          @@bot[:mpd].update(@@bot["plugin"]["youtube"]["folder"]["download"].gsub(/\//,"")) 
+          @@bot[:mpd].update(@@bot["plugin"]["youtube"]["folder"]["download"].gsub(/\//,""))
           messageto(actor, "Waiting for database update complete...")
 
           while @@bot[:mpd].status[:updating_db] != nil do
@@ -171,7 +171,7 @@ class Youtube < Plugin
           messageto(actor, "Update done.")
           out = "<b>Added:</b><br>"
 
-          while @songlist.size > 0 
+          while @songlist.size > 0
             song = @songlist.pop
             begin
               @@bot[:mpd].add(@@bot["plugin"]["youtube"]["folder"]["download"]+song)
@@ -182,13 +182,13 @@ class Youtube < Plugin
           end
           messageto(actor, out)
         else
-          messageto(actor, "Youtube: The link contains nothing interesting.") 
+          messageto(actor, "Youtube: The link contains nothing interesting.")
         end
       }
     end
   end
 
-  private 
+  private
 
   def find_youtube_song song
     songlist = []
