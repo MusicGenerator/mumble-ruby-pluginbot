@@ -11,7 +11,7 @@ class Control < Plugin
       else
           @historysize = 20
       end
-      @history = Array.new 
+      @history = Array.new
       @muted = false
       @stopped_because_unregisterd = false                              #used to determine if bot should get back in playstate
       @playing  = !@@bot[:mpd].paused?
@@ -36,17 +36,17 @@ class Control < Plugin
   def name
     if @@bot[:mpd] == nil
       "false"
-    else    
+    else
       self.class.name
     end
   end
-  
+
   # Timer Method called by Main
   def ticks(time)
     if @stopped_because_unregisterd == true                             #if bot is stopped itself
       me= @@bot[:cli].me
       allregistered = true
-      @@bot[:cli].users.values.find do |u| 
+      @@bot[:cli].users.values.find do |u|
         allregistered = false if ( u.channel_id == me.channel_id ) && (u.user_id.nil?) && (u.name != me.name)
       end                                                               #check if a unregisterd user is still in channel
       if allregistered == true                                          #if all users registerd
@@ -91,7 +91,7 @@ class Control < Plugin
     me_in = 0
     me_in = me.channel_id
     @@bot[:cli].users.values.select do |user|
-      user_count += 1 if ( user.channel_id == me_in ) 
+      user_count += 1 if ( user.channel_id == me_in )
     end
     # if i'm alone
     if ( user_count < 2 ) && ( @@bot[:control_automute] == true )
@@ -99,18 +99,18 @@ class Control < Plugin
 
       #During bot start there is no mpd plugin loaded yet...
       if @@bot[:mpd] != nil
-        if @@bot[:mpd].paused? == false 
+        if @@bot[:mpd].paused? == false
           @@bot[:mpd].pause = true
           @playing = false
         end
       end
       # mute myself and save that I've done it myself
-      me.mute true 
+      me.mute true
       @muted = true
     else
       # only unmute me if I've muted myself before
       if @muted == true
-        me.mute false 
+        me.mute false
         @muted = false
       end
       # start playing only I've stopped myself
@@ -126,7 +126,7 @@ class Control < Plugin
     #msg.actor = session_id of user who did something on someone, if self done, both is the same.
     me = @@bot[:cli].me
     msg_target = @@bot[:cli].users[msg.session]
-    if ( me.current_channel != nil ) && ( msg.channel_id != nil )         
+    if ( me.current_channel != nil ) && ( msg.channel_id != nil )
       # get register status of user
       if msg_target.user_id.nil?
         sender_is_registered = false
@@ -156,7 +156,7 @@ class Control < Plugin
     super
     # Put message in Messagehistory and pop old's if size exceeds max. historysize.
     msg.username = @@bot[:cli].users[msg.actor].name
-    @history << msg                 
+    @history << msg
     @history.shift if @history.length > @historysize
 
     if message == 'ch'
@@ -191,8 +191,8 @@ class Control < Plugin
       end
     else
       privatemessage( "Genius; you didn't define a bedroom for me :P
-                      See \"mumbleserver_targetchannel\" in my
-                      configuration file and set a valid room name where I can go to sleep :)" )
+                      See \"mumble -> channel\" in my configuration
+                      file and set a valid room name where I can go to sleep :)" )
       end
     end
 
@@ -226,7 +226,7 @@ class Control < Plugin
         Thread.current["process"]="control (following)"
         while @follow == true do
           if (@@bot[:cli].me.current_channel != @@bot[:cli].users[currentuser].channel_id)
-            @@bot[:cli].join_channel(@@bot[:cli].users[currentuser].channel_id) 
+            @@bot[:cli].join_channel(@@bot[:cli].users[currentuser].channel_id)
           end
           sleep 0.5
         end
@@ -321,7 +321,7 @@ class Control < Plugin
     if message == 'history'
       history = @history.clone
       out = "<table><tr><th>Command</th><th>by User</th></tr>"
-      loop do 
+      loop do
         break if history.empty?
         histmessage = history.shift
         out << "<tr><td>#{histmessage.message}</td><td>#{histmessage.username}</td></tr>"
@@ -333,8 +333,8 @@ class Control < Plugin
     if message == 'automute'
       if @@bot[:control_automute] == false
         privatemessage( "Automute is now activated")
-        @@bot[:control_automute] = true    
-      else    
+        @@bot[:control_automute] = true
+      else
         privatemessage( "Automute is now deactivated")
         @@bot[:control_automute] = false
       end
