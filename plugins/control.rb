@@ -178,7 +178,7 @@ class Control < Plugin
     end
 
     if message == 'gotobed'
-      if @@bot[:mumbleserver_targetchannel].length > 0
+      if !@@bot[:mumbleserver_targetchannel].nil?
         @@bot[:cli].join_channel(@@bot[:mumbleserver_targetchannel])
         @@bot[:mpd].pause = true
         @@bot[:cli].me.deafen true
