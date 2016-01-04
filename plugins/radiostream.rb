@@ -26,9 +26,9 @@ class Radiostream < Plugin
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
     h << "<b>#{@@bot[:controlstring]}radiostream URL</b> - Will try to forward the radio stream.<br>"
-    h << "<b>#{@@bot[:controlstring]}choose shows list if remote playlist has more choices. (You will get informed if you can use this command).<br>"
-    h << "<b>#{@@bot[:controlstring]}choose <i>number</i> choose stream.<br>"
-    h << "   This module should be able to handle most Radio stream URLs you can find :)"
+    h << "<b>#{@@bot[:controlstring]}choose</b> - Shows a list if remote playlist has more choices. (You will get informed if you can use this command).<br>"
+    h << "<b>#{@@bot[:controlstring]}choose <i>number</i></b> - Choose stream.</b><br><br>"
+    h << "   This module should be able to handle most Radio stream URLs you can find :)<br />"
     h << "   If you find anything that does not work don't hesitate to create an issue on GitHub."
   end
 
