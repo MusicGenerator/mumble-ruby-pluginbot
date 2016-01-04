@@ -1,12 +1,14 @@
 ---
 config:
   version: 2.1
+
+debug: true
+
 main:
   tempdir: "/home/botmaster/temp/"
   ducking: false
   automute: true
   channel_notify: 0
-  debug: true
   controllable: true
   control:
     string: "."
