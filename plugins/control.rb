@@ -5,9 +5,9 @@ class Control < Plugin
     if @@bot[:mpd] != nil
       @@bot[:control] = self
       @historysize = 20
-      @@bot[:control_automute] = false if @@bot[:control_automute] == nil
+      @@bot["main"]["automute"] = false if @@bot["main"]["automute"] == nil
       if @@bot[:control_historysize] != nil
-        @historysize =  @@bot[:control_historysize]
+        @historysize =  @@bot["main"]["control"]["historysize"]
       else
           @historysize = 20
       end
@@ -58,16 +58,16 @@ class Control < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot[:controlstring]}ch</b> - The bot will enter your channel if he has permission to.<br>"
-    h << "<b>#{@@bot[:controlstring]}debug</b> - Probe command.<br>"
-    h << "<b>#{@@bot[:controlstring]}gotobed</b> - Bot sleeps in less then 1 second :)<br>"
-    h << "<b>#{@@bot[:controlstring]}wakeup</b> - Bot is under adrenalin again.<br>"
-    h << "<b>#{@@bot[:controlstring]}follow</b> - Bot will start to follow you.<br>"
-    h << "<b>#{@@bot[:controlstring]}unfollow</b> - Bot transforms from a dog into a lazy cat :).<br>"
-    h << "<b>#{@@bot[:controlstring]}stick</b> - Jail bot into channel.<br>"
-    h << "<b>#{@@bot[:controlstring]}unstick</b> - Free the bot.<br>"
-    h << "<b>#{@@bot[:controlstring]}history</b> - Print last #{@historysize} commanding users with command given.<br>"
-    h << "<b>#{@@bot[:controlstring]}automute</b> - Toggles auto muting system. If active and if the bot is alone in a channel it instantly mutes himself and pauses the current song until a user joins the channel. Then it unmutes and starts playing the paused song. This helps to save much bandwidth on your server :)"
+    h << "<b>#{@@bot["main"]["control"]["string"]}ch</b> - The bot will enter your channel if he has permission to.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}debug</b> - Probe command.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}gotobed</b> - Bot sleeps in less then 1 second :)<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}wakeup</b> - Bot is under adrenalin again.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}follow</b> - Bot will start to follow you.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}unfollow</b> - Bot transforms from a dog into a lazy cat :).<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}stick</b> - Jail bot into channel.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}unstick</b> - Free the bot.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}history</b> - Print last #{@historysize} commanding users with command given.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}automute</b> - Toggles auto muting system. If active and if the bot is alone in a channel it instantly mutes himself and pauses the current song until a user joins the channel. Then it unmutes and starts playing the paused song. This helps to save much bandwidth on your server :)"
   end
 
   def nopermission(msg)

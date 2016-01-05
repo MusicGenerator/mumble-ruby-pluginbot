@@ -13,7 +13,7 @@ class Version < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot[:controlstring]}version</b> - Show the used Bot version.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}version</b> - Show the used Bot version.<br>"
     h
   end
 
@@ -21,7 +21,7 @@ class Version < Plugin
     super
     if message == "version"
       versionshort = `git rev-parse --short HEAD`
-      versionlong = `git rev-parse HEAD` 
+      versionlong = `git rev-parse HEAD`
       privatemessage("Version: #{versionshort.to_s} / #{versionlong.to_s}")
     end
   end
