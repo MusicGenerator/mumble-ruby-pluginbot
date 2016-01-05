@@ -1,4 +1,4 @@
-require_relative './helpers/StreamCheck.rb'
+require_relative '../helpers/StreamCheck.rb'
 class Radiostream < Plugin
 
   def init(init)

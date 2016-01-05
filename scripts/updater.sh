@@ -28,14 +28,14 @@ function upgrade_to_yaml() {
         # Neither the new overwrite config bot1_conf.yml does exist nor the YAML_UPDAT_DONE file.
 
         # Check whether we have an installation that already has YAML configuration files.
-        if [ -f $HOME/src/mumble-ruby-pluginbot/pluginbot_conf.yml ];
+        if [ -f $HOME/src/mumble-ruby-pluginbot/config/pluginbot_conf.yml ];
         then
             # This installation already has a YAML config file, so it was updated.
 
             # Create a new overwrite config beside the old .rb config but make sure not to overwrite an existing one.
             if [ ! -f $HOME/src/bot1_conf.yml ];
             then
-                cp $HOME/src/mumble-ruby-pluginbot/scripts/overwrite_conf.yml $HOME/src/bot1_conf.yml
+                cp $HOME/src/mumble-ruby-pluginbot/templates/overwrite_conf.yml $HOME/src/bot1_conf.yml
                 touch "${YAML_UPDATE_DONE}" # To know later that we already did this ... :)
             fi
 

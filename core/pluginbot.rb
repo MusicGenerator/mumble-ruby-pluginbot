@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require './plugin'
-Dir["./plugins/*.rb"].each { |f| require f }
+Dir["../plugins/*.rb"].each { |f| require f }
 
 require 'mumble-ruby'
 require 'rubygems'
@@ -28,7 +28,7 @@ class MumbleMPD
   def initialize
     # load all plugins
     require './plugin'
-    Dir["./plugins/*.rb"].each do |f|
+    Dir["../plugins/*.rb"].each do |f|
       require f
       puts "OK: Plugin \"#{f}\" loaded."
     end
@@ -37,9 +37,9 @@ class MumbleMPD
     #Initialize default values
     #Read config file if available
     begin
-      @settings = YAML::load_file('pluginbot_conf.yml')
-      puts "OK: Main configuration \"pluginbot_conf.yml\" loaded."
-      Dir["./plugins/*.yml"].each do |f|
+      @settings = YAML::load_file('../config/pluginbot_conf.yml')
+      puts "OK: Main configuration \"../config/pluginbot_conf.yml\" loaded."
+      Dir["../plugins/*.yml"].each do |f|
         deep_merge!(@settings, YAML::load_file(f))
         puts "OK: Plugin configuration \"#{f}\" loaded."
       end
@@ -115,7 +115,7 @@ class MumbleMPD
 
   def init_settings
     # set up language
-    I18n.load_path = Dir["languages/*.yml"]
+    I18n.load_path = Dir["../i18n/*.yml"]
     @configured_settings[:language] ||= :en
     I18n.default_locale=@configured_settings[:language]
     @run = false

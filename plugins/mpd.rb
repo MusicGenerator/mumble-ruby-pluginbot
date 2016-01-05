@@ -16,7 +16,7 @@ class Mpd < Plugin
       end
 
       @@bot[:mpd].on :error do |error|
-        channelmessage( "<span style='color:red;font-weight:bold;>An error occured: #{error}.</span>") 
+        channelmessage( "<span style='color:red;font-weight:bold;>An error occured: #{error}.</span>")
       end
 
       @@bot[:mpd].on :updating_db do |jobid|
@@ -34,9 +34,9 @@ class Mpd < Plugin
 
       @@bot[:mpd].on :state  do |state|
         if @@bot[:chan_notify] & 0x80 != 0 then
-          channelmessage( "Music paused.") if  state == :pause 
-          channelmessage( "Music stopped.") if state == :stop  
-          channelmessage( "Music start playing.") if state == :play 
+          channelmessage( "Music paused.") if  state == :pause
+          channelmessage( "Music stopped.") if state == :stop
+          channelmessage( "Music start playing.") if state == :play
         end
       end
 
@@ -64,7 +64,7 @@ class Mpd < Plugin
           xfade = "Off"
           channelmessage( "Crossfade is now: #{xfade}.") if (@@bot[:chan_notify] & 0x20) != 0
         else
-          channelmessage( "Crossfade time (in seconds) is now: #{xfade}.") if (@@bot[:chan_notify] & 0x20) != 0 
+          channelmessage( "Crossfade time (in seconds) is now: #{xfade}.") if (@@bot[:chan_notify] & 0x20) != 0
         end
       end
 
@@ -80,7 +80,7 @@ class Mpd < Plugin
       @@bot[:mpd].on :song do |current|
       end
 
-      @@bot[:cli].player.stream_named_pipe(@@bot["main"]["fifo"]) 
+      @@bot[:cli].player.stream_named_pipe(@@bot["main"]["fifo"])
       @@bot[:mpd].connect true #without true bot does not @@bot[:cli].text_channel messages other than for !status
 
       Thread.new do
@@ -91,7 +91,7 @@ class Mpd < Plugin
           sleep 1
           current = mpd.current_song if mpd.connected?
           if not current.nil? #Would crash if playlist was empty.
-            lastcurrent = current if lastcurrent.nil? 
+            lastcurrent = current if lastcurrent.nil?
             if ( lastcurrent.title != current.title ) || ( init == true )
               init = false
               if @@bot["main"]["display"]["comment"] == true && @@bot[:set_comment_available] == true
@@ -122,7 +122,7 @@ class Mpd < Plugin
                 end
               end
             lastcurrent = current
-            puts "[displayinfo] update" if @@bot[:debug]
+            puts "OK: [displayinfo] updated." if @@bot[:debug]
             end
           end
         end
@@ -195,7 +195,7 @@ class Mpd < Plugin
     if message == 'helpmpd'
         privatemessage( help(""))
     end
-    
+
     if message == 'seek'
       # seek command without a value...
       begin
@@ -216,10 +216,10 @@ class Mpd < Plugin
         when 1 then         # Minutes:Seconds
           if message.match(/^seek ([+-]?[0-5]?[0-9]:[0-5]?[0-9])/)
             time = message.match(/^seek ([+-]?[0-5]?[0-9]:[0-5]?[0-9])/)[1].split(/:/)
-            case time[0][0] 
+            case time[0][0]
             when "+"
               result = time[0].to_i * 60 + time[1].to_i
-              result = "+" + result.to_s 
+              result = "+" + result.to_s
             when "-"
               result = time[0].to_i * 60 + time[1].to_i * -1
             else
@@ -316,7 +316,7 @@ class Mpd < Plugin
         lastsongid = @@bot[:mpd].queue.length.to_i - 1
         @@bot[:mpd].play (lastsongid)
         privatemessage("Playing last song in the queue (#{lastsongid}).")
-      else 
+      else
         privatemessage("There is no title in the queue, cant play the first entry.")
       end
     end
@@ -344,7 +344,7 @@ class Mpd < Plugin
         out << "<br/>" + song.file.to_s
         block += 1
       end
-      privatemessage(out.to_s)    
+      privatemessage(out.to_s)
     end
 
     if message == 'stats'
@@ -362,7 +362,7 @@ class Mpd < Plugin
         end
       end
       out << "</table>"
-      privatemessage( out)    
+      privatemessage( out)
     end
 
     if message == 'queue'
@@ -372,7 +372,7 @@ class Mpd < Plugin
         playing = -1
         playing = @@bot[:mpd].current_song.pos if !@@bot[:mpd].current_song.nil?
         @@bot[:mpd].queue.each do |song|
-          text_out << "<tr><td>#{songnr}</td><td>" 
+          text_out << "<tr><td>#{songnr}</td><td>"
           songnr == playing ? text_out << "<b>" : nil
           song.title.to_s == "" ? (text_out<<"#{song.file}") : (text_out<<"#{song.title}")
           songnr == playing ? text_out << "</b>" : nil
@@ -412,26 +412,26 @@ class Mpd < Plugin
       end
     end
 
-    if ( message[0,5] == 'where' ) 
+    if ( message[0,5] == 'where' )
       search = message.gsub("where", "").lstrip
       text_out = "you should search not nothing!"
       if search != ""
         text_out ="found:<br/>"
         @@bot[:mpd].where(any: "#{search}").each do |song|
-          text_out << "#{song.file}<br/>" 
+          text_out << "#{song.file}<br/>"
         end
       end
       privatemessage( text_out)
     end
 
-    if ( message[0,3] == 'add' ) 
+    if ( message[0,3] == 'add' )
       search = (message.gsub("add", "").lstrip).tr('"','')
       text_out = "search is empty"
       if search != ""
         text_out ="added:<br/>"
         count = 0
         @@bot[:mpd].where(any: "#{search}").each do |song|
-          text_out << "add #{song.file}<br/>" 
+          text_out << "add #{song.file}<br/>"
           @@bot[:mpd].add(song)
           count += 1
         end
@@ -463,14 +463,14 @@ class Mpd < Plugin
       end
     end
 
-    if message == 'status' 
+    if message == 'status'
       out = "<table>"
       @@bot[:mpd].status.each do |key, value|
 
         case
         when key.to_s == 'volume'
           out << "<tr><td>Current volume:</td><td>#{value}%</td></tr>"
-        when key.to_s == 'repeat' 
+        when key.to_s == 'repeat'
           if value
             repeat = "on"
           else
@@ -526,7 +526,7 @@ class Mpd < Plugin
           out << "<tr><td>Current state:</td><td>#{state}</td></tr>"
         when key.to_s == 'song'
           current = @@bot[:mpd].current_song
-          if not current.nil? 
+          if not current.nil?
             out << "<tr><td>Current song:</td><td>#{current.artist} - #{current.title} (#{current.album})</td></tr>"
           else
             out << "<tr><td>Current song:</td><td>#{value})</td></tr>"
@@ -582,7 +582,7 @@ class Mpd < Plugin
     if message == 'v'
       volume = @@bot[:mpd].volume
       privatemessage( "Current volume is #{volume}%.")
-    end    
+    end
 
     if message.match(/^v [0-9]{1,3}$/)
       volume = message.match(/^v ([0-9]{1,3})$/)[1].to_i
@@ -652,7 +652,7 @@ class Mpd < Plugin
 
     if message == 'mpdcommands'
       output = ""
-      @@bot[:mpd].commands.each do |command| 
+      @@bot[:mpd].commands.each do |command|
         output << "<br>#{command}"
       end
       privatemessage( output)
@@ -660,7 +660,7 @@ class Mpd < Plugin
 
     if message == 'mpdnotcommands'
       output = ""
-      @@bot[:mpd].notcommands.each do |command| 
+      @@bot[:mpd].notcommands.each do |command|
         output << "<br\>#{command}"
       end
       privatemessage( output)
@@ -668,7 +668,7 @@ class Mpd < Plugin
 
     if message == 'mpdurlhandlers'
       output = ""
-      @@bot[:mpd].url_handlers.each do |handler| 
+      @@bot[:mpd].url_handlers.each do |handler|
         output << "<br\>#{handler}"
       end
       privatemessage( output)
@@ -676,7 +676,7 @@ class Mpd < Plugin
 
     if message == 'mpddecoders'
       output = "<table>"
-      @@bot[:mpd].decoders.each do |decoder| 
+      @@bot[:mpd].decoders.each do |decoder|
         output << "<tr>"
         output << "<td>#{decoder[:plugin]}</td>"
         output << "<td>"
@@ -693,13 +693,13 @@ class Mpd < Plugin
       privatemessage( output)
     end
   end
-  
+
   private
-  
+
   def timedecode(time)
     begin
       #Code from https://stackoverflow.com/questions/19595840/rails-get-the-time-difference-in-hours-minutes-and-seconds
-      now_mm, now_ss = time.to_i.divmod(60) 
+      now_mm, now_ss = time.to_i.divmod(60)
       now_hh, now_mm = now_mm.divmod(60)
       if ( now_hh < 24 )
         now = "%02d:%02d:%02d" % [now_hh, now_mm, now_ss]
@@ -711,5 +711,5 @@ class Mpd < Plugin
       now "unknown"
     end
   end
-  
+
 end
