@@ -159,10 +159,10 @@ class MumbleMPD
     max_connecting_time = 10
     while not @cli.connected? do
       sleep(0.5)
-      puts "Connecting to the server is still ongoing." if @settings[:debug]
+      puts "OK: Connecting to the server is still ongoing." if @settings[:debug]
       max_connecting_time -= 1
       if max_connecting_time < 1
-        puts "Connection timed out" if @settings[:debug]
+        puts "Error: Connection timed out" if @settings[:debug]
         @cli.disconnect
         break
       end
