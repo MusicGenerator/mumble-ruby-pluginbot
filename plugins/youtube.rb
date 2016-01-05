@@ -12,7 +12,7 @@ class Youtube < Plugin
         Dir.mkdir(@destination) unless File.exists?(@destination)
         Dir.mkdir(@temp) unless File.exists?(@temp)
       rescue
-        puts "Error: Youtube-Plugin didn't find settings for mpd music directory and/or your preferred temporary download directory"
+        puts "Error: Youtube-Plugin didn't find settings for mpd music directory and/or your preferred temporary download directory."
         puts "See ../config/config.yml"
       end
       begin
