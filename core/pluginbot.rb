@@ -229,7 +229,7 @@ class MumbleMPD
       init = @settings.clone
       init[:cli] = @cli
 
-      puts "initplugins"
+      puts "OK: Initializing plugins..."
       Plugin.plugins.each do |plugin_class|
         @plugin << plugin_class.new
       end
