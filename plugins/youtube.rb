@@ -13,7 +13,7 @@ class Youtube < Plugin
         Dir.mkdir(@temp) unless File.exists?(@temp)
       rescue
         puts "Error: Youtube-Plugin didn't find settings for mpd music directory and/or your preferred temporary download directory"
-        puts "See pluginbot_conf.rb"
+        puts "See pluginbot_conf.yml"
       end
       begin
         @ytdloptions = @@bot["plugin"]["youtube"]["options"]

@@ -11,9 +11,9 @@ class Ektoplazm < Plugin
         Dir.mkdir(@tempektoplazmfolder) unless File.exists?(@tempektoplazmfolder)
       rescue
         puts "Error: Ektoplazm-Plugin doesn't found settings for mpd music directory and/or your preferred temporary download directory"
-        puts "See pluginbot_conf.rb"
+        puts "See config/pluginbot_conf.yml"
       end
-      @consoleaddition = "" 
+      @consoleaddition = ""
       @consoleaddition = @@bot["plugin"]["ektoplazm"]["prefixes"] if @@bot["plugin"]["ektoplazm"]["prefixes"] != nil
       @songlist = Queue.new
       @keylist = Array.new
@@ -25,7 +25,7 @@ class Ektoplazm < Plugin
   def name
     if ( @@bot[:mpd] == nil ) || ( @@bot[:ektoplazm] == nil)
       "false"
-    else    
+    else
       self.class.name
     end
   end
@@ -52,7 +52,7 @@ class Ektoplazm < Plugin
           link.gsub!(/<\/?[^>]*>/, '')
           link.gsub!("&amp;", "&")
           name = link.split("/")[-1]
-          if !name.include? ".rar"                       
+          if !name.include? ".rar"
             # only zip archives! (mp3 and flac)
             if !File.exist?("#{@tempektoplazmfolder}#{name}")
               system ("curl -o \"#{@tempektoplazmfolder}#{name}\" #{link}")
@@ -71,7 +71,7 @@ class Ektoplazm < Plugin
             end
           end
           if ( @songlist.size > 0 ) then
-            @@bot[:mpd].update(@@bot["plugin"]["ektoplazm"]["folder"]["download"].gsub(/\//,"")) 
+            @@bot[:mpd].update(@@bot["plugin"]["ektoplazm"]["folder"]["download"].gsub(/\//,""))
             messageto(actor, "Waiting for database update complete...")
 
             begin
@@ -86,15 +86,15 @@ class Ektoplazm < Plugin
               puts "[Ektoplazm-plugin] [info] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds." if @@bot[:debug]
               sleep 10
             end
-                
+
             messageto(actor, "Update done.")
-            while @songlist.size > 0 
+            while @songlist.size > 0
               song = @songlist.pop
               messageto(actor, song)
               @@bot[:mpd].add(@@bot["plugin"]["ektoplazm"]["folder"]["download"]+song)
             end
           else
-            messageto(actor, "Ektoplazm: The link contains nothing interesting.") 
+            messageto(actor, "Ektoplazm: The link contains nothing interesting.")
           end
         else
           messageto(actor, "No ektoplazm link!?") if message.start_with?("ektoplazm")

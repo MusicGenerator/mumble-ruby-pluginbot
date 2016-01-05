@@ -11,10 +11,10 @@ class Bandcamp < Plugin
         Dir.mkdir(@temp) unless File.exists?(@temp)
       rescue
         puts "Error: bandcamp-Plugin didn't found settings for mpd music directory and/or your preferred temporary download directory"
-        puts "See pluginbot_conf.rb"
+        puts "See config/pluginbot_conf.yml"
       end
-      @ytdloptions = "" 
-      @consoleaddition = "" 
+      @ytdloptions = ""
+      @consoleaddition = ""
       begin
         @ytdloptions = @@bot["plugin"]["bandcamp"]["youtube_dl"]["options"]
         @consoleaddition = @@bot["plugin"]["bandcamp"]["youtube_dl"]["prefixes"]
@@ -31,7 +31,7 @@ class Bandcamp < Plugin
   def name
       if ( @@bot[:mpd] == nil ) || ( @@bot[:bandcamp] == nil)
           "false"
-      else    
+      else
           self.class.name
       end
   end
@@ -46,7 +46,7 @@ class Bandcamp < Plugin
     super
 
     if message == "ytdl-version"
-      privatemessage("Bandcamp uses youtube-dl " + `#{@@bot["plugin"]["bandcamp"]["youtube_dl"]["path"]} --version`) 
+      privatemessage("Bandcamp uses youtube-dl " + `#{@@bot["plugin"]["bandcamp"]["youtube_dl"]["path"]} --version`)
     end
 
     if message.start_with?("bandcamp <a href=") || message.start_with?("<a href=") then
@@ -61,7 +61,7 @@ class Bandcamp < Plugin
           messageto(actor, "Bandcamp is inspecting link: " + link + "...")
           get_song link
           if ( @songlist.size > 0 ) then
-            @@bot[:mpd].update(@@bot["plugin"]["bandcamp"]["folder"]["download"].gsub(/\//,"")) 
+            @@bot[:mpd].update(@@bot["plugin"]["bandcamp"]["folder"]["download"].gsub(/\//,""))
             messageto(actor, "Waiting for database update complete...")
 
             while @@bot[:mpd].status[:updating_db] != nil do
@@ -69,13 +69,13 @@ class Bandcamp < Plugin
             end
 
             messageto(actor, "Update done.")
-            while @songlist.size > 0 
+            while @songlist.size > 0
               song = @songlist.pop
               messageto(actor, song)
               @@bot[:mpd].add(@@bot["plugin"]["bandcamp"]["folder"]["download"]+song)
             end
           else
-            messageto(actor, "Bandcamp: The link contains nothing interesting.") 
+            messageto(actor, "Bandcamp: The link contains nothing interesting.")
           end
         end
       end
