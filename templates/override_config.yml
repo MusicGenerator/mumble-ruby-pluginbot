@@ -8,7 +8,7 @@ config:
 
 main:
   ducking: false
-  automute: true
+  automute_if_alone: true
   stop_on_unregistered: true
   control:
     string: "."
