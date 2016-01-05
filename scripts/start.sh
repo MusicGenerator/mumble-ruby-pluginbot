@@ -41,7 +41,7 @@ source ~/.rvm/scripts/rvm
 rvm use @bots
 
 ### We need to be in this directory in order to start the bot(s).
-cd $HOME/src/mumble-ruby-pluginbot/
+cd $HOME/src/mumble-ruby-pluginbot/core
 
 ### Export enviroment variable for tmux
 export HOME=$HOME
