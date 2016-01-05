@@ -19,7 +19,7 @@ class Messages < Plugin
   end
 
   def name
-    if !@@bot[:messages].nil?
+    if @@bot[:messages]
       "Messages"
     else
       self.class.name
@@ -65,7 +65,7 @@ class Messages < Plugin
         @priv_notify[msg.actor] &= ~add if message[0] == '-'
       end
     end
-    if message == '*' && !@priv_notify[msg.actor].nil?
+    if message == '*' && @priv_notify[msg.actor]
       send = ""
       send << " #volume" if (@priv_notify[msg.actor] & Cvolume) > 0
       send << " #update" if (@priv_notify[msg.actor] & Cupdating_db) > 0
@@ -85,7 +85,7 @@ class Messages < Plugin
 
   def sendmessage (message, messagetype)
     channelmessage( message) if ( @@bot["main"]["channel_notify"].to_i & messagetype) != 0
-    if !@priv_notify.nil?
+    if @priv_notify
       @priv_notify.each do |user, notify|
         begin
           @@bot[:cli].text_user(user,message) if ( notify & messagetype) != 0

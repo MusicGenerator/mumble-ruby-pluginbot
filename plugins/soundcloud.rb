@@ -2,7 +2,7 @@ class Soundcloud < Plugin
 
   def init(init)
     super
-    if ( !@@bot[:mpd].nil? ) && ( !@@bot[:messages].nil? ) && ( @@bot[:soundcloud].nil? )
+    if ( @@bot[:mpd] ) && ( @@bot[:messages] ) && ( @@bot[:soundcloud].nil? )
       begin
         @destination = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["soundcloud"]["folder"]["download"]
         @temp = @@bot["main"]["tempdir"] + @@bot["plugin"]["soundcloud"]["folder"]["temp"]
@@ -19,9 +19,9 @@ class Soundcloud < Plugin
         @ytdloptions = ""
       end
       @consoleaddition = ""
-      @consoleaddition = @@bot["plugin"]["soundcloud"]["prefixes"] if !@@bot["plugin"]["soundcloud"]["prefixes"].nil?
+      @consoleaddition = @@bot["plugin"]["soundcloud"]["prefixes"] if @@bot["plugin"]["soundcloud"]["prefixes"]
       @executable = "#"
-      @executable = @@bot["plugin"]["soundcloud"]["youtube_dl"]["path"] if !@@bot["plugin"]["soundcloud"]["youtube_dl"]["path"].nil?
+      @executable = @@bot["plugin"]["soundcloud"]["youtube_dl"]["path"] if @@bot["plugin"]["soundcloud"]["youtube_dl"]["path"]
       @songlist = Queue.new
       @keylist = Array.new
       @@bot[:soundcloud] = self
@@ -65,7 +65,7 @@ class Soundcloud < Plugin
             @@bot[:mpd].update(@@bot["plugin"]["soundcloud"]["folder"]["download"].gsub(/\//,""))
             messageto(actor, "Waiting for database update complete...")
 
-            while !@@bot[:mpd].status[:updating_db].nil? do
+            while @@bot[:mpd].status[:updating_db] do
               sleep 0.5
             end
 

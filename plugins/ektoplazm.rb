@@ -2,7 +2,7 @@ class Ektoplazm < Plugin
 
   def init(init)
     super
-    if ( !@@bot[:mpd].nil? ) && ( !@@bot[:messages].nil? ) && ( @@bot[:ektoplazm].nil? )
+    if ( @@bot[:mpd] ) && ( @@bot[:messages] ) && ( @@bot[:ektoplazm].nil? )
       begin
         @ektoplazmfolder = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["ektoplazm"]["folder"]["download"]
         @tempektoplazmfolder = @@bot["main"]["tempdir"] + @@bot["plugin"]["ektoplazm"]["folder"]["temp"]
@@ -14,7 +14,7 @@ class Ektoplazm < Plugin
         puts "See config/config.yml"
       end
       @consoleaddition = ""
-      @consoleaddition = @@bot["plugin"]["ektoplazm"]["prefixes"] if !@@bot["plugin"]["ektoplazm"]["prefixes"].nil?
+      @consoleaddition = @@bot["plugin"]["ektoplazm"]["prefixes"] if @@bot["plugin"]["ektoplazm"]["prefixes"]
       @songlist = Queue.new
       @keylist = Array.new
       @@bot[:ektoplazm] = self

@@ -276,7 +276,7 @@ class MumbleMPD
   end
 
   def handle_text_message(msg)
-    if !msg.actor.nil?
+    if msg.actor
       # else ignore text messages from the server
       # This is hacky because mumble uses -1 for user_id of unregistered users,
       # while mumble-ruby seems to just omit the value for unregistered users.
@@ -346,7 +346,7 @@ class MumbleMPD
               if message.split[0] == 'set'
                 if !@settings["main"]["need_binding"] || @settings["main"]["bound"]==msg_userid
                   setting = message.split('=',2)
-                  @settings[setting[0].split[1].to_sym] = setting[1] if setting[0].split[1] != nil
+                  @settings[setting[0].split[1].to_sym] = setting[1] if setting[0].split[1]
                 end
               end
 
@@ -377,7 +377,7 @@ class MumbleMPD
 
               if message.split(" ")[0] == 'blacklist'
                 if @settings["main"]["bound"] == msg_userid
-                  if @cli.find_user(message.split[1..-1].join(" ")) != nil
+                  if @cli.find_user(message.split[1..-1].join(" "))
                     @settings[@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym] = message.split[1..-1].join(" ")
                     @cli.text_user(msg.actor, I18n.t("ban.active"))
                     @cli.text_user(msg.actor, ":#{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}:  #{message.split[1..-1].join(" ")}")
@@ -477,7 +477,7 @@ class MumbleMPD
               if message == "jobs"
                 output = ""
                 Thread.list.each do |t|
-                  if t["process"]!=nil
+                  if t["process"]
                       output << I18n.t("jobs.status", :process => t["process"], :status => t.status.to_s, :name=> t["user"])
                   end
                   @cli.text_user(msg.actor, output)
@@ -495,7 +495,7 @@ class MumbleMPD
                         @cli.text_user(msg.actor, help)
                     end
                 end
-                if message.split[1]!=nil #Send help for a specific plugin.
+                if message.split[1] #Send help for a specific plugin.
                   @plugin.each do |plugin|
                     help = plugin.help('') if plugin.name.upcase == message.split[1].upcase
                   end

@@ -4,7 +4,7 @@ class Youtube < Plugin
 
   def init(init)
     super
-    if ( !@@bot[:mpd].nil? ) && ( !@@bot[:messages].nil? ) && ( @@bot[:youtube].nil? )
+    if ( @@bot[:mpd] ) && ( @@bot[:messages] ) && ( @@bot[:youtube].nil? )
       begin
         @destination = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["youtube"]["folder"]["download"]
         @temp = @@bot["main"]["tempdir"] + @@bot["plugin"]["youtube"]["folder"]["temp"]
@@ -21,9 +21,9 @@ class Youtube < Plugin
         @ytdloptions = ""
       end
       @consoleaddition = ""
-      @consoleaddition = @@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"] if !@@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"].nil?
+      @consoleaddition = @@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"] if @@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"]
       @executable = "#"
-      @executable = @@bot["plugin"]["youtube"]["youtube_dl"]["path"] if !@@bot["plugin"]["youtube"]["youtube_dl"]["path"].nil?
+      @executable = @@bot["plugin"]["youtube"]["youtube_dl"]["path"] if @@bot["plugin"]["youtube"]["youtube_dl"]["path"]
 
       @songlist = Queue.new
       @keylist = Array.new
@@ -73,7 +73,7 @@ class Youtube < Plugin
             @@bot[:mpd].update(@@bot["plugin"]["youtube"]["folder"]["download"].gsub(/\//,""))
             messageto(actor, "Waiting for database update complete...")
 
-            while !@@bot[:mpd].status[:updating_db].nil? do
+            while @@bot[:mpd].status[:updating_db] do
               sleep 0.5
             end
 
@@ -164,7 +164,7 @@ class Youtube < Plugin
           @@bot[:mpd].update(@@bot["plugin"]["youtube"]["folder"]["download"].gsub(/\//,""))
           messageto(actor, "Waiting for database update complete...")
 
-          while !@@bot[:mpd].status[:updating_db].nil? do
+          while @@bot[:mpd].status[:updating_db] do
             sleep 0.5
           end
 

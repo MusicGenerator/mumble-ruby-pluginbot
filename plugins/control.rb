@@ -2,11 +2,11 @@ class Control < Plugin
 
   def init(init)
     super
-    if !@@bot[:mpd].nil?
+    if @@bot[:mpd]
       @@bot[:control] = self
       @historysize = 20
       @@bot["main"]["automute_if_alone"] = false if @@bot["main"]["automute_if_alone"].nil?
-      if !@@bot[:control_historysize].nil?
+      if @@bot[:control_historysize]
         @historysize =  @@bot["main"]["control"]["historysize"]
       else
           @historysize = 20
@@ -74,7 +74,7 @@ class Control < Plugin
     @follow = false
     @alreadyfollowing = false
     begin
-      Thread.kill(@following) if !@following.nil?
+      Thread.kill(@following) if @following
       @alreadyfollowing = false
     rescue TypeError
       if @@bot[:debug]
@@ -98,7 +98,7 @@ class Control < Plugin
       # if I'm playing then pause play and save that I've stopped myself
 
       #During bot start there is no mpd plugin loaded yet...
-      if !@@bot[:mpd].nil?
+      if @@bot[:mpd]
         if @@bot[:mpd].paused? == false
           @@bot[:mpd].pause = true
           @playing = false
@@ -126,7 +126,7 @@ class Control < Plugin
     #msg.actor = session_id of user who did something on someone, if self done, both is the same.
     me = @@bot[:cli].me
     msg_target = @@bot[:cli].users[msg.session]
-    if ( !me.current_channel.nil? ) && ( !msg.channel_id.nil? )
+    if ( me.current_channel ) && ( msg.channel_id )
       # get register status of user
       if msg_target.user_id.nil?
         sender_is_registered = false
@@ -180,7 +180,7 @@ class Control < Plugin
     end
 
     if message == 'gotobed'
-      if !@@bot["mumble"]["channel"].nil?
+      if @@bot["mumble"]["channel"]
         @@bot[:cli].join_channel(@@bot["mumble"]["channel"])
         @@bot[:mpd].pause = true
         @@bot[:cli].me.deafen true

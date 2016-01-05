@@ -3,7 +3,7 @@ class Radiostream < Plugin
 
   def init(init)
     super
-    if ( !@@bot[:mpd].nil? ) && ( !@@bot[:messages].nil? ) && ( @@bot[:radiostream].nil? )
+    if ( @@bot[:mpd] ) && ( @@bot[:messages] ) && ( @@bot[:radiostream].nil? )
       @@bot[:radiostream] = self
       begin
         @xspf = require 'crack'         #parse xspf playlists only if crack gem is installed
@@ -107,14 +107,14 @@ class Radiostream < Plugin
     streaminfo = StreamCheck.new                            #init StreamCheck
 
     info = streaminfo.checkmp3(file)                        #check if mp3
-    if !info[:verified].nil? then                          #is mp3-stream?
+    if info[:verified] then                          #is mp3-stream?
       info[:link] = link                                    #add link to info
       decoded = true                                        #set decoded to true to prevent other checks
     end
 
     if !decoded                                             #if it is no mp3 stream
       info = streaminfo.checkopus(file)                     #check if ogg
-      if !info[:verified].nil? then                        #is ogg-stream?
+      if info[:verified] then                        #is ogg-stream?
         info[:link] = link                                  #add link to info
         decoded = true                                      #set decodet to true to prevent other checks
       end
