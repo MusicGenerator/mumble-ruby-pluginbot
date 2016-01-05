@@ -139,12 +139,14 @@ class Control < Plugin
         current = @@bot[:mpd].current_song
         if current.file.include? "://" #If yes, it is probably some kind of a stream.
           @@bot[:mpd].stop
+          action = "stopped"
         else
           #if @@bot[:mpd].paused? == false
             @@bot[:mpd].pause = true
+            action = "paused"
           #end
         end
-        @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, "<span style='color:red;'>An unregistered user currently joined or is acting in our channel. I stopped/paused the music.</span>")
+        @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, "<span style='color:red;'>An unregistered user currently joined or is acting in our channel. I #{action} the music.</span>")
         @stopped_because_unregisterd = true
       end
 
