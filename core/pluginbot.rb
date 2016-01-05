@@ -201,7 +201,7 @@ class MumbleMPD
         @settings[:set_comment_available]  = false
       end
       begin
-        @cli.set_avatar(IO.binread('logo/logo.png'))
+        @cli.set_avatar(IO.binread('../config/logo/logo.png'))
         @settings[:set_avatar_available]  = true
       rescue
         @settings[:set_avatar_available]  = false
@@ -547,7 +547,7 @@ loop do #https://github.com/bbatsov/ruby-style-guide#infinite-loop
   rescue
     puts "Error: Pluginbot could not start."
   end
-  
+
   sleep 3
   begin
     while client.run == true

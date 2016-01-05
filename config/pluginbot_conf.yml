@@ -24,7 +24,7 @@ main:
   bound: nobody
   certfolder: "/home/botmaster/certs/"
   fifo: "/home/botmaster/mpd1/mpd.fifo"
-  logo: "logo/logo.html"
+  logo: "../config/logo/logo.html"
   timer:
     ticks:  3600
   superpassword: "kaguBe gave me all the power and I want to "
