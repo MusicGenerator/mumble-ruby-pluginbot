@@ -65,10 +65,10 @@ de:
                             <b>%{cc}bandwidth</b> Zeigt Informationen zur Gesammtbandbreite, Audiobandbreite und Paketgr&ouml;sse an."
     default:              "<br />\
                             Hallo ich bin ein <a href='https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot'>Mumble-Ruby-Pluginbot</a> und DU kannst mich mit Textkommandos steuern.<br /><br />
-                            Benutze folgendes Kommando um meine Bedienung kennenzulernden:<br />\
+                            Benutze folgendes Kommando um meine Bedienung kennenzulernen:<br />\
                             <b>%{cc}help mpd</b><br />
                             <br />\
-                            N&auml;here Informationen &uuml;ber mich erh&aauml;ltst Du mit:<br />\
+                            N&auml;here Informationen &uuml;ber mich erh&auml;ltst Du mit:<br />\
                             <b>%{cc}about</b><br />\
                             <br />\
                             <b><u>Kommandos f&uuml; erfahrene Benutzer:</b></u><br />\
