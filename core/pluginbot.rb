@@ -247,7 +247,7 @@ class MumbleMPD
         maxcount -= 1
         break if maxcount <= 0
       end
-      puts "maybe not all plugin functional!" if maxcount <= 0
+      puts "Warning: Maybe not all plugins are functional!" if maxcount <= 0
 
       ## Enable Ticktimer Thread
       @ticktimer = Thread.new do
@@ -541,7 +541,13 @@ loop do #https://github.com/bbatsov/ruby-style-guide#infinite-loop
   puts "OK: Initializing settings..."
   client.init_settings
   puts "OK: Pluginbot is starting..."
-  client.mumble_start
+  begin
+    puts "OK: Pluginbot is running."
+    client.mumble_start
+  rescue
+    puts "Error: Pluginbot could not start."
+  end
+  
   sleep 3
   begin
     while client.run == true
