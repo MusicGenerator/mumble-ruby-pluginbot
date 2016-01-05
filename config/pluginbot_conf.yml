@@ -3,6 +3,7 @@ config:
   version: 2.1
 
 :debug: true
+:language: en
 
 main:
   tempdir: "/home/botmaster/temp/"
