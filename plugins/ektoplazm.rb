@@ -11,7 +11,7 @@ class Ektoplazm < Plugin
         Dir.mkdir(@tempektoplazmfolder) unless File.exists?(@tempektoplazmfolder)
       rescue
         puts "Error: Ektoplazm-Plugin doesn't found settings for mpd music directory and/or your preferred temporary download directory"
-        puts "See config/pluginbot_conf.yml"
+        puts "See config/config.yml"
       end
       @consoleaddition = ""
       @consoleaddition = @@bot["plugin"]["ektoplazm"]["prefixes"] if @@bot["plugin"]["ektoplazm"]["prefixes"] != nil

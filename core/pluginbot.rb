@@ -37,8 +37,8 @@ class MumbleMPD
     #Initialize default values
     #Read config file if available
     begin
-      @settings = YAML::load_file('../config/pluginbot_conf.yml')
-      puts "OK: Main configuration \"../config/pluginbot_conf.yml\" loaded."
+      @settings = YAML::load_file('../config/config.yml')
+      puts "OK: Main configuration \"../config/config.yml\" loaded."
       Dir["../plugins/*.yml"].each do |f|
         deep_merge!(@settings, YAML::load_file(f))
         puts "OK: Plugin configuration \"#{f}\" loaded."

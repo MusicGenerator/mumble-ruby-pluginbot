@@ -11,7 +11,7 @@ class Bandcamp < Plugin
         Dir.mkdir(@temp) unless File.exists?(@temp)
       rescue
         puts "Error: bandcamp-Plugin didn't found settings for mpd music directory and/or your preferred temporary download directory"
-        puts "See config/pluginbot_conf.yml"
+        puts "See config/config.yml"
       end
       @ytdloptions = ""
       @consoleaddition = ""
