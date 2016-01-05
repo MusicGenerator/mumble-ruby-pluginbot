@@ -9,12 +9,12 @@ config:
 main:
   ducking: false
   automute: true
+  stop_on_unregistered: true
   control:
     string: "."
     message:
       private_only: false
       registered_only: true
-      stop_on_unregistered: true
     historysize: 20
   fifo: "/home/botmaster/mpd1/mpd.fifo"
   superpassword: "kaguBe gave me all the power and I want to "

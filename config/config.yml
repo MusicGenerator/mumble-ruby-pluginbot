@@ -8,7 +8,8 @@ config:
 main:
   tempdir: "/home/botmaster/temp/"
   ducking: false
-  automute: true
+  automute_if_alone: true
+  stop_on_unregistered: true
   channel_notify: 0
   controllable: true
   control:
@@ -16,7 +17,6 @@ main:
     message:
       private_only: false
       registered_only: true
-      stop_on_unregistered: true
     historysize: 20
   display:
     comment: true

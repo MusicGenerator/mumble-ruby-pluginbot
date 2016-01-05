@@ -5,7 +5,7 @@ class Control < Plugin
     if @@bot[:mpd] != nil
       @@bot[:control] = self
       @historysize = 20
-      @@bot["main"]["automute"] = false if @@bot["main"]["automute"] == nil
+      @@bot["main"]["automute_if_alone"] = false if @@bot["main"]["automute_if_alone"].nil?
       if @@bot[:control_historysize] != nil
         @historysize =  @@bot["main"]["control"]["historysize"]
       else
@@ -94,7 +94,7 @@ class Control < Plugin
       user_count += 1 if ( user.channel_id == me_in )
     end
     # if i'm alone
-    if ( user_count < 2 ) && ( @@bot[:control_automute] == true )
+    if ( user_count < 2 ) && ( @@bot["main"]["automute_if_alone"] == true )
       # if I'm playing then pause play and save that I've stopped myself
 
       #During bot start there is no mpd plugin loaded yet...
@@ -135,7 +135,7 @@ class Control < Plugin
       end
 
       # If user is in my channel and is unregistered then pause playing if stop_on_unregistered_users is enabled.
-      if ( me.current_channel.channel_id == msg_target.channel_id ) && ( @@bot[:stop_on_unregistered_users] == true ) && ( sender_is_registered == false )  && ( @@bot[:mpd].playing? == true )
+      if ( me.current_channel.channel_id == msg_target.channel_id ) && ( @@bot["main"]["stop_on_unregistered"] == true ) && ( sender_is_registered == false )  && ( @@bot[:mpd].playing? == true )
         current = @@bot[:mpd].current_song
         if current.file.include? "://" #If yes, it is probably some kind of a stream.
           @@bot[:mpd].stop
@@ -331,12 +331,12 @@ class Control < Plugin
     end
 
     if message == 'automute'
-      if @@bot[:control_automute] == false
+      if @@bot["main"]["automute_if_alone"] == false
         privatemessage( "Automute is now activated")
-        @@bot[:control_automute] = true
+        @@bot["main"]["automute_if_alone"] = true
       else
         privatemessage( "Automute is now deactivated")
-        @@bot[:control_automute] = false
+        @@bot["main"]["automute_if_alone"] = false
       end
     end
   end
