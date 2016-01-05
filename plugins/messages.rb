@@ -11,7 +11,7 @@ class Messages < Plugin
 
   def init(init)
     super
-    if @@bot[:messages] == nil
+    if @@bot[:messages].nil?
       @priv_notify = {}
       @@bot[:messages] = self
     end
@@ -19,7 +19,7 @@ class Messages < Plugin
   end
 
   def name
-    if @@bot[:messages] != nil
+    if !@@bot[:messages].nil?
       "Messages"
     else
       self.class.name
@@ -61,8 +61,8 @@ class Messages < Plugin
         else
           add = 0
         end
-        @priv_notify[msg.actor] |= add if message[0] == '+' 
-        @priv_notify[msg.actor] &= ~add if message[0] == '-' 
+        @priv_notify[msg.actor] |= add if message[0] == '+'
+        @priv_notify[msg.actor] &= ~add if message[0] == '-'
       end
     end
     if message == '*' && !@priv_notify[msg.actor].nil?
@@ -75,7 +75,7 @@ class Messages < Plugin
       send << " #repeat" if (@priv_notify[msg.actor] & Crepeat) > 0
       send << " #state" if (@priv_notify[msg.actor] & Cstate) > 0
       if send != ""
-        send = "You listen to following MPD-Channels:" + send + "." 
+        send = "You listen to following MPD-Channels:" + send + "."
       else
         send << "You listen to no MPD-Channels"
       end
@@ -86,7 +86,7 @@ class Messages < Plugin
   def sendmessage (message, messagetype)
     channelmessage( message) if ( @@bot["main"]["channel_notify"].to_i & messagetype) != 0
     if !@priv_notify.nil?
-      @priv_notify.each do |user, notify| 
+      @priv_notify.each do |user, notify|
         begin
           @@bot[:cli].text_user(user,message) if ( notify & messagetype) != 0
         rescue

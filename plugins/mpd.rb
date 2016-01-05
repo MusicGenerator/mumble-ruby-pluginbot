@@ -8,7 +8,7 @@ class Mpd < Plugin
     #init default template
     @infotemplate = "send <b>#{@@bot["main"]["control"]["string"]}help</b> or <b>#{@@bot["main"]["control"]["string"]}about</b> for more information about me."
 
-    if ( @@bot[:messages] != nil ) && ( @@bot[:mpd] == nil ) then
+    if ( !@@bot[:messages].nil? ) && ( @@bot[:mpd].nil? ) then
       @@bot[:mpd] = MPD.new @@bot["plugin"]["mpd"]["host"], @@bot["plugin"]["mpd"]["port"].to_i
 
       @@bot[:mpd].on :volume do |volume|
@@ -90,7 +90,7 @@ class Mpd < Plugin
         while (true == true)
           sleep 1
           current = mpd.current_song if mpd.connected?
-          if not current.nil? #Would crash if playlist was empty.
+          if !current.nil? #Would crash if playlist was empty.
             lastcurrent = current if lastcurrent.nil?
             if ( lastcurrent.title != current.title ) || ( init == true )
               init = false
@@ -131,14 +131,14 @@ class Mpd < Plugin
       @@bot[:cli].on_user_state do |msg|
       end
 
-      @@bot[:mpd].volume = @@bot["plugin"]["mpd"]["volume"] if @@bot["plugin"]["mpd"]["volume"] != nil
+      @@bot[:mpd].volume = @@bot["plugin"]["mpd"]["volume"] if ! @@bot["plugin"]["mpd"]["volume"].nil?
     end
 
     return @@bot
   end
 
   def name
-    if @@bot[:messages] == nil
+    if @@bot[:messages].nil?
       "false"
     else
       self.class.name
@@ -526,7 +526,7 @@ class Mpd < Plugin
           out << "<tr><td>Current state:</td><td>#{state}</td></tr>"
         when key.to_s == 'song'
           current = @@bot[:mpd].current_song
-          if not current.nil?
+          if !current.nil?
             out << "<tr><td>Current song:</td><td>#{current.artist} - #{current.title} (#{current.album})</td></tr>"
           else
             out << "<tr><td>Current song:</td><td>#{value})</td></tr>"
@@ -562,12 +562,12 @@ class Mpd < Plugin
 
     if message == 'file'
       current = @@bot[:mpd].current_song
-      privatemessage( "Filename of currently played song:<br>#{current.file}</span>") if not current.nil?
+      privatemessage( "Filename of currently played song:<br>#{current.file}</span>") if !current.nil?
     end
 
     if message == 'song'
       current = @@bot[:mpd].current_song
-      if not current.nil? #Would crash if playlist was empty.
+      if !current.nil? #Would crash if playlist was empty.
         privatemessage( "#{current.artist} - #{current.title} (#{current.album})")
       else
         privatemessage( "No song is played currently.")
@@ -617,7 +617,7 @@ class Mpd < Plugin
     if message == 'update'
       @@bot[:mpd].update
       privatemessage("Running database update...")
-      while @@bot[:mpd].status[:updating_db] != nil do
+      while !@@bot[:mpd].status[:updating_db].nil? do
         sleep 0.5
       end
       privatemessage("Done.")

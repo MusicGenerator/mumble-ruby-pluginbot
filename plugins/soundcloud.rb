@@ -2,7 +2,7 @@ class Soundcloud < Plugin
 
   def init(init)
     super
-    if ( @@bot[:mpd] != nil ) && ( @@bot[:messages] != nil ) && ( @@bot[:soundcloud] == nil )
+    if ( !@@bot[:mpd].nil? ) && ( !@@bot[:messages].nil? ) && ( @@bot[:soundcloud].nil? )
       begin
         @destination = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["soundcloud"]["folder"]["download"]
         @temp = @@bot["main"]["tempdir"] + @@bot["plugin"]["soundcloud"]["folder"]["temp"]
@@ -16,12 +16,12 @@ class Soundcloud < Plugin
       begin
         @ytdloptions = @@bot["plugin"]["soundcloud"]["youtube_dl"]["options"]
       rescue
-        @ytdloptions = "" 
+        @ytdloptions = ""
       end
-      @consoleaddition = "" 
-      @consoleaddition = @@bot["plugin"]["soundcloud"]["prefixes"] if @@bot["plugin"]["soundcloud"]["prefixes"] != nil
+      @consoleaddition = ""
+      @consoleaddition = @@bot["plugin"]["soundcloud"]["prefixes"] if !@@bot["plugin"]["soundcloud"]["prefixes"].nil?
       @executable = "#"
-      @executable = @@bot["plugin"]["soundcloud"]["youtube_dl"]["path"] if @@bot["plugin"]["soundcloud"]["youtube_dl"]["path"] != nil
+      @executable = @@bot["plugin"]["soundcloud"]["youtube_dl"]["path"] if !@@bot["plugin"]["soundcloud"]["youtube_dl"]["path"].nil?
       @songlist = Queue.new
       @keylist = Array.new
       @@bot[:soundcloud] = self
@@ -31,9 +31,9 @@ class Soundcloud < Plugin
   end
 
   def name
-    if ( @@bot[:mpd] == nil ) || ( @@bot[:soundcloud] == nil)
+    if ( @@bot[:mpd].nil? ) || ( @@bot[:soundcloud].nil?)
       "false"
-    else    
+    else
       self.class.name
     end
   end
@@ -48,7 +48,7 @@ class Soundcloud < Plugin
     super
 
     if message == "ytdl-version"
-      privatemessage("Soundcloud uses youtube-dl " + `#{@executable} --version`) 
+      privatemessage("Soundcloud uses youtube-dl " + `#{@executable} --version`)
     end
 
     if message.start_with?("soundcloud <a href=") || message.start_with?("<a href=") then
@@ -62,21 +62,21 @@ class Soundcloud < Plugin
           messageto(actor, "Soundcloud is inspecting link: " + link + "...")
           get_song link
           if ( @songlist.size > 0 ) then
-            @@bot[:mpd].update(@@bot["plugin"]["soundcloud"]["folder"]["download"].gsub(/\//,"")) 
+            @@bot[:mpd].update(@@bot["plugin"]["soundcloud"]["folder"]["download"].gsub(/\//,""))
             messageto(actor, "Waiting for database update complete...")
 
-            while @@bot[:mpd].status[:updating_db] != nil do
+            while !@@bot[:mpd].status[:updating_db].nil? do
               sleep 0.5
             end
 
             messageto(actor, "Update done.")
-            while @songlist.size > 0 
+            while @songlist.size > 0
               song = @songlist.pop
               messageto(actor, song)
               @@bot[:mpd].add(@@bot["plugin"]["soundcloud"]["folder"]["download"]+song)
             end
           else
-            messageto(actor, "Soundcloud: The link contains nothing interesting.") 
+            messageto(actor, "Soundcloud: The link contains nothing interesting.")
           end
         end
       end
@@ -99,7 +99,7 @@ class Soundcloud < Plugin
           if File.exist?("#{@temp}#{name}.#{ending}")
             system ("#{@consoleaddition} convert \"#{@temp}#{name}.jpg\" -resize 320x240 \"#{@destination}#{name}.jpg\" ")
 
-            if @@bot["plugin"]["soundcloud"]["to_mp3"] == nil
+            if @@bot["plugin"]["soundcloud"]["to_mp3"].nil?
               # Mixin tags without recode on standard
               system ("#{@consoleaddition} ffmpeg -i \"#{@temp}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@destination}#{name}.#{ending}\"") if !File.exist?("#{@destination}#{name}.#{ending}")
               @songlist << name.split("/")[-1] + ".#{ending}"

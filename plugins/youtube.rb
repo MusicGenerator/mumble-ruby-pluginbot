@@ -4,7 +4,7 @@ class Youtube < Plugin
 
   def init(init)
     super
-    if ( @@bot[:mpd] != nil ) && ( @@bot[:messages] != nil ) && ( @@bot[:youtube] == nil )
+    if ( !@@bot[:mpd].nil? ) && ( !@@bot[:messages].nil? ) && ( @@bot[:youtube].nil? )
       begin
         @destination = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["youtube"]["folder"]["download"]
         @temp = @@bot["main"]["tempdir"] + @@bot["plugin"]["youtube"]["folder"]["temp"]
@@ -21,9 +21,9 @@ class Youtube < Plugin
         @ytdloptions = ""
       end
       @consoleaddition = ""
-      @consoleaddition = @@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"] if @@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"] != nil
+      @consoleaddition = @@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"] if !@@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"].nil?
       @executable = "#"
-      @executable = @@bot["plugin"]["youtube"]["youtube_dl"]["path"] if @@bot["plugin"]["youtube"]["youtube_dl"]["path"] != nil
+      @executable = @@bot["plugin"]["youtube"]["youtube_dl"]["path"] if !@@bot["plugin"]["youtube"]["youtube_dl"]["path"].nil?
 
       @songlist = Queue.new
       @keylist = Array.new
@@ -34,7 +34,7 @@ class Youtube < Plugin
   end
 
   def name
-    if ( @@bot[:mpd] == nil ) || ( @@bot[:youtube] == nil)
+    if ( @@bot[:mpd].nil? ) || ( @@bot[:youtube].nil?)
       "false"
     else
       self.class.name
@@ -73,7 +73,7 @@ class Youtube < Plugin
             @@bot[:mpd].update(@@bot["plugin"]["youtube"]["folder"]["download"].gsub(/\//,""))
             messageto(actor, "Waiting for database update complete...")
 
-            while @@bot[:mpd].status[:updating_db] != nil do
+            while !@@bot[:mpd].status[:updating_db].nil? do
               sleep 0.5
             end
 
@@ -92,7 +92,7 @@ class Youtube < Plugin
 
     if message.split[0] == 'yts'
       search = message[4..-1]
-      if !(( search == nil ) || ( search == "" ))
+      if !(( search.nil? ) || ( search == "" ))
         Thread.new do
           Thread.current["user"]=msg.actor
           Thread.current["process"]="youtube (yts)"
@@ -164,7 +164,7 @@ class Youtube < Plugin
           @@bot[:mpd].update(@@bot["plugin"]["youtube"]["folder"]["download"].gsub(/\//,""))
           messageto(actor, "Waiting for database update complete...")
 
-          while @@bot[:mpd].status[:updating_db] != nil do
+          while !@@bot[:mpd].status[:updating_db].nil? do
             sleep 0.5
           end
 
@@ -215,7 +215,7 @@ class Youtube < Plugin
         @filetypes.each do |ending|
           if File.exist?("#{@temp}#{name}.#{ending}")
             system ("#{@consoleaddition} convert \"#{@temp}#{name}.jpg\" -resize 320x240 \"#{@destination}#{name}.jpg\" ")
-            if @@bot["plugin"]["youtube"]["to_mp3"] == nil
+            if @@bot["plugin"]["youtube"]["to_mp3"].nil?
               # Mixin tags without recode on standard
               system ("#{@consoleaddition} ffmpeg -i \"#{@temp}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@destination}#{name}.#{ending}\"") if !File.exist?("#{@destination}#{name}.#{ending}")
               @songlist << name.split("/")[-1] + ".#{ending}"

@@ -2,11 +2,11 @@ class Control < Plugin
 
   def init(init)
     super
-    if @@bot[:mpd] != nil
+    if !@@bot[:mpd].nil?
       @@bot[:control] = self
       @historysize = 20
       @@bot["main"]["automute_if_alone"] = false if @@bot["main"]["automute_if_alone"].nil?
-      if @@bot[:control_historysize] != nil
+      if !@@bot[:control_historysize].nil?
         @historysize =  @@bot["main"]["control"]["historysize"]
       else
           @historysize = 20
@@ -34,7 +34,7 @@ class Control < Plugin
   end
 
   def name
-    if @@bot[:mpd] == nil
+    if @@bot[:mpd].nil?
       "false"
     else
       self.class.name
@@ -44,7 +44,7 @@ class Control < Plugin
   # Timer Method called by Main
   def ticks(time)
     if @stopped_because_unregisterd == true                             #if bot is stopped itself
-      me= @@bot[:cli].me
+      me = @@bot[:cli].me
       allregistered = true
       @@bot[:cli].users.values.find do |u|
         allregistered = false if ( u.channel_id == me.channel_id ) && (u.user_id.nil?) && (u.name != me.name)
@@ -74,7 +74,7 @@ class Control < Plugin
     @follow = false
     @alreadyfollowing = false
     begin
-      Thread.kill(@following) if @following != nil
+      Thread.kill(@following) if !@following.nil?
       @alreadyfollowing = false
     rescue TypeError
       if @@bot[:debug]
@@ -98,7 +98,7 @@ class Control < Plugin
       # if I'm playing then pause play and save that I've stopped myself
 
       #During bot start there is no mpd plugin loaded yet...
-      if @@bot[:mpd] != nil
+      if !@@bot[:mpd].nil?
         if @@bot[:mpd].paused? == false
           @@bot[:mpd].pause = true
           @playing = false
@@ -126,7 +126,7 @@ class Control < Plugin
     #msg.actor = session_id of user who did something on someone, if self done, both is the same.
     me = @@bot[:cli].me
     msg_target = @@bot[:cli].users[msg.session]
-    if ( me.current_channel != nil ) && ( msg.channel_id != nil )
+    if ( !me.current_channel.nil? ) && ( !msg.channel_id.nil? )
       # get register status of user
       if msg_target.user_id.nil?
         sender_is_registered = false
@@ -224,8 +224,8 @@ class Control < Plugin
       currentuser = msg.actor
       @following = Thread.new {
       begin
-        Thread.current["user"]=currentuser
-        Thread.current["process"]="control (following)"
+        Thread.current["user"] = currentuser
+        Thread.current["process"] = "control (following)"
         while @follow == true do
           if (@@bot[:cli].me.current_channel != @@bot[:cli].users[currentuser].channel_id)
             @@bot[:cli].join_channel(@@bot[:cli].users[currentuser].channel_id)
@@ -233,9 +233,8 @@ class Control < Plugin
           sleep 0.5
         end
       rescue
-        if @@bot[:debug]
-          puts "#{$!}"
-        end
+        puts "#{$!}" if @@bot[:debug]
+
         @alreadyfollowing = false
         Thread.kill(@following)
       end

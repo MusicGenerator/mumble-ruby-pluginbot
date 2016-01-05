@@ -3,7 +3,7 @@ class Bandcamp < Plugin
   def init(init)
     super
 
-    if ( @@bot[:mpd] != nil ) && ( @@bot[:messages] != nil ) && ( @@bot[:bandcamp] == nil )
+    if ( !@@bot[:mpd].nil? ) && ( !@@bot[:messages].nil? ) && ( @@bot[:bandcamp].nil? )
       begin
         @destination = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["bandcamp"]["folder"]["download"]
         @temp = @@bot["main"]["tempdir"] + @@bot["plugin"]["bandcamp"]["folder"]["temp"]
@@ -29,7 +29,7 @@ class Bandcamp < Plugin
   end
 
   def name
-      if ( @@bot[:mpd] == nil ) || ( @@bot[:bandcamp] == nil)
+      if ( @@bot[:mpd].nil? ) || ( @@bot[:bandcamp].nil?)
           "false"
       else
           self.class.name
@@ -64,7 +64,7 @@ class Bandcamp < Plugin
             @@bot[:mpd].update(@@bot["plugin"]["bandcamp"]["folder"]["download"].gsub(/\//,""))
             messageto(actor, "Waiting for database update complete...")
 
-            while @@bot[:mpd].status[:updating_db] != nil do
+            while !@@bot[:mpd].status[:updating_db].nil? do
               sleep 0.5
             end
 
