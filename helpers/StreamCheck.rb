@@ -27,16 +27,31 @@ class StreamCheck
     @bitrateMPEG2L3 =  [0, 8 , 16 , 24 , 32 , 40 , 48 , 56 , 64 , 80 , 96 , 112 , 128 , 144 , 160 , 0]
     @channel_mode = ["stereo", "joint-stereo", "dual-channel", "mono"]
     @emphasis = ["none", "50/15 ms", "reserved", "CCIT J.17"]
+    @aac_sampling_rate = [96000,88200,64000,48000,44100,32000,24000,22050,16000,12000,11025,8000,7350,"reserved","reserved","forbidden"]
+    @aac_channel_config = ["defined in AOT specific config", 1,2,3,4,5,6,8, "reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved"]
+    @aac_profile = ["AAC Main", "AAC LC", "AAC SSR", "AAC LTP"]
   end
 
   def testurl(url)
     file = `curl -L --max-time 3 "#{url}" `
-    opus  = checkopus(file)
     mp3   = checkmp3(file)
-    return opus if opus[:verified]
-    return mp3 if mp3[:verified]
+    if mp3[:verified]
+      return mp3 
+    else
+      opus  = checkopus(file)
+      if opus[:verified]
+        return opus
+      else
+        aac   = checkaac(file)
+        if aac[:verified] 
+          return aac
+        else
+          return nil
+        end
+      end
+    end
   end
-
+  
   def checkopus(file)
     bytefield = file.unpack('C*')
     info = Hash.new
@@ -98,6 +113,31 @@ class StreamCheck
     return info
   end
 
+  def checkaac(file)
+    bytefield = file.unpack('C*')
+    pos = 0
+    validate = 0
+    while pos < (bytefield.size - 10) 
+      if (bytefield[pos] == 255)
+        npos = pos
+        while ( npos + 10 )  < bytefield.size
+          search = testaacheader(bytefield[npos..(npos + 10)])
+          break if search[:frame_length].nil?
+          npos += search[:frame_length]
+          validate += 1
+        end
+      end
+      if validate > 10 then
+        pos = bytefield.size
+        search[:verified] = validate
+      else
+        pos += 1
+        validate = 0
+      end
+    end
+    return search
+  end
+
   def checkmp3(file)
     bytefield = file.unpack('C*')
     lastbyte = Array.new(3,0)
@@ -133,13 +173,13 @@ class StreamCheck
             begin
               case audio_version_id
                 when MPEG1
-                  info[:mpeg]= "MPEG1"
+                  info[:mpeg_version]= "MPEG1"
                 when MPEG2
-                  info[:mpeg]= "MPEG2"
+                  info[:mpeg_version]= "MPEG2"
                 when MPEG2_5
-                  info[:mpeg]= "MPEG2.5"
+                  info[:mpeg_version]= "MPEG2.5"
                 else
-                  info[:mpeg]= "unknown"
+                  info[:mpeg_version]= "unknown"
               end
               info[:layer] = 4 - layer_index
               info[:protected] = protection_bit
@@ -184,5 +224,36 @@ class StreamCheck
       to_return=@bitrateMPEG2L3[bitrate_index] if layer_index == 1  # Layer III
     end
     return to_return
+  end
+
+  def testaacheader(field)
+    info = Hash.new
+    if (field[0] == 255)
+      if (field[1] & 0b11110110) == 0b11110000
+        qword = 0
+        (1..8).each do |i|
+          qword = qword * 256 + field[i]
+        end
+        qword = ('%64b' % qword)
+        info[:mpeg_version] =        qword[4].to_i(2) *2 + 2
+        info[:protection_bit] =      qword[7].to_i(2)
+        info[:mpeg_profile] =        @aac_profile[qword[8..9].to_i(2)]
+        info[:mpeg_sampling_freq] =  @aac_sampling_rate[qword[10..13].to_i(2)]
+        info[:channel_config] =      @aac_channel_config[qword[15..18].to_i(2)]
+        info[:frame_length] =        qword[21..34].to_i(2)
+        info[:num_of_frames] =       qword[46..48].to_i(2)
+      end
+    end
+    return info
+  end
+
+end
+
+
+begin
+  if ARGV[0] == "test"
+    test = StreamCheck.new
+    puts test.testurl("http://stream.radioreklama.bg:80/nrj.ogg") 
+    puts test.testurl("http://stream.fragradio.co.uk:8000/autodj")
   end
 end
