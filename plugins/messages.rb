@@ -12,7 +12,7 @@ class Messages < Plugin
   def init(init)
     super
     if @@bot[:messages].nil?
-      @priv_notify = {}
+      @priv_notify = Hash.new(0)
       @@bot[:messages] = self
     end
     return @@bot
@@ -38,7 +38,8 @@ class Messages < Plugin
 
   def handle_chat(msg, message)
     super
-    @priv_notify[msg.actor] = 0 if @priv_notify[msg.actor].nil?
+    #@priv_notify[msg.actor] = 0 if @priv_notify[msg.actor].nil?
+    # we don't need above anymore because Hash is now defaulted to 0
     if message[2] == '#'
       message.split.each do |command|
         case command
