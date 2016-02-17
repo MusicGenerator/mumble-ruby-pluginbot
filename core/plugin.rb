@@ -36,7 +36,7 @@ class Plugin
   end
 
   private
-  def prozessmessage(message)
+  def processmessage(message)
     # count lines
     # for future use (send long messages in smaller parts)
     lines = message.count("<br>") + message.count("<tr>")
