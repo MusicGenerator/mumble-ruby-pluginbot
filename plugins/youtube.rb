@@ -119,10 +119,11 @@ class Youtube < Plugin
     end
 
     if message.split[0] == 'ytstream'
-      #messageto(actor, "Youtube is inspecting link: " + link + "...")
       link = msg.message.match(/http[s]?:\/\/(.+?)\"/).to_s.chop
       link.gsub!(/<\/?[^>]*>/, '')
       link.gsub!("&amp;", "&")
+
+      messageto(msg.actor, "Youtube is inspecting link: " + link + "...")
 
       streams = `#{@executable} -g "#{link}"`
       streams.each_line do |line|
