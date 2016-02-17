@@ -24,7 +24,7 @@ class Plugin
   end
 
   def handle_help(text)
-    text << "#{self.class.name} does'nt implement a help"
+    text << "#{self.class.name} doesn't implement a help"
   end
 
   def ticks(time)
@@ -54,14 +54,14 @@ class Plugin
     begin
       @@bot[:cli].text_user(actor, message)
     rescue
-      puts "Sending message to user #{actor} failed. Maybe left server before we try to send." 
+      puts "Sending message to user #{actor} failed. Maybe left server before we try to send."
     end
   end
   def channelmessage(message)
     begin
       @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, message)
     rescue
-      puts "Sending message to channel #{@@bot[:cli].me.current_channel} failed. ->should never happen<-" 
+      puts "Sending message to channel #{@@bot[:cli].me.current_channel} failed. ->should never happen<-"
     end
   end
 
