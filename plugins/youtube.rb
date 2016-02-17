@@ -118,6 +118,21 @@ class Youtube < Plugin
       end
     end
 
+    if message.split[0] == 'ytstream'
+      #messageto(actor, "Youtube is inspecting link: " + link + "...")
+      link = msg.message.match(/http[s]?:\/\/(.+?)\"/).to_s.chop
+      link.gsub!(/<\/?[^>]*>/, '')
+      link.gsub!("&amp;", "&")
+
+      streams = `#{@executable} -g "#{link}"`
+      streams.each_line do |line|
+        line.chop!
+        @@bot[:mpd].add line if line.include? "mime=audio/mp4"
+      end
+
+      messageto(msg.actor, "Added \"#{link}\" to the queue.")
+    end
+
     if message.split[0] == 'yta'
       begin
         out = "<br>Going to download the following songs:<br />"
