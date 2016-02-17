@@ -103,18 +103,26 @@ class Radiostream < Plugin
 
     decoded = false
     puts link
-    file = `curl -g -L --max-time 3 "#{link}" `                #Load some data from link
+    file = `curl -g -L --max-time 3 "#{link}" `             #Load some data from link
     streaminfo = StreamCheck.new                            #init StreamCheck
 
     info = streaminfo.checkmp3(file)                        #check if mp3
-    if info[:verified] then                          #is mp3-stream?
+    if info[:verified] then                                 #is mp3-stream?
       info[:link] = link                                    #add link to info
       decoded = true                                        #set decoded to true to prevent other checks
     end
 
     if !decoded                                             #if it is no mp3 stream
       info = streaminfo.checkopus(file)                     #check if ogg
-      if info[:verified] then                        #is ogg-stream?
+      if info[:verified] then                               #is ogg-stream?
+        info[:link] = link                                  #add link to info
+        decoded = true                                      #set decodet to true to prevent other checks
+      end
+    end
+
+    if !decoded                                             #if it is no ogg stream
+      info = streaminfo.checkaac(file)                      #check if mpeg2aac
+      if info[:verified] then                               #is aac-stream?
         info[:link] = link                                  #add link to info
         decoded = true                                      #set decodet to true to prevent other checks
       end
