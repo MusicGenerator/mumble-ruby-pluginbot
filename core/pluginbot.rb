@@ -489,13 +489,13 @@ class MumbleMPD
               end
 
               if message.split[0] == 'help'
-                if message.split[1]=='all' #Send help texts of all plugins.
+                if message.split[1] == 'all' #Send help texts of all plugins.
                     @plugin.each do |plugin|
-                        help = plugin.help(help.to_s)
-                        @cli.text_user(msg.actor, help)
+                        #help = plugin.help(help.to_s)
+                        help = plugin.help('')
+                        @cli.text_user(msg.actor, help) #FIXME still shwos help for youtube plugin twice.
                     end
-                end
-                if message.split[1] #Send help for a specific plugin.
+                elsif message.split[1] #Send help for a specific plugin.
                   @plugin.each do |plugin|
                     help = plugin.help('') if plugin.name.upcase == message.split[1].upcase
                   end
