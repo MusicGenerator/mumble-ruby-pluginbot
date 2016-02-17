@@ -502,7 +502,7 @@ class MumbleMPD
 
                   @cli.text_user(msg.actor, help)
                 else #Send default help text.
-                    @cli.text_user(msg.actor, I18n.t("help.default", :cc=> @settings["main"]["control"]["string"]))
+                  @cli.text_user(msg.actor, I18n.t("help.default", :cc=> @settings["main"]["control"]["string"]))
                 end
               end
             end
