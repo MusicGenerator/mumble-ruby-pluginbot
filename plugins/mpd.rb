@@ -536,9 +536,9 @@ class Mpd < Plugin
           #out << "<tr><td>Current songid:</td><td>#{current_song}</td></tr>"
           out << "<tr><td>Current songid:</td><td>#{value}</td></tr>"
         when key.to_s == 'time'
-            out << "<tr><td>Current position:</td><td>#{timedecode(now)}/#{timedecode(total)}</td></tr>"
+            out << "<tr><td>Current position:</td><td>#{timedecode(value[0])}/#{timedecode(value[1])}</td></tr>"
         when key.to_s == 'elapsed'
-          out << "<tr><td>Elapsed:</td><td>#{timedecode(now)}</td></tr>"
+          out << "<tr><td>Elapsed:</td><td>#{timedecode(value)}</td></tr>"
         when key.to_s == 'bitrate'
           out << "<tr><td>Current song bitrate:</td><td>#{value}</td></tr>"
         when key.to_s == 'audio'
