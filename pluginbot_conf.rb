@@ -109,7 +109,7 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
   # The default is nil. Downloaded files will be stored at best quality
   ###########################
   
-  @settings[:youtube_youtubedl_options] = ""
+  @settings[:youtube_youtubedl_options] = "--restrict-filenames"
   # Additional options to youtube-dl.
   # You can add for example "-r 2.5M" and the downloadspeed
   # will be limited to 2.5 Mb/s. "--restrict-filenames" transformes
@@ -166,7 +166,7 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
   # The default is nil. Downloaded files will be stored at best quality
   ###########################
   
-  @settings[:soundcloud_youtubedl_options] = ""
+  @settings[:soundcloud_youtubedl_options] = "--restrict-filenames"
   # additional options to youtube-dl 
   # you can add "-r 2.5M" and the downloadspeed will be limited to 2.5 Mb/s 
   # "--restrict-filenames" transformes filenames into a safe charset 
@@ -211,7 +211,7 @@ iVBORw0KGgoAAAANSUhEUgAAAMgAAADZCAYAAABl0n+gAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAE
   # The default is nil. Downloaded files will be stored at best quality
   ###########################
   
-  @settings[:bandcamp_youtubedl_options] = ""
+  @settings[:bandcamp_youtubedl_options] = "--restrict-filenames"
   # additional options to youtube-dl 
   # you can add "-r 2.5M" and the downloadspeed will be limited to 2.5 Mb/s 
   # "--restrict-filenames" transformes filenames into a safe charset 
