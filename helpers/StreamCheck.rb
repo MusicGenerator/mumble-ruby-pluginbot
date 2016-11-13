@@ -114,6 +114,7 @@ class StreamCheck
   end
 
   def checkaac(file)
+    aac = Hash.new
     bytefield = file.unpack('C*')
     pos = 0
     validate = 0
@@ -129,13 +130,13 @@ class StreamCheck
       end
       if validate > 10 then
         pos = bytefield.size
-        search[:verified] = validate
+        aac[:verified] = validate
       else
         pos += 1
         validate = 0
       end
     end
-    return search
+    return aac
   end
 
   def checkmp3(file)
