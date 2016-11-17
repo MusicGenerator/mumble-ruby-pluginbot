@@ -1,10 +1,4 @@
 #!/bin/bash --login
-#FIXME add parameters for see ENV vars in dockerfile
-
-echo $@
-echo "..."
-echo $*
-
 while true; do
     # Do an update of youtube-dl on every start as there are very often updates.
     if [ -f $HOME/src/youtube-dl ]; then
@@ -38,16 +32,6 @@ while true; do
     ### Export enviroment variable for tmux
     export HOME=$HOME
     
-    ### Start Mumble-Ruby-Bots - MPD instances must already be running. ###
-    # Bot 1
-    #tmux new-session -d -n bot1 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot1_conf.yml$DEBUG"
-    LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb \ 
-        --config=$HOME/src/bot1_conf.yml \ 
-        --mumblehost "$MUMBLE_HOST" \ 
-        --mumbleport "$MUMBLE_PORT" \ 
-        --name "$MUMBLE_USERNAME" \ 
-        --userpass "$MUMBLE_PASSWORD" \ 
-        --targetchannel "$MUMBLE_CHANNEL" \ 
-        --bitrate "$MUMBLE_BITRATE"
+    LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot1_conf.yml --mumblehost "$MUMBLE_HOST" --mumbleport "$MUMBLE_PORT" --name "$MUMBLE_USERNAME" --userpass "$MUMBLE_PASSWORD" --targetchannel "$MUMBLE_CHANNEL" --bitrate "$MUMBLE_BITRATE"
     sleep 5
 done
