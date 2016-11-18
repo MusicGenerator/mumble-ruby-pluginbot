@@ -330,7 +330,12 @@ class MumbleMPD
         if ( msg.session ) || ( @settings["main"]["control"]["message"]["private_only"] != true )
           if @settings["main"]["controllable"] == true
             if msg.message.start_with?("#{@settings["main"]["control"]["string"]}") && msg.message.length >@settings["main"]["control"]["string"].length #Check whether we have a command after the controlstring.
-              message = msg.message.split(@settings["main"]["control"]["string"])[1 .. -1].join() #Remove @settings[:controlstring]
+              begin
+                message = msg.message.split(@settings["main"]["control"]["string"])[1 .. -1].join() #Remove @settings[:controlstring]
+              rescue
+                message = ".help"  # FIXME Set .help if the given command from user caused an exception.
+              end
+
               @plugin.each do |plugin|
                 plugin.handle_chat(msg, message)
               end
