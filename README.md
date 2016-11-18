@@ -54,6 +54,9 @@ Instead of setting up the bot yourself you can download a fully set up Mumble-Ru
 
 The howto can be [found here](https://wiki.natenom.com/w/VirtualBox_Appliance_for_Mumble-Ruby-Pluginbot)
 
+##Dockerized
+There is a Dockerfile available at https://github.com/Natenom/mumble-ruby-pluginbot-docker to automatically built a Docker container running MPD and the current devel branch of Mumble-Ruby-Pluginbot.
+
 ##Pre configured system images
 ###Banana Pi 
 Download one of the following compressed images:
