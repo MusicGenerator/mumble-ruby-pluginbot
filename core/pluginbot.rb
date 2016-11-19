@@ -333,7 +333,7 @@ class MumbleMPD
               begin
                 message = msg.message.split(@settings["main"]["control"]["string"])[1 .. -1].join() #Remove @settings[:controlstring]
               rescue
-                message = ".help"  # FIXME Set .help if the given command from user caused an exception.
+                message = "help"  # FIXME Set 'help' if the given command from user caused an exception.
               end
 
               @plugin.each do |plugin|
