@@ -1,0 +1,14 @@
+---
+  
+plugin:
+  mixcloud:
+    folder:
+      download: downloadedfrommc/
+      temp: mixcloudplugin/
+    youtube_dl:
+      path: "/home/botmaster/src/youtube-dl"
+      options: '--external-downloader aria2c --external-downloader-args "-j 6 -k 1M -x 10"'
+      prefixes: ''
+    to_mp3: 
+
+#Use a downloader for mixcloude else your download is suspended after a few megabytes for some time.
