@@ -265,7 +265,11 @@ class MumbleMPD
       sleep(3600/ticktime)
       time = Time.now
       @plugin.each do |plugin|
-        plugin.ticks(time)
+      	begin
+          plugin.ticks(time)
+        rescue
+          puts "ERROR: Plugin #{plugin.name} throws error in timertick" if @settings[:debug]
+        end
       end
     end
   end
@@ -337,7 +341,11 @@ class MumbleMPD
               end
 
               @plugin.each do |plugin|
-                plugin.handle_chat(msg, message)
+                begin
+                  plugin.handle_chat(msg, message)
+                rescue
+                  puts "ERROR: Plugin #{plugin.name} throws error in handle_chat" if @settings[:debug]
+                end
               end
 
               if message == 'about'

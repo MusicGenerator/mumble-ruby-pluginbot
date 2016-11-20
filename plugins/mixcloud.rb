@@ -44,7 +44,7 @@ class Mixcloud < Plugin
 
   def handle_chat(msg, message)
     super
-
+    
     if message == "ytdl-version"
       privatemessage("Mixcloud uses youtube-dl " + `#{@@bot["plugin"]["mixcloud"]["youtube_dl"]["path"]} --version`)
     end

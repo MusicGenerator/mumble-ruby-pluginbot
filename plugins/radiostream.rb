@@ -164,6 +164,8 @@ class Radiostream < Plugin
     if ( decoded == true )                                  #if decoded add info to keylist
       info[:user]=user
       @keylist << info
+    else
+      messageto(user, "Radiostream: <b>no radio found!</b>")
     end
   end
 end
