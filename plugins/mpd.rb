@@ -413,7 +413,7 @@ class Mpd < Plugin
     end
 
     if ( message[0,5] == 'where' )
-      search = message.gsub("where", "").lstrip.tr('"\\','')
+      search = message.gsub("where", "").lstrip
       text_out = "you should search not nothing!"
       if search != ""
         text_out ="found:<br/>"
@@ -425,7 +425,7 @@ class Mpd < Plugin
     end
 
     if ( message[0,3] == 'add' )
-      search = (message.gsub("add", "").lstrip).tr('"\\','')
+      search = (message.gsub("add", "").lstrip).tr('"','')
       text_out = "search is empty"
       if search != ""
         text_out ="added:<br/>"
