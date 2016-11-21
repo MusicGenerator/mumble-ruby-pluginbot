@@ -1,5 +1,5 @@
 en:
-  about: 
+  about:
     <br />Hi, I am the Mumble-Ruby-Pluginbot.<br />
       <ul>
         <li><a href='https://github.com/dafoxia/mumble-ruby-pluginbot'>Get my source code</a></li>
@@ -7,14 +7,16 @@ en:
         <li>I am licensed by the <a href='https://github.com/dafoxia/mumble-ruby-pluginbot/blob/master/LICENSE'>MIT license</a></li>
         <li>If you have any issues, bugs or ideas please tell us on <a href='https://github.com/dafoxia/mumble-ruby-pluginbot/issues'>https://github.com/dafoxia/mumble-ruby-pluginbot/issues</a></li>
       </ul>
-  
+
+  command_blacklisted: "My admin has blacklisted this command."
+
   ban:
     active: This ban is active until the bot restarts. To permaban add following line to your configuration
-  
+
   user:
     not:
       found: "User %{user} not found."
-        
+
   ducking:
     _on:                "Music ducking is on."
     _off:               "Music ducking is off."
@@ -26,16 +28,16 @@ en:
   bitrate:
     set:                "Encoding is set to %{bitrate} bit/s."
     error:              "You really need dafoxia's mumble-ruby!"
-    
+
   bandwidth:
     set:                "Calculated overall bandwidth is %{bandwidth} bit/s."
     max:                "Allowed server bandwidth: %{bandwidth} bit/s."
     settings:           "<br /><u>Current bandwidth related settings:</u><br />The calculated overall bandwidth (audio + overhead): %{overall} bit/s<br />Audio encoding bandwidth: %{audio} bit/s<br />Framesize: %{framesize} ms"
-    
+
   framesize:
     set:                "Sending in %{framesize} ms frames."
     error:              "You really need dafoxia's mumble-ruby!"
-    
+
   plugins:
     loaded:
       _shead:            "<br /><span style='color:red;'>Loaded plugins:<br /><b>"
@@ -43,8 +45,8 @@ en:
     general_help:        "<br /><b>%{control}help <i>pluginname</i></b> Get the help text for the specific plugin.<br /><br />For example send the following text to get some basic control commands of the bot:<br /><b>%{control}help mpd</b><br />"
 
   jobs:
-    status:              "%{process} is in state %{status} for user %{name}.<br>" 
-    
+    status:              "%{process} is in state %{status} for user %{name}.<br>"
+
   help:
     internal:            "<br /><span style='color:red;'><b>Internal commands</b></span><br />
                             <b>superpassword+restart</b> will restart the bot.<br />
@@ -81,4 +83,3 @@ en:
                             <br />\
                             <b><u>Commands for experts only:</b></u><br />\
                             <b>%{cc}internals</b> - See my internal commands.<br />"
-

@@ -173,13 +173,13 @@ class MumbleMPD
         @cli.join_channel(@settings["mumble"]["channel"])
         puts "OK: Pluginbot entered configured channel \"#{@settings["mumble"]["channel"]}\"."
       rescue
-        debug "Error: [joincannel]#{$1} Can't join #{@settings["mumble"]["channel"]}!" 
+        debug "Error: [joincannel]#{$1} Can't join #{@settings["mumble"]["channel"]}!"
       end
 
       begin
         Thread.kill(@duckthread)
       rescue
-        debug "Error: [killduckthread] can't kill because #{$!}" 
+        debug "Error: [killduckthread] can't kill because #{$!}"
       end
 
       #Start duckthread
@@ -293,11 +293,11 @@ class MumbleMPD
         sender_is_registered = true
       end
 
-      debug "Debug: Got a message from \"#{@cli.users[msg.actor].name}\" (user id: #{msg_userid}, session id: #{msg.actor}). Content: \"#{msg.message}\"" 
+      debug "Debug: Got a message from \"#{@cli.users[msg.actor].name}\" (user id: #{msg_userid}, session id: #{msg.actor}). Content: \"#{msg.message}\""
       # check if User is on a blacklist
       begin
         if @settings.has_key?(@cli.users[msg.actor].hash.to_sym)
-          debug "Debug: User with userid \"#{msg_userid}\" is in blacklist! Ignoring him." 
+          debug "Debug: User with userid \"#{msg_userid}\" is in blacklist! Ignoring him."
 
           sender_is_registered = false # If on blacklist handle user as if he was unregistered.
         end
@@ -337,6 +337,20 @@ class MumbleMPD
                 message = msg.message.split(@settings["main"]["control"]["string"])[1 .. -1].join() #Remove @settings[:controlstring]
               rescue
                 message = "help"  # FIXME Set 'help' if the given command from user caused an exception.
+              end
+
+              blacklisted_commands = @settings["main"]["blacklisted_commands"]
+
+              # FIXME Better is:
+              # if blacklisted_commands.contains?(current_command)
+              # But we need the current_command then. We do have only the complete
+              # message currently.
+
+              for command in blacklisted_commands.split(" ") do
+                if message.start_with?(command)
+                  @cli.text_user(msg.actor, I18n.t('command_blacklisted'))
+                  return
+                end
               end
 
               @plugin.each do |plugin|
@@ -520,10 +534,10 @@ class MumbleMPD
             end
           end
         else
-          debug "DEBUG: Not listening because @settings[:listen_to_private_message_only] is true and message was sent to channel." 
+          debug "DEBUG: Not listening because @settings[:listen_to_private_message_only] is true and message was sent to channel."
         end
       else
-        debug "DEBUG: Not listening because @settings[:listen_to_registered_users_only] is true and sender is unregistered or on a blacklist." 
+        debug "DEBUG: Not listening because @settings[:listen_to_registered_users_only] is true and sender is unregistered or on a blacklist."
       end
     end
   end
@@ -546,7 +560,7 @@ class MumbleMPD
       Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
     target.merge! data, &merger
   end
-  
+
   def debug(message)
     if @settings[:debug]
       time=Time.new

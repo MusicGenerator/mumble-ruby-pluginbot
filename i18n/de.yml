@@ -8,6 +8,8 @@ de:
         <li>Wenn Du Fehler findest oder Probleme mit mir hast, dann melde dich unter <a href='https://github.com/dafoxia/mumble-ruby-pluginbot/issues'>https://github.com/dafoxia/mumble-ruby-pluginbot/issues</a></li>
       </ul>
 
+  command_blacklisted: "Mein Admin hat diesen Befehl gesperrt."
+
   ban:
     active: "Dieser Bann h&auml;lt nur bis zum Neustart. F&uuml;r einen permantenten Bann f&uuml;ge folgende Zeile in Deine Konfiguration ein:"
 
