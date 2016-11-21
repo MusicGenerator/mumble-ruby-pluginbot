@@ -145,7 +145,6 @@ class Mpd < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}settings</b> - Print current MPD settings.<br>"
     h << "<b>#{@@bot["main"]["control"]["string"]}seek <i>value</i> | <i>+/-value</i></b> - Seek to an absolute position (in seconds). Use +value or -value to seek relative to the current position.<br>"
     h << "<b>#{@@bot["main"]["control"]["string"]}seek <i>mm:ss</i> | <i>+/-mm:ss</i></b> - Seek to an absolute position. Use + or - to seek relative to the current position.<br>"
     h << "<b>#{@@bot["main"]["control"]["string"]}seek <i>hh:mm:ss</i> | <i>+/-hh:mm:ss</i></b> - Seek to an absolute position. Use + or - to seek relative to the current position.<br>"
