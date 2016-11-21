@@ -219,7 +219,14 @@ class Youtube < Plugin
 
   def get_song(site)
     error = Array.new
+
     if ( site.include? "www.youtube.com/" ) || ( site.include? "www.youtu.be/" ) || ( site.include? "m.youtube.com/" ) then
+      if !File.writable?(@temp) || !File.writable?(@destination)
+        debug "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
+        error << "I do not have write permissions in temp or in music directory. Please contact an admin."
+        return error
+      end
+
       site.gsub!(/<\/?[^>]*>/, '')
       site.gsub!("&amp;", "&")
       filename = `#{@executable} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`

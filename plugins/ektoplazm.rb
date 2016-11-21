@@ -48,6 +48,12 @@ class Ektoplazm < Plugin
         Thread.current["process"]="radiostream"
 
         if ( link.include? "www.ektoplazm.com/files" ) then
+          if !File.writable?(@temp) || !File.writable?(@destination)
+            debug "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
+            #error << "I do not have write permissions in temp or in music directory. Please contact an admin."
+            #return error
+          end
+
           messageto(actor, "ektoplazm is inspecting link: " + link + "...")
           link.gsub!(/<\/?[^>]*>/, '')
           link.gsub!("&amp;", "&")

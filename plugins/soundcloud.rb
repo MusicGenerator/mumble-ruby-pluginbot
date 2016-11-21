@@ -86,6 +86,12 @@ class Soundcloud < Plugin
   def get_song(site)
     error = Array.new
     if ( site.include? "soundcloud.com/" ) then
+      if !File.writable?(@temp) || !File.writable?(@destination)
+        debug "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
+        error << "I do not have write permissions in temp or in music directory. Please contact an admin."
+        return error
+      end
+
       site.gsub!(/<\/?[^>]*>/, '')
       site.gsub!("&amp;", "&")
       filename = `#{@executable} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`

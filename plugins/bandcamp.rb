@@ -50,6 +50,12 @@ class Bandcamp < Plugin
     end
 
     if message.start_with?("bandcamp <a href=") || message.start_with?("<a href=") then
+      if !File.writable?(@temp) || !File.writable?(@destination)
+        debug "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
+        #error << "I do not have write permissions in temp or in music directory. Please contact an admin."
+        #return error
+      end
+
       link = msg.message.match(/http[s]?:\/\/(.+?)\"/).to_s.chop
       if link.include? "bandcamp" then
         Thread.new do

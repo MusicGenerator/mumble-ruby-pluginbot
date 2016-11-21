@@ -44,7 +44,7 @@ class Mixcloud < Plugin
 
   def handle_chat(msg, message)
     super
-    
+
     if message == "ytdl-version"
       privatemessage("Mixcloud uses youtube-dl " + `#{@@bot["plugin"]["mixcloud"]["youtube_dl"]["path"]} --version`)
     end
@@ -84,6 +84,12 @@ class Mixcloud < Plugin
 
   def get_song(site)
     if ( site.include? "mixcloud.com/" ) then
+      if !File.writable?(@temp) || !File.writable?(@destination)
+        debug "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
+        #error << "I do not have write permissions in temp or in music directory. Please contact an admin."
+        return
+      end
+
       site.gsub!(/<\/?[^>]*>/, '')
       site.gsub!("&amp;", "&")
 
@@ -102,7 +108,7 @@ class Mixcloud < Plugin
       end
 
       debug site
-      
+
       filename = `#{@@bot["plugin"]["mixcloud"]["youtube_dl"]["path"]} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`
       output =`nice -n20 #{@consoleaddition} #{@@bot["plugin"]["mixcloud"]["youtube_dl"]["path"]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
       filename.split("\n").each do |name|
