@@ -65,4 +65,10 @@ class Plugin
     end
   end
 
+
+  def debug(message)
+    if @@bot[:debug]
+      puts "Plugin[#{self.class.name}] "+message
+    end
+  end
 end

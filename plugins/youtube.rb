@@ -12,8 +12,8 @@ class Youtube < Plugin
         Dir.mkdir(@destination) unless File.exists?(@destination)
         Dir.mkdir(@temp) unless File.exists?(@temp)
       rescue
-        puts "Error: Youtube-Plugin didn't find settings for mpd music directory and/or your preferred temporary download directory."
-        puts "See ../config/config.yml"
+        debug "Error: Youtube-Plugin didn't find settings for mpd music directory and/or your preferred temporary download directory."
+        debug "See ../config/config.yml"
       end
       begin
         @ytdloptions = @@bot["plugin"]["youtube"]["options"]
@@ -145,7 +145,7 @@ class Youtube < Plugin
           id_list = msg_parameters.match(/(?:[\d{1,3}\ ?])+/)[0].split
           id_list.each do |id|
             downloadid = @keylist[msg.actor][id.to_i]
-            puts downloadid.inspect
+            debug downloadid.inspect
             out << "ID: #{id}, Name: \"#{downloadid[1]}\"<br>"
             link << "https://www.youtube.com/watch?v="+downloadid[0]
           end

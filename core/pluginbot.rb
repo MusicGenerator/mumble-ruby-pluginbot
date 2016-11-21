@@ -159,10 +159,10 @@ class MumbleMPD
     max_connecting_time = 10
     while not @cli.connected? do
       sleep(0.5)
-      puts "OK: Connecting to the server is still ongoing." if @settings[:debug]
+      debug "OK: Connecting to the server is still ongoing."
       max_connecting_time -= 1
       if max_connecting_time < 1
-        puts "Error: Connection timed out" if @settings[:debug]
+        debug "Error: Connection timed out"
         @cli.disconnect
         break
       end
@@ -173,13 +173,13 @@ class MumbleMPD
         @cli.join_channel(@settings["mumble"]["channel"])
         puts "OK: Pluginbot entered configured channel \"#{@settings["mumble"]["channel"]}\"."
       rescue
-        puts "Error: [joincannel]#{$1} Can't join #{@settings["mumble"]["channel"]}!" if @settings[:debug]
+        debug "Error: [joincannel]#{$1} Can't join #{@settings["mumble"]["channel"]}!" 
       end
 
       begin
         Thread.kill(@duckthread)
       rescue
-        puts "Error: [killduckthread] can't kill because #{$!}" if @settings[:debug]
+        debug "Error: [killduckthread] can't kill because #{$!}" 
       end
 
       #Start duckthread
@@ -197,7 +197,7 @@ class MumbleMPD
         @cli.set_comment('Mumble_Ruby_Pluginbot')
         @settings[:set_comment_available] = true
       rescue NoMethodError
-        puts "[displaycomment]#{$!}" if @settings[:debug]
+        debug "[displaycomment]#{$!}"
         @settings[:set_comment_available]  = false
       end
       begin
@@ -268,7 +268,7 @@ class MumbleMPD
       	begin
           plugin.ticks(time)
         rescue
-          puts "ERROR: Plugin #{plugin.name} throws error in timertick" if @settings[:debug]
+          debug "ERROR: Plugin #{plugin.name} throws error in timertick"
         end
       end
     end
@@ -293,12 +293,11 @@ class MumbleMPD
         sender_is_registered = true
       end
 
-      puts "Debug: Got a message from \"#{@cli.users[msg.actor].name}\" (user id: #{msg_userid}, session id: #{msg.actor}). Content: \"#{msg.message}\"" if @settings[:debug]
-
+      debug "Debug: Got a message from \"#{@cli.users[msg.actor].name}\" (user id: #{msg_userid}, session id: #{msg.actor}). Content: \"#{msg.message}\"" 
       # check if User is on a blacklist
       begin
         if @settings.has_key?(@cli.users[msg.actor].hash.to_sym)
-          puts "Debug: User with userid \"#{msg_userid}\" is in blacklist! Ignoring him." if @settings[:debug]
+          debug "Debug: User with userid \"#{msg_userid}\" is in blacklist! Ignoring him." 
 
           sender_is_registered = false # If on blacklist handle user as if he was unregistered.
         end
@@ -344,7 +343,7 @@ class MumbleMPD
                 begin
                   plugin.handle_chat(msg, message)
                 rescue
-                  puts "ERROR: Plugin #{plugin.name} throws error in handle_chat" if @settings[:debug]
+                  debug "ERROR: Plugin #{plugin.name} throws error in handle_chat"
                 end
               end
 
@@ -521,10 +520,10 @@ class MumbleMPD
             end
           end
         else
-          puts "Debug: Not listening because @settings[:listen_to_private_message_only] is true and message was sent to channel." if @settings[:debug]
+          debug "DEBUG: Not listening because @settings[:listen_to_private_message_only] is true and message was sent to channel." 
         end
       else
-        puts "Debug: Not listening because @settings[:listen_to_registered_users_only] is true and sender is unregistered or on a blacklist." if @settings[:debug]
+        debug "DEBUG: Not listening because @settings[:listen_to_registered_users_only] is true and sender is unregistered or on a blacklist." 
       end
     end
   end
@@ -547,6 +546,13 @@ class MumbleMPD
       Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
     target.merge! data, &merger
   end
+  
+  def debug(message)
+    if @settings[:debug]
+      time=Time.new
+      puts time.to_s + message.to_s
+    end
+  end
 end
 
 client = MumbleMPD.new
@@ -558,7 +564,8 @@ loop do #https://github.com/bbatsov/ruby-style-guide#infinite-loop
     puts "OK: Pluginbot is running."
     client.mumble_start
   rescue
-    puts "Error: Pluginbot could not start."
+    puts "ERROR: Pluginbot could not start."
+    puts $!
   end
 
   sleep 3
@@ -567,8 +574,8 @@ loop do #https://github.com/bbatsov/ruby-style-guide#infinite-loop
         sleep 0.5
     end
   rescue
-    puts "Error: An error occurred: #{$!}"
-    puts "Error: Backtrace: #{$@}"
+    puts "ERROR: An error occurred: #{$!}"
+    puts "ERROR: Backtrace: #{$@}"
     client.disconnect
   end
   puts " "

@@ -10,8 +10,8 @@ class Ektoplazm < Plugin
         Dir.mkdir(@ektoplazmfolder) unless File.exists?(@ektoplazmfolder)
         Dir.mkdir(@tempektoplazmfolder) unless File.exists?(@tempektoplazmfolder)
       rescue
-        puts "Error: Ektoplazm-Plugin doesn't found settings for mpd music directory and/or your preferred temporary download directory"
-        puts "See config/config.yml"
+        debug "ERROR: Ektoplazm-Plugin doesn't found settings for mpd music directory and/or your preferred temporary download directory"
+        debug "See config/config.yml"
       end
       @consoleaddition = ""
       @consoleaddition = @@bot["plugin"]["ektoplazm"]["prefixes"] if @@bot["plugin"]["ektoplazm"]["prefixes"]
@@ -83,7 +83,7 @@ class Ektoplazm < Plugin
               # end
               # and uncomment it there, then build gem new.
             rescue
-              puts "[Ektoplazm-plugin] [info] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds." if @@bot[:debug]
+              debug "[INFO] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds." if @@bot[:debug]
               sleep 10
             end
 

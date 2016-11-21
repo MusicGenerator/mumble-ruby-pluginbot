@@ -10,8 +10,8 @@ class Mixcloud < Plugin
         Dir.mkdir(@destination) unless File.exists?(@destination)
         Dir.mkdir(@temp) unless File.exists?(@temp)
       rescue
-        puts "Error: Mixcloud-Plugin didn't found settings for mpd music directory and/or your preferred temporary download directory"
-        puts "See config/config.yml"
+        debug "ERROR: Mixcloud-Plugin didn't found settings for mpd music directory and/or your preferred temporary download directory"
+        debug "See config/config.yml"
       end
       @ytdloptions = ""
       @consoleaddition = ""
@@ -101,7 +101,7 @@ class Mixcloud < Plugin
         finaldirectory = "#{@destination}"
       end
 
-      puts site
+      debug site
       
       filename = `#{@@bot["plugin"]["mixcloud"]["youtube_dl"]["path"]} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`
       output =`nice -n20 #{@consoleaddition} #{@@bot["plugin"]["mixcloud"]["youtube_dl"]["path"]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon

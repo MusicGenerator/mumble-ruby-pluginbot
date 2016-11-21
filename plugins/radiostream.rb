@@ -8,7 +8,7 @@ class Radiostream < Plugin
       begin
         @xspf = require 'crack'         #parse xspf playlists only if crack gem is installed
       rescue
-        puts "if you install crack gem radiostream plugin also can parse xspf stream playlists." if @xspf == false
+        debug "if you install crack gem radiostream plugin also can parse xspf stream playlists." if @xspf == false
       end
       @keylist = Array.new
     end
@@ -102,7 +102,7 @@ class Radiostream < Plugin
   def add_link(link, user)
 
     decoded = false
-    puts link
+    debug link
     file = `curl -g -L --max-time 3 "#{link}" `             #Load some data from link
     streaminfo = StreamCheck.new                            #init StreamCheck
 

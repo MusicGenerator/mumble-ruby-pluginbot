@@ -10,8 +10,8 @@ class Soundcloud < Plugin
         Dir.mkdir(@destination) unless File.exists?(@destination)
         Dir.mkdir(@temp) unless File.exists?(@temp)
       rescue
-        puts "Error: soundcloud-Plugin doesn't found settings for mpd music directory and/or your preferred temporary download directory"
-        puts "See pluginbot_conf.yaml"
+        debug "ERROR: soundcloud-Plugin doesn't found settings for mpd music directory and/or your preferred temporary download directory"
+        debug "See pluginbot_conf.yaml"
       end
       begin
         @ytdloptions = @@bot["plugin"]["soundcloud"]["youtube_dl"]["options"]

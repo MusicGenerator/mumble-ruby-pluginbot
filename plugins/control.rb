@@ -77,9 +77,7 @@ class Control < Plugin
       Thread.kill(@following) if @following
       @alreadyfollowing = false
     rescue TypeError
-      if @@bot[:debug]
-        puts "[control] no following thread but try to kill. #{$!}"
-      end
+	  debug "No following thread but try to kill. #{$!}"
     end
   end
 
@@ -211,10 +209,8 @@ class Control < Plugin
         begin
           Thread.kill(@following)
           @alreadyfollowing = false
-          rescue TypeError
-          if @@bot[:debug]
-            puts "#{$!}"
-          end
+        rescue TypeError
+          debug "#{$!}"
         end
       else
         privatemessage( "I am following your steps, master.")
@@ -233,7 +229,7 @@ class Control < Plugin
           sleep 0.5
         end
       rescue
-        puts "#{$!}" if @@bot[:debug]
+        debug "#{$!}" 
 
         @alreadyfollowing = false
         Thread.kill(@following)
@@ -251,10 +247,8 @@ class Control < Plugin
         begin
           Thread.kill(@following)
           @alreadyfollowing = false
-          rescue TypeError
-          if @@bot[:debug]
-            puts "#{$!}"
-          end
+        rescue TypeError
+          debug "#{$!}"
           privatemessage( "#{@controlstring}follow hasn't been executed yet.")
         end
       end
@@ -267,10 +261,8 @@ class Control < Plugin
         begin
           Thread.kill(@sticked)
           @alreadysticky = false
-          rescue TypeError
-          if @@bot[:debug]
-            puts "#{$!}"
-          end
+        rescue TypeError
+          debug "#{$!}"
         end
       else
         privatemessage( "I am now sticked to this channel.")
@@ -293,9 +285,7 @@ class Control < Plugin
             @alreadysticky = false
             @@bot[:cli].join_channel(@@bot[:mumbleserver_targetchannel])
             Thread.kill(@sticked)
-            if @@bot[:debug]
-              puts "#{$!}"
-            end
+            debug "#{$!}"
           end
         end
       end
@@ -312,9 +302,7 @@ class Control < Plugin
         begin
           Thread.kill(@sticked)
         rescue TypeError
-          if @@bot[:debug]
-            puts "#{$!}"
-          end
+          debug "#{$!}"
         end
       end
     end

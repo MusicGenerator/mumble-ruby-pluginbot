@@ -110,9 +110,7 @@ class Mpd < Plugin
                   output << "</table><br>" + @infotemplate
                   @@bot[:cli].set_comment(output)
                 rescue NoMethodError
-                  if @@bot[:debug]
-                    puts "#{$!}"
-                  end
+                  debug "#{$!}"
                 end
               else
                 if current.artist.nil? && current.title.nil? && current.album.nil?
@@ -122,7 +120,7 @@ class Mpd < Plugin
                 end
               end
             lastcurrent = current
-            puts "OK: [displayinfo] updated." if @@bot[:debug]
+            debug "OK: [displayinfo] updated." if @@bot[:debug]
             end
           end
         end
@@ -245,7 +243,7 @@ class Mpd < Plugin
         channelmessage( "Now on position #{timedecode @@bot[:mpd].status[:time][0]}/#{timedecode @@bot[:mpd].status[:time][1]}.")
       rescue
         # mpd is old and knows no seek commands
-        puts "[mpd-plugin] [error] seek without success, maybe mpd version < 0.17 installed"
+        debug "ERROR: seek without success, maybe mpd version < 0.17 installed"
         channelmessage( "Seeking failed.")
       end
     end
@@ -413,7 +411,7 @@ class Mpd < Plugin
     end
 
     if ( message[0,5] == 'where' )
-      search = message.gsub("where", "").lstrip
+      search = message.gsub("where", "").lstrip.tr('"\\','')
       text_out = "you should search not nothing!"
       if search != ""
         text_out ="found:<br/>"
@@ -425,7 +423,7 @@ class Mpd < Plugin
     end
 
     if ( message[0,3] == 'add' )
-      search = (message.gsub("add", "").lstrip).tr('"','')
+      search = (message.gsub("add", "").lstrip).tr('"\\','')
       text_out = "search is empty"
       if search != ""
         text_out ="added:<br/>"
@@ -635,9 +633,7 @@ class Mpd < Plugin
           @@bot[:cli].set_comment(@template_if_comment_enabled)
         end
       rescue NoMethodError
-        if @@bot[:debug]
-          puts "#{$!}"
-        end
+        debug "#{$!}"
       end
     end
 
