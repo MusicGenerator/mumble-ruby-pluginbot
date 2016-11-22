@@ -28,7 +28,7 @@ main:
   timer:
     ticks:  3600
   superpassword: "kaguBe gave me all the power and I want to "
-  blacklisted_commands: "settings set"
+  blacklisted_commands: "settings set superpassword"
 
 mumble:
   use_vbr: 1

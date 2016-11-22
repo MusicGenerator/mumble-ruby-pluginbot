@@ -314,6 +314,11 @@ class MumbleMPD
       #msg.message.gsub!(/(<[^<^>]*>)/, "") #Strip html tags. #BEFORE doing this we need to ensure that no plugin needs the html source code. For example youtube plugin needs them...
 
       if msg.message == @settings["main"]["superpassword"]+"restart"
+        if blacklisted_commands.contains?("superpassword")
+          @cli.text_user(msg.actor, I18n.t('command_blacklisted'))
+          return
+        end
+
         @settings = @configured_settings.clone
         @cli.text_channel(@cli.me.current_channel,@superanswer);
         @run = false
@@ -321,6 +326,11 @@ class MumbleMPD
       end
 
       if msg.message == @settings["main"]["superpassword"]+"reset"
+        if blacklisted_commands.contains?("superpassword")
+          @cli.text_user(msg.actor, I18n.t('command_blacklisted'))
+          return
+        end
+
         @settings = @configured_settings.clone
         @cli.text_channel(@cli.me.current_channel,@superanswer);
       end
