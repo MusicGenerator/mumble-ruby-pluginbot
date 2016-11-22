@@ -313,6 +313,8 @@ class MumbleMPD
       #FIXME
       #msg.message.gsub!(/(<[^<^>]*>)/, "") #Strip html tags. #BEFORE doing this we need to ensure that no plugin needs the html source code. For example youtube plugin needs them...
 
+      blacklisted_commands = @settings["main"]["blacklisted_commands"]
+
       if msg.message == @settings["main"]["superpassword"]+"restart"
         if blacklisted_commands.contains?("superpassword")
           @cli.text_user(msg.actor, I18n.t('command_blacklisted'))
@@ -348,8 +350,6 @@ class MumbleMPD
               rescue
                 message = "help"  # FIXME Set 'help' if the given command from user caused an exception.
               end
-
-              blacklisted_commands = @settings["main"]["blacklisted_commands"]
 
               # FIXME Better is:
               # if blacklisted_commands.contains?(current_command)
