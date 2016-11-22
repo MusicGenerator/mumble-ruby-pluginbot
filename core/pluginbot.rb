@@ -316,7 +316,7 @@ class MumbleMPD
       blacklisted_commands = @settings["main"]["blacklisted_commands"]
 
       if msg.message == @settings["main"]["superpassword"]+"restart"
-        if blacklisted_commands.contains?("superpassword")
+        if blacklisted_commands.include?("superpassword")
           @cli.text_user(msg.actor, I18n.t('command_blacklisted'))
           return
         end
@@ -328,7 +328,7 @@ class MumbleMPD
       end
 
       if msg.message == @settings["main"]["superpassword"]+"reset"
-        if blacklisted_commands.contains?("superpassword")
+        if blacklisted_commands.include?("superpassword")
           @cli.text_user(msg.actor, I18n.t('command_blacklisted'))
           return
         end
@@ -352,7 +352,7 @@ class MumbleMPD
               end
 
               # FIXME Better is:
-              # if blacklisted_commands.contains?(current_command)
+              # if blacklisted_commands.include?(current_command)
               # But we need the current_command then. We do have only the complete
               # message currently.
 
