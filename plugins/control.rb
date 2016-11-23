@@ -13,7 +13,7 @@ class Control < Plugin
       end
       @history = Array.new
       @muted = false
-      #@bot[:cli].mute false 
+      #@@bot[:cli].mute false 
       @stopped_because_unregisterd = false                              #used to determine if bot should get back in playstate
       @playing  = !@@bot[:mpd].paused?
       # Register for permission denied messages
@@ -146,10 +146,8 @@ class Control < Plugin
       state_handling_if_alone
     end
   end
-  def handle_chat(msg, message)
-  end
   
-  def handle_chit(msg, message)
+  def handle_chat(msg, message)
     super
     # Put message in Messagehistory and pop old's if size exceeds max. historysize.
     msg.username = @@bot[:cli].users[msg.actor].name
