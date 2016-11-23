@@ -312,6 +312,8 @@ class MumbleMPD
 
       #FIXME
       #msg.message.gsub!(/(<[^<^>]*>)/, "") #Strip html tags. #BEFORE doing this we need to ensure that no plugin needs the html source code. For example youtube plugin needs them...
+      msg.message.strip! #remove leading and trailing whitespaces
+      msg.message.gsub!(/\s/," ") #replace all carriage return and newline in message to spaces
 
       blacklisted_commands = @settings["main"]["blacklisted_commands"]
 
