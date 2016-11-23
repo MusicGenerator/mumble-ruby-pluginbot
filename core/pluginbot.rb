@@ -184,6 +184,9 @@ class MumbleMPD
 
       #Start duckthread
       @duckthread = Thread.new do
+        Thread.current["user"]=@settings["mumble"]["name"]
+        Thread.current["process"]="main (ducking)"
+        debug Thread.current.to_s
         while (true == true)
           while (@cli.player.volume != 100)
             @cli.player.volume += 2 if @cli.player.volume < 100
@@ -207,6 +210,7 @@ class MumbleMPD
         @settings[:set_avatar_available]  = false
       end
 
+      # Register Callbacks
       @cli.on_user_state do |msg|
         handle_user_state_changes(msg)
       end
@@ -251,6 +255,8 @@ class MumbleMPD
 
       ## Enable Ticktimer Thread
       @ticktimer = Thread.new do
+        Thread.current["user"]=@settings["mumble"]["name"]
+        Thread.current["process"]="main (timertick)"
         timertick
       end
 
@@ -518,8 +524,8 @@ class MumbleMPD
                   if t["process"]
                       output << I18n.t("jobs.status", :process => t["process"], :status => t.status.to_s, :name=> t["user"])
                   end
-                  @cli.text_user(msg.actor, output)
                 end
+                @cli.text_user(msg.actor, output)
               end
 
               if message == 'internals'
@@ -580,7 +586,7 @@ class MumbleMPD
     end
   end
 end
-
+  
 client = MumbleMPD.new
 loop do #https://github.com/bbatsov/ruby-style-guide#infinite-loop
   puts "OK: Initializing settings..."
@@ -592,6 +598,7 @@ loop do #https://github.com/bbatsov/ruby-style-guide#infinite-loop
   rescue
     puts "ERROR: Pluginbot could not start."
     puts $!
+    puts $@
   end
 
   sleep 3
