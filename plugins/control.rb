@@ -13,10 +13,9 @@ class Control < Plugin
       end
       @history = Array.new
       @muted = false
+      #@bot[:cli].mute false 
       @stopped_because_unregisterd = false                              #used to determine if bot should get back in playstate
       @playing  = !@@bot[:mpd].paused?
-      @@bot[:cli].mute false
-
       # Register for permission denied messages
       @@bot[:cli].on_permission_denied do |msg|
         nopermission(msg)
@@ -103,14 +102,10 @@ class Control < Plugin
         end
       end
       # mute myself and save that I've done it myself
-      me.mute true
-      @muted = true
+      selfmute true
     else
       # only unmute me if I've muted myself before
-      if @muted == true
-        me.mute false
-        @muted = false
-      end
+      selfmute false
       # start playing only I've stopped myself
       if @playing == false
         @@bot[:mpd].pause = false
@@ -151,8 +146,10 @@ class Control < Plugin
       state_handling_if_alone
     end
   end
-
   def handle_chat(msg, message)
+  end
+  
+  def handle_chit(msg, message)
     super
     # Put message in Messagehistory and pop old's if size exceeds max. historysize.
     msg.username = @@bot[:cli].users[msg.actor].name
@@ -170,7 +167,7 @@ class Control < Plugin
         #additionally do a "wakeup"
         @@bot[:mpd].pause = false
         @@bot[:cli].me.deafen false if @@bot[:cli].me.deafened?
-        @@bot[:cli].me.mute false if @@bot[:cli].me.muted?
+        selfmute false
       end
     end
     if message == 'debug'
@@ -199,7 +196,7 @@ class Control < Plugin
     if message == 'wakeup'
       @@bot[:mpd].pause = false
       @@bot[:cli].me.deafen false if @@bot[:cli].me.deafened?
-      @@bot[:cli].me.mute false if @@bot[:cli].me.muted?
+      selfmute false
     end
 
     if message == 'follow'
@@ -327,6 +324,15 @@ class Control < Plugin
         privatemessage( "Automute is now deactivated")
         @@bot["main"]["automute_if_alone"] = false
       end
+    end
+  end
+
+  private
+
+  def selfmute(mute)
+    if mute != @muted
+      @muted = !@muted
+      @@bot[:cli].mute @muted
     end
   end
 end
