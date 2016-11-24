@@ -84,6 +84,8 @@ class Mpd < Plugin
       @@bot[:mpd].connect true #without true bot does not @@bot[:cli].text_channel messages other than for !status
 
       Thread.new do
+        Thread.current["user"]=@@bot["mumble"]["name"]
+        Thread.current["process"]="mpd (display info)"
         mpd =@@bot[:mpd]
         lastcurrent = nil
         init = true
