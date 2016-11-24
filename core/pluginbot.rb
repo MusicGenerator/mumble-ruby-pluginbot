@@ -119,7 +119,6 @@ class MumbleMPD
     @configured_settings[:language] ||= :en
     I18n.default_locale=@configured_settings[:language]
     @run = false
-    puts @cli if !@cli==nil
     @cli = Mumble::Client.new(@settings["mumble"]["host"], @settings["mumble"]["port"]) do |conf|
       conf.username = @settings["mumble"]["name"]
       conf.password = @settings["mumble"]["password"]
