@@ -119,7 +119,7 @@ class MumbleMPD
     @configured_settings[:language] ||= :en
     I18n.default_locale=@configured_settings[:language]
     @run = false
-    @cli = nil
+    puts @cli if !@cli==nil
     @cli = Mumble::Client.new(@settings["mumble"]["host"], @settings["mumble"]["port"]) do |conf|
       conf.username = @settings["mumble"]["name"]
       conf.password = @settings["mumble"]["password"]
@@ -142,8 +142,16 @@ class MumbleMPD
     calc_overall_bandwidth(@cli.get_frame_length, @cli.get_bitrate)
   end
 
-  def mumble_start
+  def mumble_kill
+    Thread.list.each do |t|
+      if t["process"]
+        debug "killing #{t["process"]} from user #{t["user"]}"
+        t.kill
+      end
+    end
+  end
 
+  def mumble_start
     @cli.on_server_config do |serverconfig|
       @settings["mumble"]["imagelength"] = serverconfig.image_message_length
       @settings["mumble"]["messagelength"] = serverconfig.message_length
@@ -323,18 +331,6 @@ class MumbleMPD
 
       blacklisted_commands = @settings["main"]["blacklisted_commands"]
 
-      if msg.message == @settings["main"]["superpassword"]+"restart"
-        if blacklisted_commands.include?("superpassword")
-          @cli.text_user(msg.actor, I18n.t('command_blacklisted'))
-          return
-        end
-
-        @settings = @configured_settings.clone
-        @cli.text_channel(@cli.me.current_channel,@superanswer);
-        @run = false
-        @cli.disconnect
-      end
-
       if msg.message == @settings["main"]["superpassword"]+"reset"
         if blacklisted_commands.include?("superpassword")
           @cli.text_user(msg.actor, I18n.t('command_blacklisted'))
@@ -404,13 +400,6 @@ class MumbleMPD
 
               if message == 'reset'
                 @settings = @configured_settings.clone if @settings["main"]["bound"] == msg_userid
-              end
-
-              if message == 'restart'
-                if @settings["main"]["bound"] == msg_userid
-                  @run=false
-                  @cli.disconnect
-                end
               end
 
               if message == 'register'
@@ -522,7 +511,7 @@ class MumbleMPD
                 output = ""
                 Thread.list.each do |t|
                   if t["process"]
-                      output << I18n.t("jobs.status", :process => t["process"], :status => t.status.to_s, :name=> t["user"])
+                    output << I18n.t("jobs.status", :process => t["process"], :status => t.status.to_s, :name=> t["user"])
                   end
                 end
                 @cli.text_user(msg.actor, output)
@@ -588,32 +577,30 @@ class MumbleMPD
 end
   
 client = MumbleMPD.new
-loop do #https://github.com/bbatsov/ruby-style-guide#infinite-loop
-  puts "OK: Initializing settings..."
-  client.init_settings
-  puts "OK: Pluginbot is starting..."
-  begin
-    puts "OK: Pluginbot is running."
-    client.mumble_start
-  rescue
-    puts "ERROR: Pluginbot could not start."
-    puts $!
-    puts $@
-  end
+client.init_settings
 
-  sleep 3
-  begin
-    while client.run == true
-        sleep 0.5
-    end
-  rescue
-    puts "ERROR: An error occurred: #{$!}"
-    puts "ERROR: Backtrace: #{$@}"
-    client.disconnect
+puts "OK: Pluginbot is starting..."
+begin
+  puts "OK: Pluginbot is running."
+  client.mumble_start
+rescue
+  puts "ERROR: Pluginbot could not start."
+  puts $!
+  puts $@
+end
+
+sleep 3
+begin
+  while client.run == true
+      sleep 0.5
   end
-  puts " "
-  puts "----------------------------------------------"
-  puts "-- Restart                                  --"
-  puts "----------------------------------------------"
-  sleep 0.5
+rescue
+  puts "ERROR: An error occurred: #{$!}"
+  puts "ERROR: Backtrace: #{$@}"
+end
+
+client.disconnect
+client.mumble_kill
+Thread.list.each do |t|
+  t.kill if t!=Thread.main
 end
