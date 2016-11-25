@@ -47,28 +47,38 @@ class Plugin
     begin
       @@bot[:cli].text_user(@user, message)
     rescue
-      puts "Sending message to user #{@user} failed. Maybe left server before we try to send."
+      logger "WARN: Sending message to user #{@user} failed. Maybe left server before we try to send. Message:'#{message}'"
     end
   end
   def messageto(actor, message)
     begin
       @@bot[:cli].text_user(actor, message)
     rescue
-      puts "Sending message to user #{actor} failed. Maybe left server before we try to send."
+      logger "WARN: Sending message to user #{actor} failed. Maybe left server before we try to send. Message:'#{message}'"
     end
   end
   def channelmessage(message)
     begin
       @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, message)
     rescue
-      puts "Sending message to channel #{@@bot[:cli].me.current_channel} failed. ->should never happen<-"
+      logger "WARN: Sending message to channel '#{@@bot[:cli].me.current_channel}' failed. Message:'#{message}'"
     end
   end
 
-
-  def debug(message)
+  def logger(logline)
     if @@bot[:debug]
-      puts "Plugin[#{self.class.name}] "+message
+      logline="#{Time.new.to_s} : #{logline}\n"
+      if @@bot["main"]["logfile"] == nil
+        puts logline.chomp
+      else
+        written = IO.write(@@bot["main"]["logfile"], logline, mode: 'a')
+        if written != logline.length
+          puts "ERROR: Logfile (#{@@bot['main']['logfile']}) is not writeable, logging to stdout instead"
+          puts logline.chomp
+          @@bot["main"]["logfile"] = nil
+        end
+      end
     end
   end
+
 end

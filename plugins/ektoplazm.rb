@@ -10,8 +10,8 @@ class Ektoplazm < Plugin
         Dir.mkdir(@ektoplazmfolder) unless File.exists?(@ektoplazmfolder)
         Dir.mkdir(@tempektoplazmfolder) unless File.exists?(@tempektoplazmfolder)
       rescue
-        debug "ERROR: Ektoplazm-Plugin doesn't found settings for mpd music directory and/or your preferred temporary download directory"
-        debug "See config/config.yml"
+        logger "ERROR: Ektoplazm-Plugin doesn't found settings for mpd music directory and/or your preferred temporary download directory"
+        logger "See config/config.yml"
       end
       @consoleaddition = ""
       @consoleaddition = @@bot["plugin"]["ektoplazm"]["prefixes"] if @@bot["plugin"]["ektoplazm"]["prefixes"]
@@ -49,7 +49,7 @@ class Ektoplazm < Plugin
 
         if ( link.include? "www.ektoplazm.com/files" ) then
           if !File.writable?(@temp) || !File.writable?(@destination)
-            debug "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
+            logger "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
             #error << "I do not have write permissions in temp or in music directory. Please contact an admin."
             #return error
           end
@@ -89,7 +89,7 @@ class Ektoplazm < Plugin
               # end
               # and uncomment it there, then build gem new.
             rescue
-              debug "[INFO] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds." if @@bot[:debug]
+              logger "[INFO] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds."
               sleep 10
             end
 

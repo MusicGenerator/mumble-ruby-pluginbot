@@ -10,8 +10,8 @@ class Mixcloud < Plugin
         Dir.mkdir(@destination) unless File.exists?(@destination)
         Dir.mkdir(@temp) unless File.exists?(@temp)
       rescue
-        debug "ERROR: Mixcloud-Plugin didn't found settings for mpd music directory and/or your preferred temporary download directory"
-        debug "See config/config.yml"
+        logger "ERROR: Mixcloud-Plugin didn't found settings for mpd music directory and/or your preferred temporary download directory"
+        logger "See config/config.yml"
       end
       @ytdloptions = ""
       @consoleaddition = ""
@@ -85,7 +85,7 @@ class Mixcloud < Plugin
   def get_song(site)
     if ( site.include? "mixcloud.com/" ) then
       if !File.writable?(@temp) || !File.writable?(@destination)
-        debug "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
+        logger "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
         #error << "I do not have write permissions in temp or in music directory. Please contact an admin."
         return
       end
@@ -107,7 +107,7 @@ class Mixcloud < Plugin
         finaldirectory = "#{@destination}"
       end
 
-      debug site
+      logger site
 
       filename = `#{@@bot["plugin"]["mixcloud"]["youtube_dl"]["path"]} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`
       output =`nice -n20 #{@consoleaddition} #{@@bot["plugin"]["mixcloud"]["youtube_dl"]["path"]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon

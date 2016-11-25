@@ -10,8 +10,8 @@ class Bandcamp < Plugin
         Dir.mkdir(@destination) unless File.exists?(@destination)
         Dir.mkdir(@temp) unless File.exists?(@temp)
       rescue
-        debug "Error: bandcamp-Plugin didn't found settings for mpd music directory and/or your preferred temporary download directory"
-        debug "See config/config.yml"
+        logger "Error: bandcamp-Plugin didn't found settings for mpd music directory and/or your preferred temporary download directory"
+        logger "See config/config.yml"
       end
       @ytdloptions = ""
       @consoleaddition = ""
@@ -51,7 +51,7 @@ class Bandcamp < Plugin
 
     if message.start_with?("bandcamp <a href=") || message.start_with?("<a href=") then
       if !File.writable?(@temp) || !File.writable?(@destination)
-        debug "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
+        logger "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
         #error << "I do not have write permissions in temp or in music directory. Please contact an admin."
         #return error
       end
@@ -107,7 +107,7 @@ class Bandcamp < Plugin
         finaldirectory = "#{@destination}"
       end
 
-      debug site
+      logger site
 
       filename = `#{@@bot["plugin"]["bandcamp"]["youtube_dl"]["path"]} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`
       output =`nice -n20 #{@consoleaddition} #{@@bot["plugin"]["bandcamp"]["youtube_dl"]["path"]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon

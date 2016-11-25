@@ -112,7 +112,7 @@ class Mpd < Plugin
                   output << "</table><br>" + @infotemplate
                   @@bot[:cli].set_comment(output)
                 rescue NoMethodError
-                  debug "#{$!}"
+                  logger "#{$!}"
                 end
               else
                 if current.artist.nil? && current.title.nil? && current.album.nil?
@@ -122,7 +122,7 @@ class Mpd < Plugin
                 end
               end
             lastcurrent = current
-            debug "OK: [displayinfo] updated." if @@bot[:debug]
+            logger "OK: [displayinfo] updated."
             end
           end
         end
@@ -244,7 +244,7 @@ class Mpd < Plugin
         channelmessage( "Now on position #{timedecode @@bot[:mpd].status[:time][0]}/#{timedecode @@bot[:mpd].status[:time][1]}.")
       rescue
         # mpd is old and knows no seek commands
-        debug "ERROR: seek without success, maybe mpd version < 0.17 installed"
+        logger "ERROR: seek without success, maybe mpd version < 0.17 installed"
         channelmessage( "Seeking failed.")
       end
     end
@@ -634,7 +634,7 @@ class Mpd < Plugin
           @@bot[:cli].set_comment(@template_if_comment_enabled)
         end
       rescue NoMethodError
-        debug "#{$!}"
+        logger "#{$!}"
       end
     end
 

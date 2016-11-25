@@ -76,7 +76,7 @@ class Control < Plugin
       Thread.kill(@following) if @following
       @alreadyfollowing = false
     rescue TypeError
-	  debug "No following thread but try to kill. #{$!}"
+	  logger "No following thread but try to kill. #{$!}"
     end
   end
 
@@ -205,7 +205,7 @@ class Control < Plugin
           Thread.kill(@following)
           @alreadyfollowing = false
         rescue TypeError
-          debug "#{$!}"
+          logger "#{$!}"
         end
       else
         privatemessage( "I am following your steps, master.")
@@ -224,7 +224,7 @@ class Control < Plugin
           sleep 0.5
         end
       rescue
-        debug "#{$!}" 
+        logger "#{$!}" 
 
         @alreadyfollowing = false
         Thread.kill(@following)
@@ -243,7 +243,7 @@ class Control < Plugin
           Thread.kill(@following)
           @alreadyfollowing = false
         rescue TypeError
-          debug "#{$!}"
+          logger "#{$!}"
           privatemessage( "#{@controlstring}follow hasn't been executed yet.")
         end
       end
@@ -257,7 +257,7 @@ class Control < Plugin
           Thread.kill(@sticked)
           @alreadysticky = false
         rescue TypeError
-          debug "#{$!}"
+          logger "#{$!}"
         end
       else
         privatemessage( "I am now sticked to this channel.")
@@ -280,7 +280,7 @@ class Control < Plugin
             @alreadysticky = false
             @@bot[:cli].join_channel(@@bot[:mumbleserver_targetchannel])
             Thread.kill(@sticked)
-            debug "#{$!}"
+            logger "#{$!}"
           end
         end
       end
@@ -297,7 +297,7 @@ class Control < Plugin
         begin
           Thread.kill(@sticked)
         rescue TypeError
-          debug "#{$!}"
+          logger "#{$!}"
         end
       end
     end

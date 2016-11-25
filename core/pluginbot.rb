@@ -26,11 +26,12 @@ class MumbleMPD
   attr_reader :run
 
   def initialize
+    @logging = []
     # load all plugins
     require './plugin'
     Dir["../plugins/*.rb"].each do |f|
       require f
-      puts "OK: Plugin \"#{f}\" loaded."
+      earlylog "OK: Plugin \"#{f}\" loaded."
     end
     @plugin = Array.new
     @settings = Hash.new()
@@ -38,30 +39,30 @@ class MumbleMPD
     #Read config file if available
     begin
       @settings = YAML::load_file('../config/config.yml')
-      puts "OK: Main configuration \"../config/config.yml\" loaded."
+      earlylog "OK: Main configuration \"../config/config.yml\" loaded."
       Dir["../plugins/*.yml"].each do |f|
         deep_merge!(@settings, YAML::load_file(f))
-        puts "OK: Plugin configuration \"#{f}\" loaded."
+        earlylog "OK: Plugin configuration \"#{f}\" loaded."
       end
     rescue
-      puts "Warning: Main configuration OR one OR more plugin configurations could not be loaded! Ignoring them and using default configuration."
+      earlylog "Warning: Main configuration OR one OR more plugin configurations could not be loaded! Ignoring them and using default configuration."
     end
     OptionParser.new do |opts|
       opts.banner = "Usage: pluginbot.rb [options]"
 
       opts.on("--config=", "(Relative) path and filename to config") do |v|
-      puts "OK: Parsing extra configuration file \"#{v}\" (--config parameter)"
+      earlylog "OK: Parsing extra configuration file \"#{v}\" (--config parameter)"
         if File.exist? v
           begin
             overwrite = YAML::load_file(v)
             deep_merge!(@settings, overwrite)
           rescue
-            puts "Warning: Your config \"#{v}\" could not be loaded! Using default configuration."
+            earlylog "Warning: Your config \"#{v}\" could not be loaded! Using default configuration."
           end
         else
-          puts "Config path- and/or filename is wrong!"
-          puts "used #{v}"
-          puts "Config not loaded!"
+          earlylog "Config path- and/or filename is wrong!"
+          earlylog "used #{v}"
+          earlylog "Config not loaded!"
         end
       end
 
@@ -111,6 +112,12 @@ class MumbleMPD
     end.parse!
     @settings["main"]["duckvol"] ||= 20
     @configured_settings = @settings.clone
+    # now it is time to empty early log to logfile if it exist!
+    logger "-------------------------Start Logging-------------------------------"
+    @logging.each do |message|
+      logger message
+    end
+   
   end
 
   def init_settings
@@ -144,13 +151,14 @@ class MumbleMPD
   def mumble_kill
     Thread.list.each do |t|
       if t["process"]
-        debug "killing #{t["process"]} from user #{t["user"]}"
+        logger "killing #{t["process"]} from user #{t["user"]}"
         t.kill
       end
     end
   end
 
   def mumble_start
+    logger "OK: start connecting"
     @cli.on_server_config do |serverconfig|
       @settings["mumble"]["imagelength"] = serverconfig.image_message_length
       @settings["mumble"]["messagelength"] = serverconfig.message_length
@@ -166,34 +174,33 @@ class MumbleMPD
     max_connecting_time = 10
     while not @cli.connected? do
       sleep(0.5)
-      debug "OK: Connecting to the server is still ongoing."
+      logger "OK: Connecting to the server is still ongoing."
       max_connecting_time -= 1
       if max_connecting_time < 1
-        debug "Error: Connection timed out"
+        logger "Error: Connection timed out"
         @cli.disconnect
         break
       end
     end
     if @cli.connected?
-      puts "OK: Pluginbot successfully connected to \"#{@settings["mumble"]["host"]}:#{@settings["mumble"]["port"]}\"."
+      logger "OK: Pluginbot successfully connected to \"#{@settings["mumble"]["host"]}:#{@settings["mumble"]["port"]}\"."
       begin
         @cli.join_channel(@settings["mumble"]["channel"])
-        puts "OK: Pluginbot entered configured channel \"#{@settings["mumble"]["channel"]}\"."
+        logger "OK: Pluginbot entered configured channel \"#{@settings["mumble"]["channel"]}\"."
       rescue
-        debug "Error: [joincannel]#{$1} Can't join #{@settings["mumble"]["channel"]}!"
+        logger "ERROR: Can't join channel '#{@settings["mumble"]["channel"]}'!"
       end
 
       begin
-        Thread.kill(@duckthread)
+        Thread.kill(@duckthread) if @ducktread != nil
       rescue
-        debug "Error: [killduckthread] can't kill because #{$!}"
+        logger "ERROR: [killduckthread] can't kill because #{$!}"
       end
-
+      logger "OK: Starting Duckthread..."
       #Start duckthread
       @duckthread = Thread.new do
         Thread.current["user"]=@settings["mumble"]["name"]
         Thread.current["process"]="main (ducking)"
-        debug Thread.current.to_s
         while (true == true)
           while (@cli.player.volume != 100)
             @cli.player.volume += 2 if @cli.player.volume < 100
@@ -202,12 +209,12 @@ class MumbleMPD
           Thread.stop
         end
       end
-
+      logger "OK: Duckthread is spawned"
       begin
         @cli.set_comment('Mumble_Ruby_Pluginbot')
         @settings[:set_comment_available] = true
       rescue NoMethodError
-        debug "[displaycomment]#{$!}"
+        logger "[displaycomment]#{$!}"
         @settings[:set_comment_available]  = false
       end
       begin
@@ -216,7 +223,7 @@ class MumbleMPD
       rescue
         @settings[:set_avatar_available]  = false
       end
-
+      logger "OK: Bot Avatar and Comment are set"
       # Register Callbacks
       @cli.on_user_state do |msg|
         handle_user_state_changes(msg)
@@ -232,15 +239,15 @@ class MumbleMPD
           @duckthread.run if @duckthread.stop?
         end
       end
-
+      logger "OK: Primary Bot Setup complete"
       @run = true
       @cli.player.stream_named_pipe(@settings["main"]["fifo"])
-
+      logger "OK: Stream Pipe is connected"
       #init all plugins
       init = @settings.clone
       init[:cli] = @cli
 
-      puts "OK: Initializing plugins..."
+      logger "OK: Initializing plugins..."
       Plugin.plugins.each do |plugin_class|
         @plugin << plugin_class.new
       end
@@ -258,7 +265,7 @@ class MumbleMPD
         maxcount -= 1
         break if maxcount <= 0
       end
-      puts "Warning: Maybe not all plugins are functional!" if maxcount <= 0
+      logger "Warning: Maybe not all plugins are functional!" if maxcount <= 0
 
       ## Enable Ticktimer Thread
       @ticktimer = Thread.new do
@@ -281,7 +288,7 @@ class MumbleMPD
       	begin
           plugin.ticks(time)
         rescue
-          debug "ERROR: Plugin #{plugin.name} throws error in timertick"
+          logger "ERROR: Plugin #{plugin.name} throws error in timertick"
         end
       end
     end
@@ -306,11 +313,11 @@ class MumbleMPD
         sender_is_registered = true
       end
 
-      debug "Debug: Got a message from \"#{@cli.users[msg.actor].name}\" (user id: #{msg_userid}, session id: #{msg.actor}). Content: \"#{msg.message}\""
+      logger "Debug: Got a message from \"#{@cli.users[msg.actor].name}\" (user id: #{msg_userid}, session id: #{msg.actor}). Content: \"#{msg.message}\""
       # check if User is on a blacklist
       begin
         if @settings.has_key?(@cli.users[msg.actor].hash.to_sym)
-          debug "Debug: User with userid \"#{msg_userid}\" is in blacklist! Ignoring him."
+          logger "Debug: User with userid \"#{msg_userid}\" is in blacklist! Ignoring him."
 
           sender_is_registered = false # If on blacklist handle user as if he was unregistered.
         end
@@ -370,7 +377,7 @@ class MumbleMPD
                 begin
                   plugin.handle_chat(msg, message)
                 rescue
-                  debug "ERROR: Plugin #{plugin.name} throws error in handle_chat"
+                  logger "ERROR: Plugin #{plugin.name} throws error in handle_chat"
                 end
               end
 
@@ -540,10 +547,10 @@ class MumbleMPD
             end
           end
         else
-          debug "DEBUG: Not listening because @settings[:listen_to_private_message_only] is true and message was sent to channel."
+          logger "DEBUG: Not listening because @settings[:listen_to_private_message_only] is true and message was sent to channel."
         end
       else
-        debug "DEBUG: Not listening because @settings[:listen_to_registered_users_only] is true and sender is unregistered or on a blacklist."
+        logger "DEBUG: Not listening because @settings[:listen_to_registered_users_only] is true and sender is unregistered or on a blacklist."
       end
     end
   end
@@ -566,11 +573,25 @@ class MumbleMPD
       Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
     target.merge! data, &merger
   end
-
-  def debug(message)
+  
+  def earlylog(message)
+    @logging.push message
+    puts message    
+  end
+   
+  def logger(message)
     if @settings[:debug]
-      time=Time.new
-      puts time.to_s + message.to_s
+      logline="#{Time.new.to_s} : #{message}\n"
+      if @settings["main"]["logfile"] == nil
+        puts logline.chomp
+      else
+        written = IO.write(@settings["main"]["logfile"], logline, mode: 'a')
+        if written != logline.length
+		  puts "ERROR: Logfile (#{@settings['main']['logfile']}) is not writeable, logging to stdout instead"
+		  puts logline.chomp
+		  @settings["main"]["logfile"] = nil
+		end
+      end
     end
   end
 end

@@ -10,8 +10,8 @@ class Soundcloud < Plugin
         Dir.mkdir(@destination) unless File.exists?(@destination)
         Dir.mkdir(@temp) unless File.exists?(@temp)
       rescue
-        debug "ERROR: soundcloud-Plugin doesn't found settings for mpd music directory and/or your preferred temporary download directory"
-        debug "See pluginbot_conf.yaml"
+        logger "ERROR: soundcloud-Plugin doesn't found settings for mpd music directory and/or your preferred temporary download directory"
+        logger "See pluginbot_conf.yaml"
       end
       begin
         @ytdloptions = @@bot["plugin"]["soundcloud"]["youtube_dl"]["options"]
@@ -87,7 +87,7 @@ class Soundcloud < Plugin
     error = Array.new
     if ( site.include? "soundcloud.com/" ) then
       if !File.writable?(@temp) || !File.writable?(@destination)
-        debug "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
+        logger "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
         error << "I do not have write permissions in temp or in music directory. Please contact an admin."
         return error
       end

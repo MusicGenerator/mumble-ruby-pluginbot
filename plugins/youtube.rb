@@ -12,8 +12,8 @@ class Youtube < Plugin
         Dir.mkdir(@destination) unless File.exists?(@destination)
         Dir.mkdir(@temp) unless File.exists?(@temp)
       rescue
-        debug "Error: Youtube-Plugin didn't find settings for mpd music directory and/or your preferred temporary download directory."
-        debug "See ../config/config.yml"
+        logger "Error: Youtube-Plugin didn't find settings for mpd music directory and/or your preferred temporary download directory."
+        logger "See ../config/config.yml"
       end
       begin
         @ytdloptions = @@bot["plugin"]["youtube"]["options"]
@@ -145,7 +145,7 @@ class Youtube < Plugin
           id_list = msg_parameters.match(/(?:[\d{1,3}\ ?])+/)[0].split
           id_list.each do |id|
             downloadid = @keylist[msg.actor][id.to_i]
-            debug downloadid.inspect
+            logger downloadid.inspect
             out << "ID: #{id}, Name: \"#{downloadid[1]}\"<br>"
             link << "https://www.youtube.com/watch?v="+downloadid[0]
           end
@@ -222,7 +222,7 @@ class Youtube < Plugin
 
     if ( site.include? "www.youtube.com/" ) || ( site.include? "www.youtu.be/" ) || ( site.include? "m.youtube.com/" ) then
       if !File.writable?(@temp) || !File.writable?(@destination)
-        debug "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
+        logger "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
         error << "I do not have write permissions in temp or in music directory. Please contact an admin."
         return error
       end
