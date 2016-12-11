@@ -48,7 +48,7 @@ de:
     status:              "%{process} ist im Status %{status} und geh&ouml;rt %{name}.<br>"
 
   help:
-    internal:            "<br /><span style='color:red;'><b>Interne Befehle/b></span><br />
+    internal:            "<br /><span style='color:red;'><b>Interne Befehle</b></span><br />
                             <b>superpassword+restart</b> Startet den Bot neu.<br />
                             <b>superpassword+reset</b> Setzt die Einstellungen zur&uuml;ck.<br />
                             <b>%{cc}about</b> Zeigt Informationen &uuml;ber den Bot.<br />
@@ -64,6 +64,7 @@ de:
                             <b>%{cc}duckvol <i>volume</i></b> Setze Lautst&auml;rkenabsenkung auf volume % der Normallautst&auml;rke.<br />
                             <b>%{cc}duckvol</b> Zeige eingestellte Lautst&auml;rkenabsenkung.<br />
                             <b>%{cc}bitrate <i>rate in kbit/s</i></b> Stelle Audiobitrate. Beachte das der Bot zus&auml;tzliche Bandbreite zur Audiobandbreite verbraucht.<br />
+                            <b>%{cc}framesize <i>size in msek</i></b> Stelle Framegr&ouml;&szlig;e in Millisekunden. Gr&ouml;ssere Werte verursachen kleineren Overhead. G&uuml;ltige Werte sind 10, 20, 40 und 60 msek.<br />
                             <b>%{cc}bandwidth</b> Zeigt Informationen zur Gesammtbandbreite, Audiobandbreite und Paketgr&ouml;sse an."
     default:              "<br />\
                             Hallo ich bin ein <a href='https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot'>Mumble-Ruby-Pluginbot</a> und DU kannst mich mit Textkommandos steuern.<br /><br />

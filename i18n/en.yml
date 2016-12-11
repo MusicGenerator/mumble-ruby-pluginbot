@@ -64,6 +64,7 @@ en:
                             <b>%{cc}duckvol <i>volume</i></b> Set the ducking volume (% of normal volume).<br />
                             <b>%{cc}duckvol</b> Show current ducking volume.<br />
                             <b>%{cc}bitrate <i>rate in kbit/s</i></b> Set audio encoding rate. Note that the bot needs additional bandwidth for overhead so the overall bandwidth is higher than this bitrate.<br />
+                            <b>%{cc}framesize <i>size in msec</i></b> Set framesize in milliseconds. Greater values causes smaller overhead. Valid values are 10, 20, 40 and 60 msec<br />
                             <b>%{cc}bandwidth</b> Show information about the overall bandwidth, audo bandwidth (bitrate) and framesize."
     default:              "<br />\
                             Hi, I am a <a href='https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot'>Mumble-Ruby-Pluginbot</a> and YOU can control me through text commands.<br /><br />
