@@ -22,7 +22,8 @@ class Version < Plugin
     if message == "version"
       versionshort = `git rev-parse --short HEAD`
       versionlong = `git rev-parse HEAD`
-      privatemessage("Version: #{versionshort.to_s} / #{versionlong.to_s}")
+      date = `git log -n1 --format="%at"`
+      privatemessage("Version: #{versionshort.to_s} / #{versionlong.to_s} / #{Time.at(date.to_i).utc}")
     end
   end
 end
