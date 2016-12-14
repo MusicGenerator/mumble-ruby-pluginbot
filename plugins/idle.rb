@@ -18,7 +18,7 @@ class Idle < Plugin
     end
 
     if @is_idle == true
-      idle_timeframe = Time.now.getutc - @timestamp_idle_started
+      idle_timeframe = (Time.now.getutc - @timestamp_idle_started).to_i
 
       if (idle_timeframe) >= @@bot["plugin"]["idle"]["maxidletime"]
         if @@bot["plugin"]["idle"]["idleaction"] == "deafen"
@@ -47,11 +47,14 @@ class Idle < Plugin
   def handle_chat(msg, message)
     super
     if message == "idletime"
+      status_message = "<br />Maximum idle time is set to: #{@@bot["plugin"]["idle"]["maxidletime"]} seconds.
+                        <br />Idle action is: #{@@bot["plugin"]["idle"]["idleaction"]}."
+
       if @is_idle
-        current_idle_time = Time.now.getutc - @timestamp_idle_started
-        privatemessage("Current idle time is: #{current_idle_time.to_s}<br />Maximum idle time is: #{@@bot["plugin"]["idle"]["maxidletime"]}")
+        current_idle_time = (Time.now.getutc - @timestamp_idle_started).to_i
+        privatemessage("<br />Current idle time is: #{current_idle_time.to_s} seconds. #{status_message}")
       else
-        privatemessage("The bot is not idle currently.<br />")
+        privatemessage("<br />The bot is currently not idle.#{status_message}")
       end
     end
   end
