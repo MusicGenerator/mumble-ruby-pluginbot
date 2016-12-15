@@ -296,9 +296,13 @@ class Mpd < Plugin
     @@bot[:mpd].stop if message == 'stop'
 
     if message == 'play'
-      @@bot[:mpd].play
-      @@bot[:cli].me.deafen false if @@bot[:cli].me.deafened?
-      @@bot[:cli].me.mute false if @@bot[:cli].me.muted?
+      if @@bot[:mpd].queue.length == 0
+        privatemessage("My queue is empty, cannot start playing.")
+      else
+        @@bot[:mpd].play
+        @@bot[:cli].me.deafen false if @@bot[:cli].me.deafened?
+        @@bot[:cli].me.mute false if @@bot[:cli].me.muted?
+      end
     end
 
     if message == 'play first'
