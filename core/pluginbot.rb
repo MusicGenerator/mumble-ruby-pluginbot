@@ -117,7 +117,7 @@ class MumbleMPD
     @logging.each do |message|
       logger message
     end
-   
+
   end
 
   def init_settings
@@ -188,7 +188,7 @@ class MumbleMPD
         @cli.join_channel(@settings["mumble"]["channel"])
         logger "OK: Pluginbot entered configured channel \"#{@settings["mumble"]["channel"]}\"."
       rescue
-        logger "ERROR: Can't join channel '#{@settings["mumble"]["channel"]}'!"
+        logger "ERROR: Can't join channel '#{@settings["mumble"]["channel"]}'! (#{$!})"
       end
 
       begin
@@ -288,7 +288,7 @@ class MumbleMPD
       	begin
           plugin.ticks(time)
         rescue
-          logger "ERROR: Plugin #{plugin.name} throws error in timertick"
+          logger "ERROR: Plugin #{plugin.name} throws error in timertick (#{$!})"
         end
       end
     end
@@ -377,7 +377,7 @@ class MumbleMPD
                 begin
                   plugin.handle_chat(msg, message)
                 rescue
-                  logger "ERROR: Plugin #{plugin.name} throws error in handle_chat"
+                  logger "ERROR: Plugin #{plugin.name} throws error in handle_chat (#{$!})"
                 end
               end
 
@@ -573,12 +573,12 @@ class MumbleMPD
       Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
     target.merge! data, &merger
   end
-  
+
   def earlylog(message)
     @logging.push message
-    puts message    
+    puts message
   end
-   
+
   def logger(message)
     if @settings[:debug]
       logline="#{Time.new.to_s} : #{message}\n"
@@ -595,7 +595,7 @@ class MumbleMPD
     end
   end
 end
-  
+
 client = MumbleMPD.new
 client.init_settings
 
@@ -604,7 +604,7 @@ begin
   puts "OK: Pluginbot is running."
   client.mumble_start
 rescue
-  puts "ERROR: Pluginbot could not start."
+  puts "ERROR: Pluginbot could not start. (#{$!})"
   puts $!
   puts $@
 end
