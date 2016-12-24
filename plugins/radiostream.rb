@@ -1,5 +1,4 @@
 require_relative '../helpers/StreamCheck.rb'
-require 'rss'
 
 class Radiostream < Plugin
 
