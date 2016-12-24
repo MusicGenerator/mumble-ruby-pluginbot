@@ -12,6 +12,7 @@ class Messages < Plugin
   def init(init)
     super
     if @@bot[:messages].nil?
+      logger("INFO: INIT plugin #{self.class.name}.")
       @priv_notify = Hash.new(0)
       @@bot[:messages] = self
     end

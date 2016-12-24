@@ -3,6 +3,7 @@ class Ektoplazm < Plugin
   def init(init)
     super
     if ( @@bot[:mpd] ) && ( @@bot[:messages] ) && ( @@bot[:ektoplazm].nil? )
+      logger("INFO: INIT plugin #{self.class.name}.")
       begin
         @ektoplazmfolder = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["ektoplazm"]["folder"]["download"]
         @tempektoplazmfolder = @@bot["main"]["tempdir"] + @@bot["plugin"]["ektoplazm"]["folder"]["temp"]

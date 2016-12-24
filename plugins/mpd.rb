@@ -6,10 +6,9 @@ class Mpd < Plugin
     super
     @@bot = init
     #init default template
-    logger("INFO: mpd-plugin init default template")
     @infotemplate = "send <b>#{@@bot["main"]["control"]["string"]}help</b> or <b>#{@@bot["main"]["control"]["string"]}about</b> for more information about me."
-    logger("INFO: mpd-plugin init message hooks")
     if ( @@bot[:messages] ) && ( @@bot[:mpd].nil? ) then
+      logger("INFO: INIT plugin #{self.class.name}.")
       @@bot[:mpd] = MPD.new @@bot["plugin"]["mpd"]["host"], @@bot["plugin"]["mpd"]["port"].to_i
 
       @@bot[:mpd].on :volume do |volume|
@@ -89,7 +88,7 @@ class Mpd < Plugin
       end
       testing.close
       @@bot[:cli].player.stream_named_pipe(@@bot["main"]["fifo"])
-      logger("INFO: mpd-plugin is now connecting to mpd deamon")
+      logger("INFO: mpd-plugin is now connecting to mpd daemon")
       @@bot[:mpd].connect true #without true bot does not @@bot[:cli].text_channel messages other than for !status
       logger("INFO: mpd-plugin is connected.")
       Thread.new do
@@ -142,7 +141,6 @@ class Mpd < Plugin
 
       @@bot[:mpd].volume = @@bot["plugin"]["mpd"]["volume"] if @@bot["plugin"]["mpd"]["volume"]
     end
-
     return @@bot
   end
 

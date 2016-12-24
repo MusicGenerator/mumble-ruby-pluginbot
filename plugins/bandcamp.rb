@@ -4,6 +4,7 @@ class Bandcamp < Plugin
     super
 
     if ( !@@bot[:mpd].nil? ) && ( @@bot[:messages] ) && ( @@bot[:bandcamp].nil? )
+      logger("INFO: INIT plugin #{self.class.name}.")
       begin
         @destination = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["bandcamp"]["folder"]["download"]
         @temp = @@bot["main"]["tempdir"] + @@bot["plugin"]["bandcamp"]["folder"]["temp"]

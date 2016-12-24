@@ -2,6 +2,7 @@ class Timer < Plugin
 
   def init(init)
     super
+    logger("INFO: INIT plugin #{self.class.name}.")
     @nextalarm = 0
     @alarmlist = {}
     @@bot[:bot] = self

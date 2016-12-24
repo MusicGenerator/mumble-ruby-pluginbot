@@ -3,6 +3,7 @@ class Control < Plugin
   def init(init)
     super
     if @@bot[:mpd]
+      logger("INFO: INIT plugin #{self.class.name}.")
       @@bot[:control] = self
       @historysize = 20
       @@bot["main"]["automute_if_alone"] = false if @@bot["main"]["automute_if_alone"].nil?
@@ -13,7 +14,7 @@ class Control < Plugin
       end
       @history = Array.new
       @muted = false
-      #@@bot[:cli].mute false 
+      #@@bot[:cli].mute false
       @stopped_because_unregisterd = false                              #used to determine if bot should get back in playstate
       @playing  = !@@bot[:mpd].paused?
       # Register for permission denied messages
@@ -33,7 +34,7 @@ class Control < Plugin
   end
 
   def name
-    if @@bot[:mpd].nil?
+    if (@@bot[:mpd].nil? == true) || (@historysize.nil? == true)
       "false"
     else
       self.class.name
@@ -146,7 +147,7 @@ class Control < Plugin
       state_handling_if_alone
     end
   end
-  
+
   def handle_chat(msg, message)
     super
     # Put message in Messagehistory and pop old's if size exceeds max. historysize.
@@ -224,7 +225,7 @@ class Control < Plugin
           sleep 0.5
         end
       rescue
-        logger "#{$!}" 
+        logger "#{$!}"
 
         @alreadyfollowing = false
         Thread.kill(@following)

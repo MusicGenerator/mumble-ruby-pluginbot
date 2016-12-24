@@ -5,6 +5,7 @@ class Youtube < Plugin
   def init(init)
     super
     if ( @@bot[:mpd] ) && ( @@bot[:messages] ) && ( @@bot[:youtube].nil? )
+      logger("INFO: INIT plugin #{self.class.name}.")
       begin
         @destination = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["youtube"]["folder"]["download"]
         @temp = @@bot["main"]["tempdir"] + @@bot["plugin"]["youtube"]["folder"]["temp"]

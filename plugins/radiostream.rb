@@ -5,6 +5,7 @@ class Radiostream < Plugin
   def init(init)
     super
     if ( @@bot[:mpd] ) && ( @@bot[:messages] ) && ( @@bot[:radiostream].nil? )
+      logger("INFO: INIT plugin #{self.class.name}.")
       @@bot[:radiostream] = self
       begin
         @xspf = require 'crack'         #parse xspf playlists only if crack gem is installed

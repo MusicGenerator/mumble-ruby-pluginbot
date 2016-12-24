@@ -4,6 +4,7 @@ class Mixcloud < Plugin
     super
 
     if ( !@@bot[:mpd].nil? ) && ( @@bot[:messages] ) && ( @@bot[:mixcloud].nil? )
+      logger("INFO: INIT plugin #{self.class.name}.")
       begin
         @destination = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["mixcloud"]["folder"]["download"]
         @temp = @@bot["main"]["tempdir"] + @@bot["plugin"]["mixcloud"]["folder"]["temp"]

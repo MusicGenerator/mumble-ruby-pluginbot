@@ -3,6 +3,7 @@ class Soundcloud < Plugin
   def init(init)
     super
     if ( @@bot[:mpd] ) && ( @@bot[:messages] ) && ( @@bot[:soundcloud].nil? )
+      logger("INFO: INIT plugin #{self.class.name}.")
       begin
         @destination = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["soundcloud"]["folder"]["download"]
         @temp = @@bot["main"]["tempdir"] + @@bot["plugin"]["soundcloud"]["folder"]["temp"]

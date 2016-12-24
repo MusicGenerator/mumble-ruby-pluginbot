@@ -2,6 +2,7 @@ class Idle < Plugin
 
   def init(init)
     super
+    logger("INFO: INIT plugin #{self.class.name}.")
     @@bot[:bot] = self
     return @@bot
   end
