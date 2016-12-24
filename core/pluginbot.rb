@@ -241,8 +241,8 @@ class MumbleMPD
       end
       logger "OK: Primary Bot Setup complete"
       @run = true
-      @cli.player.stream_named_pipe(@settings["main"]["fifo"])
-      logger "OK: Stream Pipe is connected"
+      #@cli.player.stream_named_pipe(@settings["main"]["fifo"])
+      #logger "OK: Stream Pipe is connected"
       #init all plugins
       init = @settings.clone
       init[:cli] = @cli
