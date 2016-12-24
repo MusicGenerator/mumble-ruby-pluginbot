@@ -33,7 +33,7 @@ class Radiostream < Plugin
     h << "<b>#{@@bot["main"]["control"]["string"]}radioupdate</b> - Update internal stationlist<br>" if @xspf == true
     h << "<b>#{@@bot["main"]["control"]["string"]}radiocategories</b> - Show categories you can search with <b>#{@@bot["main"]["control"]["string"]}radioserach</b><br>" if @xspf == true
     h << "<b>#{@@bot["main"]["control"]["string"]}radiocategory</b> <i>search</i> - List stations found in category 'search'<br>" if @xspf == true
-    h << "<b>#{@@bot["main"]["control"]["string"]}radioselect</b> <i>search number</i> - Add sation from position 'number' in <b>#{@@bot["main"]["control"]["string"]}radiocategory</b> <i>search</i> to the playqueue" if @xspf == true
+    h << "<b>#{@@bot["main"]["control"]["string"]}radioselect</b> <i>search number</i> - Add sation from position 'number' in <b>#{@@bot["main"]["control"]["string"]}radiocategory</b> <i>search</i> to the playqueue<br>" if @xspf == true
     h << "<b>#{@@bot["main"]["control"]["string"]}choose</b> - Shows a list if remote playlist has more choices. (You will get informed if you can use this command).<br>"
     h << "<b>#{@@bot["main"]["control"]["string"]}choose <i>number</i></b> - Choose stream.</b><br><br>"
     h << "   This module should be able to handle most Radio stream URLs you can find :)<br />"

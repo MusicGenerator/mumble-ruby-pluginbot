@@ -88,7 +88,6 @@ class Mpd < Plugin
         puts "MPD-Plugin is waiting for mpd fifo pipe..."
       end
       testing.close
-      
       @@bot[:cli].player.stream_named_pipe(@@bot["main"]["fifo"])
       logger("INFO: mpd-plugin is now connecting to mpd deamon")
       @@bot[:mpd].connect true #without true bot does not @@bot[:cli].text_channel messages other than for !status
