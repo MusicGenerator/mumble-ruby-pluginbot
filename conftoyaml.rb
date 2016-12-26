@@ -45,7 +45,7 @@ read_config("config/config.yml")
 @config["main"]["tempdir"] = c[:main_tempdir].to_s
 @config["main"]["ducking"] = c[:ducking]
 @config["main"]["stop_on_unregistered"] = c[:stop_on_unregistered_users]
-@config["main"]["control"]["string"] = c[:conftrolstring]
+@config["main"]["control"]["string"] = c[:controlstring]
 @config["main"]["certfolder"] = c[:certdirectory]
 @config["main"]["fifo"] = c[:mpd_fifopath]
 @config["main"]["logo"] = c[:logo]
