@@ -2,5 +2,5 @@
 
 plugin:
   idle:
-    maxidletime: 300
+    maxidletime: 600
     idleaction: 'channel' #Can be "deafen" or "channel" different to let the bot join his default channel.

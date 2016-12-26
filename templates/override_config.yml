@@ -29,7 +29,10 @@ mumble:
   channel: Bottest
 
 plugin:
-    mpd:
-      volume: 65
-      host: localhost
-      port: 7701
+  mpd:
+    volume: 65
+    host: localhost
+    port: 7701
+  idle:
+    maxidletime: 600 #in seconds
+    idleaction: 'channel' #Can be "deafen" or "channel" different to let the bot join his default channel.
