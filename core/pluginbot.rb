@@ -375,7 +375,7 @@ class MumbleMPD
 
               @plugin.each do |plugin|
                 begin
-                  plugin.handle_chat(msg, message)
+                  plugin.handle_chat(msg, message) if plugin.name != "false"
                 rescue
                   logger "ERROR: Plugin #{plugin.name} throws error in handle_chat (#{$!})"
                 end
@@ -504,7 +504,7 @@ class MumbleMPD
               if message == 'plugins'
                 help = I18n.t("plugins.loaded._shead")
                 @plugin.each do |plugin|
-                  help << plugin.name + "<br />"
+                  help << plugin.name + "<br />" if plugin.name != "false"
                 end
                 help << I18n.t("plugins.loaded._ehead")
 
