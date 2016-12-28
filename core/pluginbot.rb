@@ -252,20 +252,70 @@ class MumbleMPD
         @plugin << plugin_class.new
       end
 
-      maxcount = @plugin.length
-      allok = 0
-      while allok != @plugin.length do
+#      Thread based plugin initiation
+#      Work also but is no improvemnet
+#      left for better ideas
+#      plug_in = []
+#      @plugin.each do |plugin|
+#        plug_in << Thread.new do
+#          Thread.current["user"]=@settings["mumble"]["name"]
+#          Thread.current["process"]="Init Plugin '#{plugin.class.name}'"
+#          plugin.init(init)
+#          while plugin.name != plugin.class.name
+#            plugin.init(init)
+#            sleep(0.2)
+#          end
+#        end
+#      end
+#
+#      now = Time.now
+#      term = false
+#      while !term do
+#        term = true
+#        plug_in.delete_if do |thr|
+#          if thr.status == false
+#            logger "INFO: #{thr["process"]} done"
+#            true
+#          else
+#            term = false
+#            false
+#          end
+#        end
+#        if (Time.now - now ) > 15
+#          logger "ERROR: Plugins not inited in time"
+#          @run = false
+#          break
+#        end
+#      end
+      plugininitiation = Thread.new do
+        Thread.current["user"]=@settings["mumble"]["name"]
+        Thread.current["process"]="Init Plugins"
+        maxcount = @plugin.length
         allok = 0
-        @plugin.each do |plugin|
-          init = plugin.init(init)
-          if plugin.name != "false"
-            allok += 1
+        while allok != @plugin.length do
+          allok = 0
+          @plugin.each do |plugin|
+            @pluginname = plugin.class.name
+            init = plugin.init(init)
+            if plugin.name == plugin.class.name
+              allok += 1
+            end
           end
+          maxcount -= 1
+          break if maxcount <= 0
         end
-        maxcount -= 1
-        break if maxcount <= 0
+        logger "Warning: Maybe not all plugins are functional!" if maxcount <= 0
       end
-      logger "Warning: Maybe not all plugins are functional!" if maxcount <= 0
+
+      now = Time.now
+      while plugininitiation.status != false do
+        sleep(0.5)
+        if (Time.now - now) > 15
+          logger "ERROR: Plugins take to long to init (last plugin start to init was '#{@pluginname}')"
+          @run=false
+          plugininitiation.terminate
+        end
+      end
 
       ## Enable Ticktimer Thread
       @ticktimer = Thread.new do
@@ -504,7 +554,7 @@ class MumbleMPD
               if message == 'plugins'
                 help = I18n.t("plugins.loaded._shead")
                 @plugin.each do |plugin|
-                  help << plugin.name + "<br />" if plugin.name != "false"
+                  help << plugin.name + "<br />" if plugin.name == plugin.class.name
                 end
                 help << I18n.t("plugins.loaded._ehead")
 
