@@ -1,3 +1,4 @@
+require 'open-uri'
 require_relative '../helpers/StreamCheck.rb'
 
 class Radiostream < Plugin
