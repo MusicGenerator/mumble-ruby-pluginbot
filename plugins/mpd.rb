@@ -79,14 +79,18 @@ class Mpd < Plugin
 
       @@bot[:mpd].on :song do |current|
       end
-      logger("INFO: mpd-plugin is testing stream pipe (#{@@bot["main"]["fifo"]})")
-      testing = File.open(@@bot["main"]["fifo"], File::RDONLY | File::NONBLOCK)
-      if testing.gets == nil
-        logger("ERROR: mpd-plugin could not connect to pipe. Maybe wrong pipe or mpd is not running")
-        @@bot[:cli].set_comment("Waiting for mpd fifo pipe...")
-        puts "MPD-Plugin is waiting for mpd fifo pipe..."
+
+      if @@bot["plugin"]["mpd"]["testpipe"] == "true"
+        logger("INFO: mpd-plugin is testing stream pipe (#{@@bot["main"]["fifo"]})")
+        testing = File.open(@@bot["main"]["fifo"], File::RDONLY | File::NONBLOCK)
+        if testing.gets == nil
+          logger("ERROR: mpd-plugin could not connect to pipe. Maybe wrong pipe or mpd is not running")
+          @@bot[:cli].set_comment("Waiting for mpd fifo pipe...")
+          puts "MPD-Plugin is waiting for mpd fifo pipe..."
+        end
+        testing.close
       end
-      testing.close
+      logger "INFO: mpd-plugin is connecting to FIFO"
       @@bot[:cli].player.stream_named_pipe(@@bot["main"]["fifo"])
       logger("INFO: mpd-plugin is now connecting to mpd daemon")
       @@bot[:mpd].connect true #without true bot does not @@bot[:cli].text_channel messages other than for !status
