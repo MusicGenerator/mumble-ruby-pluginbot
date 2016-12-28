@@ -1,41 +1,41 @@
 ---
 config:
-  version: 2.1
+  version: 2.1 # Do not change this :)
 
 :debug: true
-:language: en
+:language: en # The language the bot should use. Currently available languages are en and de. FIXME
 
 main:
   tempdir: "/home/botmaster/temp/"
   logfile: "/home/botmaster/logs/bot1.log"
-  ducking: false
-  automute_if_alone: true
-  stop_on_unregistered: true
+  ducking: false # If true the bot automatically reduces its volume while users in the channel are talking.
+  automute_if_alone: true # The bot automatically mutes itself if he is alone in a channel.
+  stop_on_unregistered: true # The bot pauses the music or stops a radiostream if an unregistered user enters the channel.
   channel_notify: 0
-  controllable: true
+  controllable: true # Bot is only controlable if this is set to true. If false it will ignore all text commands.
   control:
-    string: "."
+    string: "." # This is the character/string a user must prepend to text commands. The bot ignores commands not starting with that character/string.
     message:
-      private_only: false
-      registered_only: true
-    historysize: 20
+      private_only: false # If true the bot reacts only to private messages and not to channel messages. If false, the bot reacts to channel and private messages.
+      registered_only: true # If true the bot reacts only to registered users. If false also unregistered users can control the bot.
+    historysize: 20 # Store this many entries in the command history of the bot.
   display:
-    comment: true
-  need_binding: false
-  bound: nobody
-  certfolder: "/home/botmaster/certs/"
-  fifo: "/home/botmaster/mpd1/mpd.fifo"
-  logo: "../config/logo/logo.html"
+    comment: true # If true the bot sets its comment to display the current music that is being played.
+  need_binding: false # If true the bot reacts only if a user used the bind command.
+  bound: nobody # You can predefine a username the bot is bound to.
+  certfolder: "/home/botmaster/certs/" # In this folder the bot automatically creates an openssl certificate per username you set up. See mumble: name.
+  fifo: "/home/botmaster/mpd1/mpd.fifo" # This fifo must also be used by the MPD the bot connects to.
+  logo: "../config/logo/logo.html" # A relative path to the logo the bot uses.
   timer:
     ticks:  3600
-  superpassword: "kaguBe gave me all the power and I want to "
-  blacklisted_commands: "settings set superpassword"
+  superpassword: "kaguBe gave me all the power and I want to " # You should change this password because everyone knowing the default password can reset or restart your bot!
+  blacklisted_commands: "settings set superpassword" # Here you can disable specific commands. Be aware that currently the bot checks this very stupid. That means that it checks only the beginning of a word. For example if you blacklist set then settings is also blacklisted.
 
 mumble:
-  use_vbr: 1
-  bitrate: 72000
-  host: m.natenom.com
-  port: 64738
-  name: MumbleRubyPluginbot
-  password: ''
-  channel: Bottest
+  use_vbr: 1 # If 1 the bot encodes with a variable bitrate. If 0 it encodes with a constant bitrate.
+  bitrate: 72000 # The overall bandwidth the bot is allowed to use. Please not that the bot is able to ask the server for its maximum bandwidth and so can reduce its bitrate if you set it higher than possible.
+  host: m.natenom.com # The hostname or IP address of the Mumble server your bot connects to.
+  port: 64738 # The port of the Mumble server your bot connects to.
+  name: "MumbleRubyPluginbot" # The name of your bot. Be aware that on most servers you are not allowed to use white spaces or other special characters.
+  password: '' # FIXME
+  channel: Bottest # The channel the bot connects to. This is also the channel the bot tries to enter if you command it to "gotobed".
