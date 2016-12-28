@@ -2,8 +2,11 @@ class Idle < Plugin
 
   def init(init)
     super
-    logger("INFO: INIT plugin #{self.class.name}.")
-    @@bot[:bot] = self
+    # prevent multible initiation.
+    if @@bot[:idle].nil?
+      logger("INFO: INIT plugin #{self.class.name}.")
+      @@bot[:idle] = self
+    end
     return @@bot
   end
 
@@ -36,7 +39,9 @@ class Idle < Plugin
   end
 
   def name
-    self.class.name
+    if  !@@bot[:bot].nil?
+      self.class.name
+    end
   end
 
   def help(h)
