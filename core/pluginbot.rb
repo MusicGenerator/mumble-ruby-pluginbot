@@ -410,7 +410,7 @@ class MumbleMPD
           if @settings["main"]["controllable"] == true
             if msg.message.start_with?("#{@settings["main"]["control"]["string"]}") && msg.message.length >@settings["main"]["control"]["string"].length #Check whether we have a command after the controlstring.
               begin
-                message = msg.message.split(@settings["main"]["control"]["string"])[1 .. -1].join() #Remove @settings[:controlstring]
+                message = msg.message.split(@settings["main"]["control"]["string"])[1 .. -1].join()
               rescue
                 message = "help"  # FIXME Set 'help' if the given command from user caused an exception.
               end

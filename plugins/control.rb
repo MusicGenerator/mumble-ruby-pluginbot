@@ -243,7 +243,7 @@ class Control < Plugin
           @alreadyfollowing = false
         rescue TypeError
           logger "#{$!}"
-          privatemessage( I18n.t("plugin_control.unfollow.error", :control => @controlstring))
+          privatemessage( I18n.t("plugin_control.unfollow.error", :control => @@bot["main"]["control"]["string"]))
         end
       end
     end

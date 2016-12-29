@@ -6,7 +6,7 @@ class Mpd < Plugin
     super
     @@bot = init
     #init default template
-    @infotemplate = "send <b>#{@@bot["main"]["control"]["string"]}help</b> or <b>#{@@bot["main"]["control"]["string"]}about</b> for more information about me."
+    @infotemplate = "send <b>#{@@bot["main"]["control"]["string"]}help</b> or <b>#{@@bot["main"]["<"]["string"]}about</b> for more information about me."
     if ( @@bot[:messages] ) && ( @@bot[:mpd].nil? ) then
       logger("INFO: INIT plugin #{self.class.name}.")
       @@bot[:mpd] = MPD.new @@bot["plugin"]["mpd"]["host"], @@bot["plugin"]["mpd"]["port"].to_i
@@ -663,7 +663,7 @@ class Mpd < Plugin
         if @@bot["main"]["display"]["comment"] == true
           @@bot["main"]["display"]["comment"] = false
           privatemessage( "Output is now \"Channel\"")
-          @@bot[:cli].set_comment(@template_if_comment_disabled % [@controlstring])
+          @@bot[:cli].set_comment(@template_if_comment_disabled % [@@bot["main"]["control"]["string"]])
         else
           @@bot["main"]["display"]["comment"] = true
           privatemessage( "Output is now \"Comment\"")
