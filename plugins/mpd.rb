@@ -20,7 +20,7 @@ class Mpd < Plugin
       end
 
       @@bot[:mpd].on :updating_db do |jobid|
-        channelmessage( "I am running a database update just now ... new songs :)<br>My job id is: #{jobid}.") if (@@bot["channel_notify"].to_i & 0x02) != 0
+        channelmessage( "I am running a database update just now ... new songs :)<br>My job id is: #{jobid}.") if (@@bot["main"]["channel_notify"].to_i & 0x02) != 0
       end
 
       @@bot[:mpd].on :random do |random|
@@ -29,11 +29,11 @@ class Mpd < Plugin
         else
           random = "Off"
         end
-        channelmessage( "Random mode is now: #{random}.") if (@@bot["channel_notify"].to_i & 0x04) != 0
+        channelmessage( "Random mode is now: #{random}.") if (@@bot["main"]["channel_notify"].to_i & 0x04) != 0
       end
 
       @@bot[:mpd].on :state  do |state|
-        if @@bot["channel_notify"].to_i & 0x80 != 0 then
+        if @@bot["main"]["channel_notify"].to_i & 0x80 != 0 then
           channelmessage( "Music paused.") if  state == :pause
           channelmessage( "Music stopped.") if state == :stop
           channelmessage( "Music start playing.") if state == :play
@@ -46,7 +46,7 @@ class Mpd < Plugin
         else
           single = "Off"
         end
-        channelmessage( "Single mode is now: #{single}.") if (@@bot["channel_notify"].to_i & 0x08) != 0
+        channelmessage( "Single mode is now: #{single}.") if (@@bot["main"]["channel_notify"].to_i & 0x08) != 0
       end
 
       @@bot[:mpd].on :consume do |consume|
@@ -56,15 +56,15 @@ class Mpd < Plugin
           consume = "Off"
         end
 
-        channelmessage( "Consume mode is now: #{consume}.") if (@@bot["channel_notify"].to_i & 0x10) != 0
+        channelmessage( "Consume mode is now: #{consume}.") if (@@bot["main"]["channel_notify"].to_i & 0x10) != 0
       end
 
       @@bot[:mpd].on :xfade do |xfade|
         if xfade.to_i == 0
           xfade = "Off"
-          channelmessage( "Crossfade is now: #{xfade}.") if (@@bot["channel_notify"] & 0x20) != 0
+          channelmessage( "Crossfade is now: #{xfade}.") if (@@bot["main"]["channel_notify"] & 0x20) != 0
         else
-          channelmessage( "Crossfade time (in seconds) is now: #{xfade}.") if (@@bot["channel_notify"].to_i & 0x20) != 0
+          channelmessage( "Crossfade time (in seconds) is now: #{xfade}.") if (@@bot["main"]["channel_notify"].to_i & 0x20) != 0
         end
       end
 
@@ -74,7 +74,7 @@ class Mpd < Plugin
         else
           repeat = "Off"
         end
-        channelmessage( "Repeat mode is now: #{repeat}.") if (@@bot["channel_notify"].to_i & 0x40) != 0
+        channelmessage( "Repeat mode is now: #{repeat}.") if (@@bot["main"]["channel_notify"].to_i & 0x40) != 0
       end
 
       @@bot[:mpd].on :song do |current|
@@ -128,9 +128,9 @@ class Mpd < Plugin
                 end
               else
                 if current.artist.nil? && current.title.nil? && current.album.nil?
-                  channelmessage( "#{current.file}") if ( @@bot["channel_notify"].to_i && 0x80 ) == true
+                  channelmessage( "#{current.file}") if ( @@bot["main"]["channel_notify"].to_i && 0x80 ) == true
                 else
-                  channelmessage( "#{current.artist} - #{current.title} (#{current.album})") if (@@bot["channel_notify"].to_i && 0x80) != 0
+                  channelmessage( "#{current.artist} - #{current.title} (#{current.album})") if (@@bot["main"]["channel_notify"].to_i && 0x80) != 0
                 end
               end
             lastcurrent = current
