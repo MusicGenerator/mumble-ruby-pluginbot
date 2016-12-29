@@ -130,7 +130,11 @@ class MumbleMPD
       conf.username = @settings["mumble"]["name"]
       conf.password = @settings["mumble"]["password"]
       conf.bitrate = @settings["mumble"]["bitrate"].to_i
-      conf.vbr_rate = @settings["mumble"]["use_vbr"]
+      if @settings["mumble"]["use_vbr"].to_s.to_bool == true
+        conf.vbr_rate = 1
+      else
+        conf.vbr_rate = 0
+      end
       conf.ssl_cert_opts[:cert_dir] = File.expand_path(@settings["main"]["certfolder"])
     end
   end
