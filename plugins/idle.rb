@@ -5,7 +5,7 @@ class Idle < Plugin
     # prevent multible initiation.
     if @@bot[:idle].nil?
       logger("INFO: INIT plugin #{self.class.name}.")
-      @@bot[:ii] = self
+      @@bot[:idle] = self
     end
     return @@bot
   end
