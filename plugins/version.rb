@@ -24,7 +24,8 @@ class Version < Plugin
       versionshort = `git rev-parse --short HEAD`
       versionlong = `git rev-parse HEAD`
       date = `git log -n1 --format="%at"`
-      privatemessage("Version: #{versionshort.to_s} / #{versionlong.to_s} / #{Time.at(date.to_i).utc}")
+      branch = `git rev-parse --abbrev-ref HEAD`
+      privatemessage("Version: #{versionshort.to_s} / #{versionlong.to_s} / #{Time.at(date.to_i).utc} / Branch: #{branch.to_s} / <a href='https://github.com/dafoxia/mumble-ruby-pluginbot/commit/#{versionlong.to_s}'>(URL)</a>")
     end
   end
 end
