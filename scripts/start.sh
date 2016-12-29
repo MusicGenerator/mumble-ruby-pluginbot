@@ -64,7 +64,7 @@ _LOGGING/DEBUGGING_
 _START AS APPROPRIATE USER_
   Make sure to run this script as user botmaster if you used the official
   installation documentation and DO NOT RUN THIS SCRIPT AS root.
-  The official documentation can be found at https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot
+  The official documentation can be found at http://mumble-ruby-pluginbot.readthedocs.io/
 
 
 _UPDATE THE BOT (AND ITS DEPENDENCIES)_
@@ -73,7 +73,7 @@ _UPDATE THE BOT (AND ITS DEPENDENCIES)_
 
 
 _OFFICIAL DOCUMENTATION_
-  Also please reread the official documentation at https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot
+  Also please reread the official documentation at http://mumble-ruby-pluginbot.readthedocs.io/
   if you have further problems :)
 
 
