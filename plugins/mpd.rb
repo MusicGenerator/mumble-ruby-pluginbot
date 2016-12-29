@@ -413,7 +413,7 @@ class Mpd < Plugin
         @@bot[:mpd].queue.each do |song|
             playlist.add song
         end
-        message = "Songs saved in playlist \"#{name}\"."
+        privatemessage ( "Songs saved in playlist \"#{name}\"." )
       else
         privatemessage ( "no playlist name gaven." )
       end
