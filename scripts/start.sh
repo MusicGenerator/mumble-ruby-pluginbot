@@ -6,6 +6,13 @@ if [ -f $HOME/src/youtube-dl ]; then
     $HOME/src/youtube-dl -U
 fi
 
+### Kill running tmux sessions (of the user botmaster) ###
+### FIXME this is very very hacky ... replace by only killing specific tmus session
+echo "Killing tmux sessions of user $USER"
+killall tmux > /dev/null 2>&1
+sleep 1
+killall tmux > /dev/null 2>&1
+
 
 ### Kill running mumble-ruby-pluginbots (of the user botmaster) ###
 echo "Killing running ruby scripts of user $USER"
@@ -41,10 +48,10 @@ export HOME=$HOME
 tmux new-session -d -n bot1 "while true; do LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot1_conf.yml; sleep 10; done"
 
 # Bot 2
-tmux new-session -d -n bot2 "while true; do LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot2_conf.yml; sleep 10; done"
+#tmux new-session -d -n bot2 "while true; do LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot2_conf.yml; sleep 10; done"
 
 # Bot 3
-tmux new-session -d -n bot3 "while true; do LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot3_conf.yml; sleep 10; done"
+#tmux new-session -d -n bot3 "while true; do LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot3_conf.yml; sleep 10; done"
 
 
 
