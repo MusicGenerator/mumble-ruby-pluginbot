@@ -41,10 +41,10 @@ export HOME=$HOME
 tmux new-session -d -n bot1 "while true; do LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot1_conf.yml; sleep 10; done"
 
 # Bot 2
-#tmux new-session -d -n bot2 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot2_conf.yml"
+tmux new-session -d -n bot2 "while true; do LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot2_conf.yml; sleep 10; done"
 
 # Bot 3
-#tmux new-session -d -n bot3 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot3_conf.yml"
+tmux new-session -d -n bot3 "while true; do LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot3_conf.yml; sleep 10; done"
 
 
 
