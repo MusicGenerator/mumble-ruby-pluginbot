@@ -1,4 +1,6 @@
 ---
+# Please take a look into the full default configuration file located in
+# the config/ directory if you need assistance for the settings.
 
 config:
   version: 2.1
