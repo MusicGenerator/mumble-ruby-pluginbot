@@ -38,7 +38,7 @@ export HOME=$HOME
 
 ### Start Mumble-Ruby-Bots - MPD instances must already be running. ###
 # Bot 1
-tmux new-session -d -n bot1 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot1_conf.yml"
+tmux new-session -d -n bot1 "while true; do LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot1_conf.yml; done"
 
 # Bot 2
 #tmux new-session -d -n bot2 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot2_conf.yml"
