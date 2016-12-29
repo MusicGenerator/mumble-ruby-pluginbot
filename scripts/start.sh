@@ -6,12 +6,16 @@ if [ -f $HOME/src/youtube-dl ]; then
     $HOME/src/youtube-dl -U
 fi
 
-### Kill running tmux sessions (of the user botmaster) ###
-### FIXME this is very very hacky ... replace by only killing specific tmus session
-echo "Killing tmux sessions of user $USER"
-killall tmux > /dev/null 2>&1
+### Kill running tmux bot "windows" (of the user botmaster) ###
+echo "Killing tmux windows used by bots of user $USER"
+tmux kill-window -t bot1 > /dev/null 2>&1
+tmux kill-window -t bot2 > /dev/null 2>&1
+tmux kill-window -t bot3 > /dev/null 2>&1
 sleep 1
-killall tmux > /dev/null 2>&1
+tmux kill-window -t bot1 > /dev/null 2>&1
+tmux kill-window -t bot2 > /dev/null 2>&1
+tmux kill-window -t bot3 > /dev/null 2>&1
+
 
 
 ### Kill running mumble-ruby-pluginbots (of the user botmaster) ###
