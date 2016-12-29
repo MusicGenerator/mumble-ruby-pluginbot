@@ -58,27 +58,6 @@ tmux new-session -d -n bot1 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/
 
 
 
-### Optional: Clear playlist, add music and play it; three lines for every bot ###
-# Bot 1
-# Comment out the next tree lines if you don't want to always listen to the radio.
-if [ ! -f "${FIRST_START_FILE}" ];
-then
-    mpc -p 7701 add http://ogg.theradio.cc/
-    mpc -p 7701 play
-
-    touch $HOME/src/.first_start_done
-fi
-
-# Bot 2
-#mpc -p 7702 clear
-#mpc -p 7702 add http://streams.radio-gfm.net/rockpop.ogg.m3u
-#mpc -p 7702 play
-
-# Bot 3
-#mpc -p 7703 clear
-#mpc -p 7703 add http://stream.url.tld/musik.ogg
-#mpc -p 7703 play
-
 cat <<EOF
 
 
