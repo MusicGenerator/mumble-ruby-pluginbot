@@ -136,7 +136,7 @@ do
                 update_mumble-mpd-gem
             ;;
             c)
-                nano ~/src/bot1_conf.rb
+                nano ~/src/bot1_conf.yml
             ;;
             9)
                 update_celt-libs
