@@ -1,0 +1,55 @@
+en:
+  plugin_control:
+    status:
+      stopped:    "stopped"
+      paused:     "paused"
+
+    unreg_enter:  "An unregistered user currently joined or is acting in our channel. I %{action} the music."
+
+    ch:
+      brain:      "Hey superbrain, I am already in your channel :)"
+      going:      "Hey, %{user} asked me to make some music, going now. Bye :)"
+
+    debug:        "Stay out of here :)"
+
+    gotobed:
+      error:      "Genius; you didn't define a bedroom for me :P
+                    See \"mumble -> channel\" in my configuration
+                    file and set a valid room name where I can go to sleep :)"
+
+    follow:
+      newuser:    "I am already following someone! But from now on I will follow you, master."
+      user:       "I am following your steps, master."
+
+    unfollow:
+      nok:        "I am not following anyone."
+      ok:         "I will stop following."
+      error:      "%{control}follow hasn't been executed yet."
+
+    stick:
+      sticked:    "I'm already sticked! Resetting..."
+      sticking:   "I am now sticked to this channel."
+
+    unstick:
+      sticked:    "I am currently not sticked to a channel."
+      free:       "I am not sticked anymore"
+
+    history:
+      command:    "Command"
+      user:       "by user"
+
+    automute:
+      enabled:    "Automute is now activated"
+      disabled:   "Automute is now deactivated"
+
+    help:
+      ch:         "The bot will enter your channel if he has permission to."
+      debug:      "Probe command."
+      gotobed:    "Bot sleeps in less then 1 second :)"
+      wakeup:     "Bot is under adrenalin again."
+      follow:     "Bot will start to follow you."
+      unfollow:   "Bot transforms from a dog into a lazy cat :)."
+      stick:      "Jail bot into channel."
+      unstick:    "Free the bot."
+      history:    "Print last %{historysize} commanding users with command given."
+      automute:   "Toggles auto muting system. If active and if the bot is alone in a channel it instantly mutes himself and pauses the current song until a user joins the channel. Then it unmutes and starts playing the paused song. This helps to save much bandwidth on your server :)"
