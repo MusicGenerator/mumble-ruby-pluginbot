@@ -553,8 +553,16 @@ class MumbleMPD
 
               if message == 'plugins'
                 help = I18n.t("plugins.loaded._shead")
+                #Generate name list
+                pluginnames = []
                 @plugin.each do |plugin|
-                  help << plugin.name + "<br />" if plugin.name == plugin.class.name
+                  pluginnames << plugin.name if plugin.name == plugin.class.name
+                end
+                #Sort name list
+                pluginnames.sort!
+                #Push it to help list
+                pluginnames.each do |name|
+                  help << name + "<br />"
                 end
                 help << I18n.t("plugins.loaded._ehead")
 
