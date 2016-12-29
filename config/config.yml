@@ -29,7 +29,7 @@ main:
   timer:
     ticks:  3600
   superpassword: "kaguBe gave me all the power and I want to " # You should change this password because everyone knowing the default password can reset or restart your bot!
-  blacklisted_commands: "settings set superpassword" # Here you can disable specific commands. Be aware that currently the bot checks this very stupid. That means that it checks only the beginning of a word. For example if you blacklist set then settings is also blacklisted.
+  blacklisted_commands: "" # Here you can disable specific commands. Be aware that currently the bot checks this very stupid. That means that it checks only the beginning of a word. For example if you blacklist set then settings is also blacklisted.
 
 mumble:
   use_vbr: 1 # If 1 the bot encodes with a variable bitrate. If 0 it encodes with a constant bitrate.
