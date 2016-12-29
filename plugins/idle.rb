@@ -5,7 +5,7 @@ class Idle < Plugin
     # prevent multible initiation.
     if @@bot[:idle].nil?
       logger("INFO: INIT plugin #{self.class.name}.")
-      @@bot[:idle] = self
+      @@bot[:ii] = self
     end
     return @@bot
   end
@@ -46,21 +46,18 @@ class Idle < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}idletime</b> - Show current idle time of the bot.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}idletime</b> - #{I18n.t "plugin_idle.help.idletime"}<br>"
     h
   end
 
   def handle_chat(msg, message)
     super
     if message == "idletime"
-      status_message = "<br />Maximum idle time is set to: #{@@bot["plugin"]["idle"]["maxidletime"]} seconds.
-                        <br />Idle action is: #{@@bot["plugin"]["idle"]["idleaction"]}."
-
       if @is_idle
         current_idle_time = (Time.now.getutc - @timestamp_idle_started).to_i
-        privatemessage("<br />Current idle time is: #{current_idle_time.to_s} seconds. #{status_message}")
+        privatemessage(I18n.t("plugin_idle.ideling", :ideling => current_idle_time.to_s, :idletime => @@bot["plugin"]["idle"]["maxidletime"], :idleaction => @@bot["plugin"]["idle"]["idleaction"]))
       else
-        privatemessage("<br />The bot is currently not idle.#{status_message}")
+        privatemessage(I18n.t("plugin_idle.working", :idletime => @@bot["plugin"]["idle"]["maxidletime"], :idleaction => @@bot["plugin"]["idle"]["idleaction"]))
       end
     end
   end

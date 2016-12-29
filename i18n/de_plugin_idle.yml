@@ -1,0 +1,10 @@
+de:
+  plugin_idle:
+    ideling:    "<br />Der Bot idelt seit %{ideling} Sekunden.
+                  <br />Maximale Idle Zeit ist: %{idletime} Sekunden.
+                  <br />Aktion wenn die Zeit abgelaufen ist: %{idleaction}."
+    working:    "<br />Der Bot idelt zur Zeit nicht.
+                  <br />Maximale Idle Zeit ist: %{idletime} Sekunden.
+                  <br />Aktion wenn die Zeit abgelaufen ist: %{idleaction}."
+    help:
+      idletime: "Zeigt die Idle Zeit des Bots an."
