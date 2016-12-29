@@ -11,7 +11,21 @@ main:
   ducking: false # If true the bot automatically reduces its volume while users in the channel are talking.
   automute_if_alone: true # The bot automatically mutes itself if he is alone in a channel.
   stop_on_unregistered: true # The bot pauses the music or stops a radiostream if an unregistered user enters the channel.
-  channel_notify: 0
+  channel_notify: 0   #   Calculating value for 'channel_notify'
+                      #
+                      # Add all values for the desired channel notification
+                      #
+                      # 1    send message when volume change
+                      # 2    send message when database update
+                      # 4    send message when random mode changed
+                      # 8    send message when single mode changed
+                      # 16   send message when crossfading changed
+                      # 32   send message when consume-mode changed
+                      # 64   send message when repeat-mode changed
+                      # 128  send message when state changes
+                      # ------
+                      #
+                      # sum = value
   controllable: true # Bot is only controlable if this is set to true. If false it will ignore all text commands.
   control:
     string: "." # This is the character/string a user must prepend to text commands. The bot ignores commands not starting with that character/string.
