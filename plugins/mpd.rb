@@ -177,7 +177,8 @@ class Mpd < Plugin
     h << "<b>#{@@bot["main"]["control"]["string"]}play <i>number</i></b> - Play title on position <i>number</i> in queue.<br>"
     h << "<b>#{@@bot["main"]["control"]["string"]}songlist</b> - Print the list of ALL songs in the MPD collection.<br>"
     h << "<b>#{@@bot["main"]["control"]["string"]}playlist <i>id</i></b> - Load the playlist referenced by the id.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}saveplaylist <i>name</i></b> - Save queue into a playlist named 'name'<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}save2playlist <i>name</i></b> - Append queue into a playlist named 'name'<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}replaceplaylist <i>name</i></b> - Overwrite playlist 'name' with queue<br>"
     h << "<b>#{@@bot["main"]["control"]["string"]}delplaylist <i>id</i></b> - Remove a playlist with the given id. Use #{@@bot["main"]["control"]["string"]}playlists to get a list of available playlists.<br>"
     h << "<b>#{@@bot["main"]["control"]["string"]}song</b> - Print some information about the currently played song.<br>"
     h << "<b>#{@@bot["main"]["control"]["string"]}status</b> - Print current status of MPD.<br>"
@@ -400,16 +401,36 @@ class Mpd < Plugin
       privatemessage( text_out)
     end
 
-    if message[0,12] == 'saveplaylist'
-      name = message.gsub("saveplaylist", "").lstrip
+    if message[0,15] == 'replaceplaylist'
+      name = message.gsub("replaceplaylist", "").lstrip
       if name != ""
+        @@bot[:mpd].playlists.each do |pl|
+          if pl.name == name
+            pl.destroy
+          end
+        end
         playlist = MPD::Playlist.new(@@bot[:mpd], name)
         @@bot[:mpd].queue.each do |song|
             playlist.add song
         end
+        message = "Songs saved in playlist \"#{name}\"."
+      else
+        privatemessage ( "no playlist name gaven." )
+      end
+    end
 
-        privatemessage( "The playlist \"#{name}\" was created.
-                         Use the command #{@@bot["main"]["control"]["string"]}playlists to get a list of all available playlists." )
+    if message[0,13] == 'save2playlist'
+      name = message.gsub("save2playlist", "").lstrip
+      if name != ""
+        out = "Songs saved in new playlist with \"#{name}\"."
+        @@bot[:mpd].playlists.each do |pl|
+          out = "Songs added to playlist \"#{name}\"." if pl.name == name
+        end
+        playlist = MPD::Playlist.new(@@bot[:mpd], name)
+        @@bot[:mpd].queue.each do |song|
+            playlist.add song
+        end
+        privatemessage( out + " Use the command #{@@bot["main"]["control"]["string"]}playlists to get a list of all available playlists." )
       else
         privatemessage( "no playlist name gaven.")
       end
