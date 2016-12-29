@@ -1,10 +1,11 @@
 ---
 # Please take a look into the full default configuration file located in
 # the config/ directory if you need assistance for the settings.
-# Also every plugin does have its own contifuration file, see plugins/*.yml.
+# Also every plugin does have its own configuration file, see plugins/*.yml.
 #
-# Everything that you set here will overwrite the default file config/config.yml
-
+# All settings that you set here will overwrite those from the
+# default configuration file config/config.yml and also those from every single
+# plugin configuration file (plugins/*.yml).
 
 config:
   version: 2.1
