@@ -26,7 +26,7 @@ main:
                       # ------
                       #
                       # sum = value
-  controllable: true # Bot is only controlable if this is set to true. If false it will ignore all text commands.
+  controllable: true # Bot is only controllable if this is set to true. If false it will ignore all text commands.
   control:
     string: "." # This is the character/string a user must prepend to text commands. The bot ignores commands not starting with that character/string.
     message:
