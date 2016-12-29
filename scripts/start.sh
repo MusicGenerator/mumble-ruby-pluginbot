@@ -1,15 +1,5 @@
 #!/bin/bash --login
 
-DEBUG=""
-FIRST_START_FILE="$HOME/src/.first_start_done"
-
-if [ "$1" == "debug" ];
-then
-    DEBUG=">> $HOME/logs/pluginbots.log 2>&1"
-    mkdir $HOME/logs
-fi
-
-
 # Do an update of youtube-dl on every start as there are very often updates.
 if [ -f $HOME/src/youtube-dl ]; then
     echo "Updating youtube-dl..."
@@ -48,13 +38,13 @@ export HOME=$HOME
 
 ### Start Mumble-Ruby-Bots - MPD instances must already be running. ###
 # Bot 1
-tmux new-session -d -n bot1 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot1_conf.yml$DEBUG"
+tmux new-session -d -n bot1 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot1_conf.yml"
 
 # Bot 2
-#tmux new-session -d -n bot2 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot2_conf.yml$DEBUG"
+#tmux new-session -d -n bot2 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot2_conf.yml"
 
 # Bot 3
-#tmux new-session -d -n bot3 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot3_conf.yml$DEBUG"
+#tmux new-session -d -n bot3 "LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot3_conf.yml"
 
 
 
@@ -66,8 +56,7 @@ Your bot(s) should now be connected to the configured Mumble server.
 
 
 _LOGGING/DEBUGGING_
-  If something doesn't work, start this script with the additional parameter debug:
-  ~/src/mumble-ruby-pluginbot/scripts/start.sh debug
+  If something doesn't work, activate the debug config option in the main configuration file and restart the bot.
 
   Then take a look into the logfile within $HOME/logs/.
 
