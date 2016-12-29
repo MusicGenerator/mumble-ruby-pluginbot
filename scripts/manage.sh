@@ -1,5 +1,9 @@
 #!/bin/bash --login
 
+### Uncomment the next line if you get problems with special characters.
+### Also make sure that the locale it is activated in /etc/locale.gen
+#export LANG="en_US.UTF-8"
+
 function show_help() {
     cat<<EOF
 USAGE
