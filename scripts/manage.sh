@@ -5,11 +5,12 @@ function show_help() {
 USAGE
   ${0} [OPTIONS]
 
-PARAMETERS
+OPTIONS
   stop                        Stop the bot(s)
   start                       Start the bot(s)
+  restart                     Restart the bot(s)
+  uytdl|updateytdl            Update youtube-dl
   -h|--help                   Show this help
-  uytdl|updateytdl         Update youtube-dl
 EOF
 }
 
