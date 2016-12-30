@@ -2,10 +2,10 @@ en:
   about:
     <br />Hi, I am the Mumble-Ruby-Pluginbot.<br />
       <ul>
-        <li><a href='https://github.com/dafoxia/mumble-ruby-pluginbot'>Get my source code</a></li>
+        <li><a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot'>Get my source code</a></li>
         <li><a href='http://mumble-ruby-pluginbot.readthedocs.io/'>Read my documentation</a></li>
-        <li>I am licensed by the <a href='https://github.com/dafoxia/mumble-ruby-pluginbot/blob/master/LICENSE'>MIT license</a></li>
-        <li>If you have any issues, bugs or ideas please tell us on <a href='https://github.com/dafoxia/mumble-ruby-pluginbot/issues'>https://github.com/dafoxia/mumble-ruby-pluginbot/issues</a></li>
+        <li>I am licensed by the <a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot/blob/master/LICENSE'>MIT license</a></li>
+        <li>If you have any issues, bugs or ideas please tell us on <a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot/issues'>https://github.com/MusicGenerator/mumble-ruby-pluginbot/issues</a></li>
       </ul>
 
   command_blacklisted: "My admin has blacklisted this command."

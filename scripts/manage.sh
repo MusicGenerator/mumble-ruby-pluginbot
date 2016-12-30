@@ -113,7 +113,7 @@ function show_disclaimer() {
 
   _BUGS/WISHES/IDEAS_
     If you think you found a bug, have a wish for the bot or some ideas please don't
-    hesitate to create an issue at https://github.com/dafoxia/mumble-ruby-pluginbot/issues
+    hesitate to create an issue at https://github.com/MusicGenerator/mumble-ruby-pluginbot/issues
 
 
   Have fun with the Mumble-Ruby-Pluginbot :)
