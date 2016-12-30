@@ -1,0 +1,11 @@
+en:
+  plugin_soundcloud:
+    ytdlversion:    "Soundcloud uses youtube-dl %{version}"
+    inspecting:     "Soundcloud is inspecting %{link} ..."
+    db_update:      "Waiting for database update complete..."
+    db_update_done: "Database update done."
+    badlink:        "Soundcloud: The link contains nothing interesting."
+
+    help:
+      soundcloud:   "Will try to download the music from the given URL."
+      ytdl_version: "print used download helper version"

@@ -41,15 +41,15 @@ class Soundcloud < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}soundcloud <i>URL</i></b> - Will try to download the music from the given URL. <br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}ytdl-version</b> - print used download helper version"
+    h << "<b>#{@@bot["main"]["control"]["string"]}soundcloud <i>URL</i></b> - #{I18n.t("plugin_soundcloud.help.soundcloud")} <br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}ytdl-version</b> - #{I18n.t("plugin_soundcloud.help.ytdl_version")}"
   end
 
   def handle_chat(msg, message)
     super
 
     if message == "ytdl-version"
-      privatemessage("Soundcloud uses youtube-dl " + `#{@executable} --version`)
+      privatemessage(I18n.t("plugin_soundcloud.ytdlversion" , :version => `#{@executable} --version`) )
     end
 
     if message.start_with?("soundcloud <a href=") || message.start_with?("<a href=") then
@@ -60,24 +60,24 @@ class Soundcloud < Plugin
           actor = msg.actor
           Thread.current["user"]=actor
           Thread.current["process"]="soundcloud"
-          messageto(actor, "Soundcloud is inspecting link: " + link + "...")
+          messageto(actor, I18n.t("plugin_soundcloud.inspecting", :link => link ))
           get_song link
           if ( @songlist.size > 0 ) then
             @@bot[:mpd].update(@@bot["plugin"]["soundcloud"]["folder"]["download"].gsub(/\//,""))
-            messageto(actor, "Waiting for database update complete...")
+            messageto(actor, I18n.t("plugin_soundcloud.db_update"))
 
             while @@bot[:mpd].status[:updating_db] do
               sleep 0.5
             end
 
-            messageto(actor, "Update done.")
+            messageto(actor, I18n.t("plugin_soundcloud.db_update_done"))
             while @songlist.size > 0
               song = @songlist.pop
               messageto(actor, song)
               @@bot[:mpd].add(@@bot["plugin"]["soundcloud"]["folder"]["download"]+song)
             end
           else
-            messageto(actor, "Soundcloud: The link contains nothing interesting.")
+            messageto(actor, I18n.t("plugin_soundcloud.badlink"))
           end
         end
       end
