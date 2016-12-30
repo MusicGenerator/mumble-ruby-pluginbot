@@ -159,47 +159,47 @@ class Mpd < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}seek <i>value</i> | <i>+/-value</i></b> - Seek to an absolute position (in seconds). Use +value or -value to seek relative to the current position.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}seek <i>mm:ss</i> | <i>+/-mm:ss</i></b> - Seek to an absolute position. Use + or - to seek relative to the current position.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}seek <i>hh:mm:ss</i> | <i>+/-hh:mm:ss</i></b> - Seek to an absolute position. Use + or - to seek relative to the current position.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}crossfade <i>value</i></b> - Set Crossfade to value seconds, 0 to disable crossfading.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}next</b> - Play next title in the queue.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}prev</b> - Play previous title in the queue.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}clear</b> - Clear the playqueue.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}random</b> - Toggle random mode.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}single</b> - Toggle single mode.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}repeat</b> - Toggle repeat mode.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}consume</b> - Toggle consume mode. If this mode is enabled, songs will be removed from the play queue once they were played.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}pp</b> - Toggle pause/play.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}stop</b> - Stop playing.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}play</b> - Start playing.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}play first</b> - Play the first song in the queue.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}play last</b> - Play the last song in the queue.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}play <i>number</i></b> - Play title on position <i>number</i> in queue.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}songlist</b> - Print the list of ALL songs in the MPD collection.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}playlist <i>id</i></b> - Load the playlist referenced by the id.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}save2playlist <i>name</i></b> - Append queue into a playlist named 'name'<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}replaceplaylist <i>name</i></b> - Overwrite playlist 'name' with queue<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}delplaylist <i>id</i></b> - Remove a playlist with the given id. Use #{@@bot["main"]["control"]["string"]}playlists to get a list of available playlists.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}song</b> - Print some information about the currently played song.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}status</b> - Print current status of MPD.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}playlists</b> - Print the available playlists from MPD.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}add <i>searchstring</i></b> - Find song(s) by searchstring and print matches.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}delete <i>ID</i></b> - Delete an entry from the current queue. Use #{@@bot["main"]["control"]["string"]}queue to get the IDs of all songs in the current queue.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}where <i>searchstring</i></b> - Find song(s) by searchstring and print matches.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}queue</b> - Print the current play queue.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}stats</b> - Print some interesing MPD statistics.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}shuffle</b> – Play songs from the play queue in a random order.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}file</b> - Print the filename of the current song. This is useful if the file doesn't have ID3 tags and so the <b>#{@@bot["main"]["control"]["string"]}song</b> command shows nothing.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}v++++</b> - Turns volume 20% up.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}v-</b> - Turns volume 5% down.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}v <i>value</i></b> - Set the volume to the given value.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}v</b> - Print the current playback volume.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}update</b> - Start a MPD database update.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}mpdconfig</b> - Try to read mpd config.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}mpdcommands</b> - Show what commands mpd do allow to Bot (not to you!).<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}mpdnotcommands</b> - Show what commands mpd disallowed to Bot.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}mpddecoders</b> - Show enabled decoders and what they can decode for your mpd.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}seek <i>value</i> | <i>+/-value</i></b> - #{I18n.t("plugin_mpd.help.seeka")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}seek <i>mm:ss</i> | <i>+/-mm:ss</i></b> - #{I18n.t("plugin_mpd.help.seekb")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}seek <i>hh:mm:ss</i> | <i>+/-hh:mm:ss</i></b> - #{I18n.t("plugin_mpd.help.seekc")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}crossfade <i>value</i></b> - #{I18n.t("plugin_mpd.help.crossfade")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}next</b> - #{I18n.t("plugin_mpd.help.next")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}prev</b> - #{I18n.t("plugin_mpd.help.prev")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}clear</b> - #{I18n.t("plugin_mpd.help.clear")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}random</b> - #{I18n.t("plugin_mpd.help.random")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}single</b> - #{I18n.t("plugin_mpd.help.single")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}repeat</b> - #{I18n.t("plugin_mpd.help.repeat")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}consume</b> - #{I18n.t("plugin_mpd.help.consume")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}pp</b> - #{I18n.t("plugin_mpd.help.pp")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}stop</b> - #{I18n.t("plugin_mpd.help.stop")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}play</b> - #{I18n.t("plugin_mpd.help.play")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}play first</b> - #{I18n.t("plugin_mpd.help.play_first")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}play last</b> - #{I18n.t("plugin_mpd.help.play_last")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}play <i>number</i></b> - #{I18n.t("plugin_mpd.help.play_number")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}songlist</b> - #{I18n.t("plugin_mpd.help.songlist")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}playlist <i>id</i></b> - #{I18n.t("plugin_mpd.help.playlist")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}save2playlist <i>name</i></b> - #{I18n.t("plugin_mpd.help.save2playlist")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}replaceplaylist <i>name</i></b> - #{I18n.t("plugin_mpd.help.replaceplaylist")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}delplaylist <i>id</i></b> - #{I18n.t("plugin_mpd.help.delplaylist", :controlstring => @@bot["main"]["control"]["string"])}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}song</b> - #{I18n.t("plugin_mpd.help.song")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}status</b> - #{I18n.t("plugin_mpd.help.status")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}playlists</b> - #{I18n.t("plugin_mpd.help.playlists")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}add <i>searchstring</i></b> - #{I18n.t("plugin_mpd.help.searchstring")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}delete <i>ID</i></b> - #{I18n.t("plugin_mpd.help.delete", :controlstring => @@bot["main"]["control"]["string"])}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}where <i>searchstring</i></b> - #{I18n.t("plugin_mpd.help.where")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}queue</b> - #{I18n.t("plugin_mpd.help.queue")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}stats</b> - #{I18n.t("plugin_mpd.help.stats")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}shuffle</b> – #{I18n.t("plugin_mpd.help.shuffle")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}file</b> - #{I18n.t("plugin_mpd.help.file", :controlstring => @@bot["main"]["control"]["string"])}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}v++++</b> - #{I18n.t("plugin_mpd.help.vplus")}"
+    h << "<b>#{@@bot["main"]["control"]["string"]}v-</b> - #{I18n.t("plugin_mpd.help.vminus")}"
+    h << "<b>#{@@bot["main"]["control"]["string"]}v <i>value</i></b> - #{I18n.t("plugin_mpd.help.vvalue")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}v</b> - #{I18n.t("plugin_mpd.help.vprint")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}update</b> - #{I18n.t("plugin_mpd.help.update")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}mpdconfig</b> - #{I18n.t("plugin_mpd.help.mpdconfig")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}mpdcommands</b> - #{I18n.t("plugin_mpd.help.mpdcommands")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}mpdnotcommands</b> - #{I18n.t("plugin_mpd.help.mpdnotcommands")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}mpddecoders</b> - #{I18n.t("plugin_mpd.help.mpddecoders")}<br>"
   end
 
   def handle_chat(msg,message)
@@ -214,9 +214,9 @@ class Mpd < Plugin
     if message == 'seek'
       # seek command without a value...
       begin
-        privatemessage("Now on position #{timedecode @@bot[:mpd].status[:time][0]}/#{timedecode @@bot[:mpd].status[:time][1]}.")
+        privatemessage(I18n.t("plugin_mpd.seek.ok", :time1 => timedecode(@@bot[:mpd].status[:time][0]), :time2 => timedecode(@@bot[:mpd].status[:time][1])))
       rescue
-        privatemessage("Seeking failed")
+        privatemessage(I18n.t("plugin_mpd.seek.failed"))
       end
     end
 
@@ -257,11 +257,11 @@ class Mpd < Plugin
       end
       begin
         @@bot[:mpd].seek seekto
-        channelmessage( "Now on position #{timedecode @@bot[:mpd].status[:time][0]}/#{timedecode @@bot[:mpd].status[:time][1]}.")
+        privatemessage(I18n.t("plugin_mpd.seek.ok", :time1 => timedecode(@@bot[:mpd].status[:time][0]), :time2 => timedecode(@@bot[:mpd].status[:time][1])))
       rescue
         # mpd is old and knows no seek commands
         logger "ERROR: seek without success, maybe mpd version < 0.17 installed"
-        channelmessage( "Seeking failed.")
+        privatemessage(I18n.t("plugin_mpd.seek.failed"))
       end
     end
 
@@ -275,16 +275,16 @@ class Mpd < Plugin
 
     if message == 'clear'
       @@bot[:mpd].clear
-      privatemessage( "The playqueue was cleared.")
+      privatemessage(I18n.t("plugin_mpd.clear"))
     end
 
     if message[0,6] == 'delete'
       list = message.split(/ /)[1..-1].uniq.sort!{|x,y| y.to_i <=> x.to_i}.each do |del|
         begin
           @@bot[:mpd].delete del
-          privatemessage( "Deleted Position <b>'#{del}'</b>.")
+          privatemessage( I18n.t("plugin_mpd.delete.ok", :pos => del))
         rescue
-          privatemessage( "Sorry, could not delete <b>'#{del}'</b>.")
+          privatemessage( I18n.t("plugin_mpd.delete.failed", :pos => del))
         end
       end
     end
@@ -313,7 +313,7 @@ class Mpd < Plugin
 
     if message == 'play'
       if @@bot[:mpd].queue.length == 0
-        privatemessage("My queue is empty, cannot start playing.")
+        privatemessage(I18n.t("plugin_mpd.play.empty"))
       else
         @@bot[:mpd].play
         @@bot[:cli].me.deafen false if @@bot[:cli].me.deafened?
@@ -324,9 +324,9 @@ class Mpd < Plugin
     if message == 'play first'
       begin
         @@bot[:mpd].play 0
-        privatemessage("Playing first song in the queue (0).")
+        privatemessage(I18n.t("plugin_mpd.play.first"))
       rescue
-        privatemessage("There is no title in the queue, cant play the first entry.")
+        privatemessage(I18n.t("plugin_mpd.play.empty"))
       end
     end
 
@@ -334,9 +334,9 @@ class Mpd < Plugin
       if @@bot[:mpd].queue.length > 0
         lastsongid = @@bot[:mpd].queue.length.to_i - 1
         @@bot[:mpd].play (lastsongid)
-        privatemessage("Playing last song in the queue (#{lastsongid}).")
+        privatemessage(I18n.t("plugin_mpd.play.last", :id => lastsongid))
       else
-        privatemessage("There is no title in the queue, cant play the first entry.")
+        privatemessage(I18n.t("plugin_mpd.play.empty"))
       end
     end
 
@@ -345,7 +345,7 @@ class Mpd < Plugin
       begin
         @@bot[:mpd].play tracknumber
       rescue
-        privatemessage("Title on position #{tracknumber.to_s} does not exist")
+        privatemessage(I18n.t("plugin_mpd.play.notexist", :id => tracknumber.to_s))
       end
       @@bot[:cli].me.deafen false if @@bot[:cli].me.deafened?
       @@bot[:cli].me.mute false if @@bot[:cli].me.muted?
@@ -399,9 +399,8 @@ class Mpd < Plugin
         end
         text_out << "</table>"
       else
-        text_out = "The queue is empty."
+        text_out = I18n.t("plugin_mpd.queue.empty")
       end
-
       privatemessage( text_out)
     end
 
@@ -417,26 +416,26 @@ class Mpd < Plugin
         @@bot[:mpd].queue.each do |song|
             playlist.add song
         end
-        privatemessage ( "Songs saved in playlist \"#{name}\"." )
+        privatemessage ( I18n.t("plugin_mpd.replaceplaylist.ok", :name => name) )
       else
-        privatemessage ( "no playlist name gaven." )
+        privatemessage ( I18n.t("plugin_mpd.replaceplaylist.failed") )
       end
     end
 
     if message[0,13] == 'save2playlist'
       name = message.gsub("save2playlist", "").lstrip
       if name != ""
-        out = "Songs saved in new playlist with \"#{name}\"."
+        out = I18n.t("plugin_mpd.save2playlist.new", :name => name)
         @@bot[:mpd].playlists.each do |pl|
-          out = "Songs added to playlist \"#{name}\"." if pl.name == name
+          out = I18n.t("plugin_mpd.save2playlist.add", :name => name) if pl.name == name
         end
         playlist = MPD::Playlist.new(@@bot[:mpd], name)
         @@bot[:mpd].queue.each do |song|
             playlist.add song
         end
-        privatemessage( out + " Use the command #{@@bot["main"]["control"]["string"]}playlists to get a list of all available playlists." )
+        privatemessage( out + I18n.t("plugin_mpd.save2playlist.info", :controlstring => @@bot["main"]["control"]["string"]) )
       else
-        privatemessage( "no playlist name gaven.")
+        privatemessage( I18n.t("plugin_mpd.save2playlist.failed") )
       end
     end
 
@@ -444,18 +443,18 @@ class Mpd < Plugin
       playlist_id = message.match(/^delplaylist ([0-9]{1,3})$/)[1].to_i
       begin
         playlist = @@bot[:mpd].playlists[playlist_id]
+        privatemessage( I18n.t("plugin_mpd.delplaylist.ok", :name => playlist.name) )
         playlist.destroy
-        privatemessage( "The playlist \"#{playlist.name}\" deleted.")
       rescue
-        privatemessage( "Sorry, the given playlist id does not exist.")
+        privatemessage( I18n.t("plugin_mpd.delplaylist.failed" ))
       end
     end
 
     if ( message[0,5] == 'where' )
       search = message.gsub("where", "").lstrip.tr('"\\','')
-      text_out = "you should search not nothing!"
+      text_out = I18n.t("plugin_mpd.where.nothing")
       if search != ""
-        text_out ="found:<br/>"
+        text_out ="#{I18n.t("plugin_mpd.where.found")}<br/>"
         @@bot[:mpd].where(any: "#{search}").each do |song|
           text_out << "#{song.file}<br/>"
         end
@@ -465,16 +464,16 @@ class Mpd < Plugin
 
     if ( message[0,3] == 'add' )
       search = (message.gsub("add", "").lstrip).tr('"\\','')
-      text_out = "search is empty"
+      text_out = I18n.t("plugin_mpd.add.empty")
       if search != ""
-        text_out ="added:<br/>"
+        text_out ="#{I18n.t("plugin_mpd.add.added")}<br/>"
         count = 0
         @@bot[:mpd].where(any: "#{search}").each do |song|
           text_out << "add #{song.file}<br/>"
           @@bot[:mpd].add(song)
           count += 1
         end
-        text_out = "found nothing" if count == 0
+        text_out = I18n.t("plugin_mpd.add.nothing") if count == 0
       end
       privatemessage( text_out)
     end
@@ -486,7 +485,7 @@ class Mpd < Plugin
         text_out = text_out + "#{counter} - #{pl.name}<br/>"
         counter += 1
       end
-      privatemessage( "I know the following playlists:<br>#{text_out}")
+      privatemessage( I18n.t("plugin_mpd.playlists", :list => text_out) )
     end
 
     if message.match(/^playlist [0-9]{1,3}.*$/)
@@ -496,9 +495,9 @@ class Mpd < Plugin
         @@bot[:mpd].clear
         playlist.load
         @@bot[:mpd].play
-        privatemessage( "The playlist \"#{playlist.name}\" was loaded and starts now.")
+        privatemessage( I18n.t("plugin_mpd.playlist.loaded", :name => playlist.name) )
       rescue
-        privatemessage( "Sorry, the given playlist id does not exist.")
+        privatemessage( I18n.t("plugin_mpd.playlist.notfound") )
       end
     end
 
@@ -508,37 +507,37 @@ class Mpd < Plugin
 
         case
         when key.to_s == 'volume'
-          out << "<tr><td>Current volume:</td><td>#{value}%</td></tr>"
+          out << "<tr><td>#{I18n.t("plugin_mpd.status.volume")}</td><td>#{value}%</td></tr>"
         when key.to_s == 'repeat'
           if value
-            repeat = "on"
+            repeat = I18n.t("plugin_mpd.status._on")
           else
-            repeat = "off"
+            repeat = I18n.t("plugin_mpd.status._off")
           end
-          out << "<tr><td>Repeat mode:</td><td>#{repeat}</td></tr>"
+          out << "<tr><td>#{I18n.t("plugin_mpd.status.repeat")}</td><td>#{repeat}</td></tr>"
         when key.to_s == 'random'
           if value
-            random = "on"
+            random = I18n.t("plugin_mpd.status._on")
           else
-            random = "off"
+            random = I18n.t("plugin_mpd.status._off")
           end
-          out << "<tr><td>Random mode:</td><td>#{random}</td></tr>"
+          out << "<tr><td>#{I18n.t("plugin_mpd.status.random")}</td><td>#{random}</td></tr>"
         when key.to_s == 'single'
           if value
-            single = "on"
+            single = I18n.t("plugin_mpd.status._on")
           else
-            single = "off"
+            single = I18n.t("plugin_mpd.status._off")
           end
-          out << "<tr><td>Single mode:</td><td>#{single}</td></tr>"
+          out << "<tr><td>#{I18n.t("plugin_mpd.status.single")}</td><td>#{single}</td></tr>"
         when key.to_s == 'consume'
           if value
-            consume = "on"
+            consume = I18n.t("plugin_mpd.status._on")
           else
-            consume = "off"
+            consume = I18n.t("plugin_mpd.status._off")
           end
-          out << "<tr><td>Consume mode:</td><td>#{consume}</td></tr>"
+          out << "<tr><td>#{I18n.t("plugin_mpd.status.consume")}</td><td>#{consume}</td></tr>"
         when key.to_s == 'playlist'
-          out << "<tr><td>Current playlist:</td><td>#{value}</td></tr>"
+          out << "<tr><td>#{I18n.t("plugin_mpd.status.playlist")}</td><td>#{value}</td></tr>"
 
           #FIXME Not possible, because the "value" in this context is random(?) after every playlist loading.
           #playlist = @@bot[:mpd].playlists[value.to_i]
@@ -548,27 +547,27 @@ class Mpd < Plugin
           #  out << "<tr><td>Current playlist:</td><td>#{value}</td></tr>"
           #end
         when key.to_s == 'playlistlength'
-          out << "<tr><td>Song count in current queue/playlist:</td><td valign='bottom'>#{timedecode(value)}</td></tr>"
+          out << "<tr><td>#{I18n.t("plugin_mpd.status.playlistlength")}</td><td valign='bottom'>#{timedecode(value)}</td></tr>"
         when key.to_s == 'mixrampdb'
-          out << "<tr><td>Mixramp db:</td><td>#{value}</td></tr>"
+          out << "<tr><td>#{I18n.t("plugin_mpd.status.mixrampdb")}</td><td>#{value}</td></tr>"
         when key.to_s == 'state'
           case
           when value.to_s == 'play'
-            state = "playing"
+            state = I18n.t("plugin_mpd.status.play")
           when value.to_s == 'stop'
-            state = "stopped"
+            state = I18n.t("plugin_mpd.status.stop")
           when value.to_s == 'pause'
-            state = "paused"
+            state = I18n.t("plugin_mpd.status.pause")
           else
-            state = "unknown state"
+            state = I18n.t("plugin_mpd.status.unknown")
           end
           out << "<tr><td>Current state:</td><td>#{state}</td></tr>"
         when key.to_s == 'song'
           current = @@bot[:mpd].current_song
           if current
-            out << "<tr><td>Current song:</td><td>#{current.artist} - #{current.title} (#{current.album})</td></tr>"
+            out << "<tr><td>#{I18n.t("plugin_mpd.status.song")}</td><td>#{current.artist} - #{current.title} (#{current.album})</td></tr>"
           else
-            out << "<tr><td>Current song:</td><td>#{value})</td></tr>"
+            out << "<tr><td>#{I18n.t("plugin_mpd.status.mixrampdb")}</td><td>#{value})</td></tr>"
           end
         when key.to_s == 'songid'
           #queue = Queue.new
@@ -577,19 +576,19 @@ class Mpd < Plugin
           #current_song = queue.song_with_id(value.to_i)
 
           #out << "<tr><td>Current songid:</td><td>#{current_song}</td></tr>"
-          out << "<tr><td>Current songid:</td><td>#{value}</td></tr>"
+          out << "<tr><td>#{I18n.t("plugin_mpd.status.songid")}</td><td>#{value}</td></tr>"
         when key.to_s == 'time'
-            out << "<tr><td>Current position:</td><td>#{timedecode(value[0])}/#{timedecode(value[1])}</td></tr>"
+            out << "<tr><td>#{I18n.t("plugin_mpd.status.time")}</td><td>#{timedecode(value[0])}/#{timedecode(value[1])}</td></tr>"
         when key.to_s == 'elapsed'
-          out << "<tr><td>Elapsed:</td><td>#{timedecode(value)}</td></tr>"
+          out << "<tr><td>#{I18n.t("plugin_mpd.status.elapsed")}</td><td>#{timedecode(value)}</td></tr>"
         when key.to_s == 'bitrate'
-          out << "<tr><td>Current song bitrate:</td><td>#{value}</td></tr>"
+          out << "<tr><td>#{I18n.t("plugin_mpd.status.bitrate")}</td><td>#{value}</td></tr>"
         when key.to_s == 'audio'
-          out << "<tr><td>Audio properties:</td><td>samplerate(#{value[0]}), bitrate(#{value[1]}), channels(#{value[2]})</td></tr>"
+          out << "<tr><td>#{I18n.t("plugin_mpd.status.audio")}</td><td>samplerate(#{value[0]}), bitrate(#{value[1]}), channels(#{value[2]})</td></tr>"
         when key.to_s == 'nextsong'
-          out << "<tr><td>Position ID of next song to play (in the queue):</td><td valign='bottom'>#{value}</td></tr>"
+          out << "<tr><td>#{I18n.t("plugin_mpd.status.nextsong")}</td><td valign='bottom'>#{value}</td></tr>"
         when key.to_s == 'nextsongid'
-          out << "<tr><td>Song ID of next song to play:</td><td valign='bottom'>#{value}</td></tr>"
+          out << "<tr><td>#{I18n.t("plugin_mpd.status.nextsongid")}</td><td valign='bottom'>#{value}</td></tr>"
         else
           out << "<tr><td>#{key}:</td><td>#{value}</td></tr>"
         end
@@ -601,7 +600,7 @@ class Mpd < Plugin
 
     if message == 'file'
       current = @@bot[:mpd].current_song
-      privatemessage( "Filename of currently played song:<br>#{current.file}</span>") if current
+      privatemessage( I18n.t("plugin_mpd.file", :file => current.file)) if current
     end
 
     if message == 'song'
@@ -609,18 +608,18 @@ class Mpd < Plugin
       if current #Would crash if playlist was empty.
         privatemessage( "#{current.artist} - #{current.title} (#{current.album})")
       else
-        privatemessage( "No song is played currently.")
+        privatemessage( I18n.t("plugin_mpd.song.no") )
       end
     end
 
     if message == 'shuffle'
       @@bot[:mpd].shuffle
-      privatemessage( "Shuffle, shuffle and get a new order. :)")
+      privatemessage( I18n.t("plugin_mpd.shuffle") )
     end
 
     if message == 'v'
       volume = @@bot[:mpd].volume
-      privatemessage( "Current volume is #{volume}%.")
+      privatemessage( I18n.t("plugin_mpd.volume.current") )
     end
 
     if message.match(/^v [0-9]{1,3}$/)
@@ -629,7 +628,7 @@ class Mpd < Plugin
       if (volume >=0 ) && (volume <= 100)
         @@bot[:mpd].volume = volume
       else
-        privatemessage( "Volume can be within a range of 0 to 100")
+        privatemessage( I18n.t("plugin_mpd.volume.range") )
       end
     end
 
@@ -637,7 +636,7 @@ class Mpd < Plugin
       multi = message.match(/^v([-]+)$/)[1].scan(/\-/).length
       volume = ((@@bot[:mpd].volume).to_i - 5 * multi)
       if volume < 0
-        channelmessage( "Volume can't be set to &lt; 0.")
+        channelmessage( I18n.t("plugin_mpd.volume.toolow") )
         volume = 0
       end
       @@bot[:mpd].volume = volume
@@ -647,7 +646,7 @@ class Mpd < Plugin
       multi = message.match(/^v([+]+)$/)[1].scan(/\+/).length
       volume = ((@@bot[:mpd].volume).to_i + 5 * multi)
       if volume > 100
-        channelmessage( "Volume can't be set to &gt; 100.")
+        channelmessage( I18n.t("plugin_mpd.volume.toohigh") )
         volume = 100
       end
       @@bot[:mpd].volume = volume
@@ -655,22 +654,22 @@ class Mpd < Plugin
 
     if message == 'update'
       @@bot[:mpd].update
-      privatemessage("Running database update...")
+      privatemessage(I18n.t("plugin_mpd.update.run"))
       while @@bot[:mpd].status[:updating_db] do
         sleep 0.5
       end
-      privatemessage("Done.")
+      privatemessage(I18n.t("plugin_mpd.update.done"))
     end
 
     if message == 'displayinfo'
       begin
         if @@bot["main"]["display"]["comment"] == true
           @@bot["main"]["display"]["comment"] = false
-          privatemessage( "Output is now \"Channel\"")
+          privatemessage( I18n.t("plugin_mpd.displayinfo.channel") )
           @@bot[:cli].set_comment(@template_if_comment_disabled % [@@bot["main"]["control"]["string"]])
         else
           @@bot["main"]["display"]["comment"] = true
-          privatemessage( "Output is now \"Comment\"")
+          privatemessage( I18n.t("plugin_mpd.displayinfo.comment") )
           @@bot[:cli].set_comment(@template_if_comment_enabled)
         end
       rescue NoMethodError
@@ -682,7 +681,7 @@ class Mpd < Plugin
       begin
         config = @@bot[:mpd].config
       rescue
-        config = "Configuration only for local clients readable"
+        config = I18n.t("plugin_mpd.mpdconfig")
       end
       privatemessage( config)
     end
