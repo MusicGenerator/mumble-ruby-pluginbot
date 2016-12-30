@@ -205,7 +205,7 @@ class Mpd < Plugin
   def handle_chat(msg,message)
     super
 
-    parsed_message = FIXME
+    #parsed_message = FIXME
 
     if message == 'helpmpd'
         privatemessage( help(""))
