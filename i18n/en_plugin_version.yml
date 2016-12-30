@@ -1,0 +1,9 @@
+en:
+  plugin_version:
+    version:          "Version:"
+    branch:           "Branch:"
+
+    help:
+      version:        "Show the used Bot version."
+      branch:         "Show the used branch name."
+      commiturl:      "Print a clickable commit URL based on the assumption that it is a commit in the main repository."

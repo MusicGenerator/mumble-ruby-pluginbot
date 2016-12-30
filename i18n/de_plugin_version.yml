@@ -1,0 +1,9 @@
+de:
+  plugin_version:
+    version:          "Version:"
+    branch:           "Zweig:"
+
+    help:
+      version:        "Zeigt die verwendete Bot Version."
+      branch:         "Zeigt den verwendeten Quellcodezweig."
+      commiturl:      "Zeigt eine klickbare URL basierend auf der Annahme, daß es sich um einen commit in das Quellrepository handelt."

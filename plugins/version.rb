@@ -14,9 +14,9 @@ class Version < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}version</b> - Show the used Bot version.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}branch</b> - Show the used branch name.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}commiturl</b> - Print a clickable commit URL based on the assumption that it is a commit in the main repository.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}version</b> - #{I18n.t("plugin_version.help.version")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}branch</b> - #{I18n.t("plugin_version.help.branch")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}commiturl</b> - #{I18n.t("plugin_version.help.commiturl")}.<br>"
     h
   end
 
@@ -27,12 +27,12 @@ class Version < Plugin
       versionlong = `git rev-parse HEAD`
       date = `git log -n1 --format="%at"`
 
-      privatemessage("Version: #{versionshort.to_s} / #{versionlong.to_s} / #{Time.at(date.to_i).utc}")
+      privatemessage("#{I18n.t("plugin_version.version")} #{versionshort.to_s} / #{versionlong.to_s} / #{Time.at(date.to_i).utc}")
     end
 
     if message == "branch"
       branch = `git rev-parse --abbrev-ref HEAD`
-      privatemessage("Branch: #{branch.to_s}")
+      privatemessage("#{I18n.t("plugin_version.branch")} #{branch.to_s}")
     end
 
     if message == "commiturl"
