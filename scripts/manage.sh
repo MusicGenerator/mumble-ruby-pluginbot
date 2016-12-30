@@ -129,14 +129,14 @@ function log() {
 }
 
 function status() {
-  local _status=$(tmux list-windows | sed -r -e "s/.*(bot)[123].*/\1/g")
+  local _status=$(tmux list-windows 2> /dev/null | sed -r -e "s/.*(bot)[123].*/\1/g")
 
   if [ "${_status}" == "bot" ]; then
     echo "Bots are running"
-    exit 0
+    return 0
   else
     echo "Bots are not running"
-    exit 1
+    return 1
   fi
 }
 
@@ -149,6 +149,7 @@ function parse() {
     case ${1} in
        status)
            status
+           exit $?
            shift
            ;;
        start)
