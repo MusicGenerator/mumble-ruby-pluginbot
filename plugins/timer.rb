@@ -32,10 +32,10 @@ class Timer < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}alarms</b> - Show all Timers.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}alarm_set <i>(HH:)MM</i></b> - Alarm rings in HH:SS.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}alarm_del <i>timecode</i></b> - Delete your alarm.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}alarm_quit</b> - Quit/Delete running alarm.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}alarms</b> - #{I18n.t("plugin_timer.help.alarms")}.<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}alarm_set <i>(HH:)MM</i></b> - #{I18n.t("plugin_timer.help.alarm_set")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}alarm_del <i>timecode</i></b> -#{I18n.t("plugin_timer.help.alarm_del")}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}alarm_quit</b> - #{I18n.t("plugin_timer.help.alarm.quit")}<br>"
     h
   end
 
@@ -43,7 +43,7 @@ class Timer < Plugin
     super
     if message == "alarms"
       @alarmlist.each do | time, user |
-        privatemessage("User: #{user}, Time #{Time.at(time).strftime("%H:%M:%S %e.%m.%Y")} Timecode (#{time})")
+        privatemessage(I18n.t("plugin_timer.alarms" , :user => user, :time => Time.at(time).strftime("%H:%M:%S %e.%m.%Y"), :timecode => time))
       end
     end
 
@@ -66,7 +66,7 @@ class Timer < Plugin
         result += 1
       end
       @alarmlist[result] = msg.actor
-      privatemessage("Your alarm (#{result}) is set to #{Time.at(result).strftime("%H:%M:%S %e.%m.%Y")}")
+      privatemessage(I18n.t("plugin_timer.alarm_set", :result => result , :time => Time.at(result).strftime("%H:%M:%S %e.%m.%Y") ))
     end
 
     if message[0..8] == "alarm_del"
@@ -74,9 +74,9 @@ class Timer < Plugin
         result = message.match(/^alarm_del ([0-9]{1,10})$/)[1].to_i
         if @alarmlist[result] == msg.actor
           @alarmlist.delete(result)
-          privatemessage("Alarm deleted")
+          privatemessage(I18n.t("plugin_timer.alarm_del.deleted"))
         else
-          privatemessage("This is not your alarm, deleting denied")
+          privatemessage(I18n.t("plugin_timer.alarm_del.error"))
         end
       end
     end
