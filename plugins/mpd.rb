@@ -1,4 +1,5 @@
 # a pluginbot plugin
+require_relative '../helpers/MessageParser.rb'
 
 class Mpd < Plugin
 
@@ -203,6 +204,9 @@ class Mpd < Plugin
 
   def handle_chat(msg,message)
     super
+
+    parsed_message = FIXME
+
     if message == 'helpmpd'
         privatemessage( help(""))
     end
