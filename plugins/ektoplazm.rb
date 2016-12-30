@@ -33,8 +33,8 @@ class Ektoplazm < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}ektoplazm <i>URL</i></b> - Will try to download the music from the given URL.<br />"
-    h << "<br />Note: This plugins supports only .zip archives from ektoplazm.com which means you can use mp3 or flac archives, not wav archives."
+    h << "<b>#{@@bot["main"]["control"]["string"]}ektoplazm <i>URL</i></b> - #{I18n.t("plugin_ektoplazm.help.ektoplazm")}<br />"
+    h << "<br />#{I18n.t("plugin_ektoplazm.help.information")}"
   end
 
   def handle_chat(msg, message)
@@ -55,7 +55,7 @@ class Ektoplazm < Plugin
             #return error
           end
 
-          messageto(actor, "ektoplazm is inspecting link: " + link + "...")
+          messageto(actor, I18n.t("plugin_ektoplazm.inspecting", :link => link))
           link.gsub!(/<\/?[^>]*>/, '')
           link.gsub!("&amp;", "&")
           name = link.split("/")[-1]
@@ -79,7 +79,7 @@ class Ektoplazm < Plugin
           end
           if ( @songlist.size > 0 ) then
             @@bot[:mpd].update(@@bot["plugin"]["ektoplazm"]["folder"]["download"].gsub(/\//,""))
-            messageto(actor, "Waiting for database update complete...")
+            messageto(actor, I18n.t("plugin_ektoplazm.db_update"))
 
             begin
               #Caution! following command needs patched ruby-mpd!
@@ -94,17 +94,17 @@ class Ektoplazm < Plugin
               sleep 10
             end
 
-            messageto(actor, "Update done.")
+            messageto(actor, I18n.t("plugin_ektoplazm.db_update_done"))
             while @songlist.size > 0
               song = @songlist.pop
               messageto(actor, song)
               @@bot[:mpd].add(@@bot["plugin"]["ektoplazm"]["folder"]["download"]+song)
             end
           else
-            messageto(actor, "Ektoplazm: The link contains nothing interesting.")
+            messageto(actor, I18n.t("plugin_ektoplazm.badlink"))
           end
         else
-          messageto(actor, "No ektoplazm link!?") if message.start_with?("ektoplazm")
+          messageto(actor, I18n.t("plugin_ektoplazm.no_ektoplazm")) if message.start_with?("ektoplazm")
         end
       }
     end
