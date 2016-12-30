@@ -7,7 +7,7 @@ class Mpd < Plugin
     super
     @@bot = init
     #init default template
-    @infotemplate = "send <b>#{@@bot["main"]["control"]["string"]}help</b> or <b>#{@@bot["main"]["<"]["string"]}about</b> for more information about me."
+    @infotemplate = "send <b>#{@@bot["main"]["control"]["string"]}help</b> or <b>#{@@bot["main"]["control"]["string"]}about</b> for more information about me."
     if ( @@bot[:messages] ) && ( @@bot[:mpd].nil? ) then
       logger("INFO: INIT plugin #{self.class.name}.")
       @@bot[:mpd] = MPD.new @@bot["plugin"]["mpd"]["host"], @@bot["plugin"]["mpd"]["port"].to_i
@@ -205,7 +205,7 @@ class Mpd < Plugin
   def handle_chat(msg,message)
     super
 
-    parsed_message = FIXME
+    #parsed_message = FIXME
 
     if message == 'helpmpd'
         privatemessage( help(""))
