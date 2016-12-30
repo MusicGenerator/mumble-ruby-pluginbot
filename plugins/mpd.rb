@@ -619,7 +619,7 @@ class Mpd < Plugin
 
     if message == 'v'
       volume = @@bot[:mpd].volume
-      privatemessage( I18n.t("plugin_mpd.volume.current") )
+      privatemessage( I18n.t("plugin_mpd.volume.current", :volume => volume))
     end
 
     if message.match(/^v [0-9]{1,3}$/)
