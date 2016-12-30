@@ -15,6 +15,7 @@ OPTIONS
   restart                     Restart the bot(s)
   uytdl|updateytdl            Update youtube-dl
   log                         Show the bots log using tail
+  status                      Show if bots are running or not
   -h|--help                   Show this help
 EOF
 }
