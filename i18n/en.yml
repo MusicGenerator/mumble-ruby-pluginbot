@@ -67,7 +67,7 @@ en:
                             <b>%{cc}framesize <i>size in msec</i></b> Set framesize in milliseconds. Greater values causes smaller overhead. Valid values are 10, 20, 40 and 60 msec<br />
                             <b>%{cc}bandwidth</b> Show information about the overall bandwidth, audo bandwidth (bitrate) and framesize."
     default:              "<br />\
-                            Hi, I am a <a href='https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot'>Mumble-Ruby-Pluginbot</a> and YOU can control me through text commands.<br /><br />
+                            Hi, I am a <a href='http://mumble-ruby-pluginbot.rtfd.org/'>Mumble-Ruby-Pluginbot</a> and YOU can control me through text commands.<br /><br />
                             I will give you a good start with the basic commands you need to control the music I have to offer :) - if you send me the following command:<br />\
                             <b>%{cc}help mpd</b><br />
                             <br />\
