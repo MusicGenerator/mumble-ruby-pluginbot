@@ -136,4 +136,4 @@ en:
       mpdconfig:    "Try to read mpd config."
       mpdcommands:  "Show what commands mpd do allow to Bot (not to you!)."
       mpdnotcommands: "Show what commands mpd disallowed to Bot."
-      mpddecoder:   "Show enabled decoders and what they can decode for your mpd."
+      mpddecoders:  "Show enabled decoders and what they can decode for your mpd."
