@@ -67,7 +67,7 @@ de:
                             <b>%{cc}framesize <i>size in msek</i></b> Stelle Framegr&ouml;&szlig;e in Millisekunden. Gr&ouml;ssere Werte verursachen kleineren Overhead. G&uuml;ltige Werte sind 10, 20, 40 und 60 msek.<br />
                             <b>%{cc}bandwidth</b> Zeigt Informationen zur Gesammtbandbreite, Audiobandbreite und Paketgr&ouml;sse an."
     default:              "<br />\
-                            Hallo ich bin ein <a href='https://wiki.natenom.com/w/Mumble-Ruby-Pluginbot'>Mumble-Ruby-Pluginbot</a> und DU kannst mich mit Textkommandos steuern.<br /><br />
+                            Hallo ich bin ein <a href='http://mumble-ruby-pluginbot.rtfd.org/'>Mumble-Ruby-Pluginbot</a> und DU kannst mich mit Textkommandos steuern.<br /><br />
                             Benutze folgendes Kommando um meine Bedienung kennenzulernen:<br />\
                             <b>%{cc}help mpd</b><br />
                             <br />\
