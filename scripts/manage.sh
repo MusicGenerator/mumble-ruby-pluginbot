@@ -14,6 +14,7 @@ OPTIONS
   start                       Start the bot(s)
   restart                     Restart the bot(s)
   uytdl|updateytdl            Update youtube-dl
+  logger                      Show the bots log using tail
   -h|--help                   Show this help
 EOF
 }
@@ -118,6 +119,14 @@ function show_disclaimer() {
 EOF
 }
 
+function log() {
+  TAIL_BIN="$(which tail)"
+  echo -en "\n\nPress Ctrl+c to quit.\n"
+  echo "Showing" ~/logs/*.log
+  echo
+  "${TAIL_BIN}" -f -n10 ~/logs/*.log
+}
+
 function parse() {
   if [ "$#" -le "0" ]; then
     show_help
@@ -151,6 +160,10 @@ function parse() {
            ;;
        uytdl|updateytdl)
            update_youtubedl
+           shift
+           ;;
+       log)
+           log
            shift
            ;;
        *)

@@ -1,5 +1,5 @@
 # a pluginbot plugin
-require_relative '../helpers/MessageParser.rb'
+#require_relative '../helpers/MessageParser.rb'
 
 class Mpd < Plugin
 
