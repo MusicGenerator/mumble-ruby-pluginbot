@@ -14,7 +14,7 @@ OPTIONS
   start                       Start the bot(s)
   restart                     Restart the bot(s)
   uytdl|updateytdl            Update youtube-dl
-  logger                      Show the bots log using tail
+  log                         Show the bots log using tail
   -h|--help                   Show this help
 EOF
 }
@@ -127,6 +127,18 @@ function log() {
   "${TAIL_BIN}" -f -n10 ~/logs/*.log
 }
 
+function status() {
+  local _status=$(tmux list-windows | sed -r -e "s/.*(bot)[123].*/\1/g")
+
+  if [ "${_status}" == "bot" ]; then
+    echo "Bots are running"
+    exit 0
+  else
+    echo "Bots are not running"
+    exit 1
+  fi
+}
+
 function parse() {
   if [ "$#" -le "0" ]; then
     show_help
@@ -134,6 +146,10 @@ function parse() {
 
   while [ "$#" -gt "0" ]; do
     case ${1} in
+       status)
+           status
+           shift
+           ;;
        start)
            update_youtubedl
            stop_bots_and_mpds
