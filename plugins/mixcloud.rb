@@ -39,15 +39,15 @@ class Mixcloud < Plugin
 
   def help(h)
       h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-      h << "<b>#{@@bot["main"]["control"]["string"]}mixcloud <i>URL</i></b> - Will try to download the music from the given URL. Be aware that due to bandwidth limitations from mixcloud the bot downloads with the a maximum speed that is slightly higher than the streaming speed. Please be patient if you let the bot download a whole album :)<br>"
-      h << "<b>#{@@bot["main"]["control"]["string"]}ytdl-version</b> - print used download helper version"
+      h << "<b>#{@@bot["main"]["control"]["string"]}mixcloud <i>URL</i></b> - #{I18n.t("plugin_mixcloud.help.mixcloud")}<br>"
+      h << "<b>#{@@bot["main"]["control"]["string"]}ytdl-version</b> - #{I18n.t("plugin_mixcloud.help.ytdl_version")}"
   end
 
   def handle_chat(msg, message)
     super
 
     if message == "ytdl-version"
-      privatemessage("Mixcloud uses youtube-dl " + `#{@@bot["plugin"]["mixcloud"]["youtube_dl"]["path"]} --version`)
+      privatemessage(I18n.t("plugin_mixcloud.ytdlversion", :version => `#{@@bot["plugin"]["mixcloud"]["youtube_dl"]["path"]} --version`))
     end
 
     if message.start_with?("mixcloud <a href=") || message.start_with?("<a href=") then
@@ -59,24 +59,24 @@ class Mixcloud < Plugin
           Thread.current["user"]=actor
           Thread.current["process"]="mixcloud"
 
-          messageto(actor, "Mixcloud is inspecting link: " + link + "...")
+          messageto(actor, I18n.t("plugin_mixcloud.inspecting", :link => link))
           get_song link
           if ( @songlist.size > 0 ) then
             @@bot[:mpd].update(@@bot["plugin"]["mixcloud"]["folder"]["download"].gsub(/\//,""))
-            messageto(actor, "Waiting for database update complete...")
+            messageto(actor, I18n.t("plugin_mixcloud.db_update"))
 
             while @@bot[:mpd].status[:updating_db] do
               sleep 0.5
             end
 
-            messageto(actor, "Update done.")
+            messageto(actor, I18n.t("plugin_mixcloud.db_update_done"))
             while @songlist.size > 0
               song = @songlist.pop
               messageto(actor, song)
               @@bot[:mpd].add(@@bot["plugin"]["mixcloud"]["folder"]["download"]+song)
             end
           else
-            messageto(actor, "Mixcloud: The link contains nothing interesting.")
+            messageto(actor, I18n.t("plugin_mixcloud.badlink"))
           end
         end
       end
