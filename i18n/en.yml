@@ -64,8 +64,11 @@ en:
                             <b>%{cc}duckvol <i>volume</i></b> Set the ducking volume (% of normal volume).<br />
                             <b>%{cc}duckvol</b> Show current ducking volume.<br />
                             <b>%{cc}bitrate <i>rate in kbit/s</i></b> Set audio encoding rate. Note that the bot needs additional bandwidth for overhead so the overall bandwidth is higher than this bitrate.<br />
+                            <b>%{cc}framesize</b> Print current framesize.<br />
                             <b>%{cc}framesize <i>size in msec</i></b> Set framesize in milliseconds. Greater values causes smaller overhead. Valid values are 10, 20, 40 and 60 msec<br />
-                            <b>%{cc}bandwidth</b> Show information about the overall bandwidth, audo bandwidth (bitrate) and framesize."
+                            <b>%{cc}bandwidth</b> Show information about the overall bandwidth, audo bandwidth (bitrate) and framesize.<br />
+                            <b>%{cc}jobs</b> Shows current jobs of the bot.<br />
+                            <b>%{cc}plugins</b> - Shows activated plugins.<br />"
     default:              "<br />\
                             Hi, I am a <a href='http://mumble-ruby-pluginbot.rtfd.org/'>Mumble-Ruby-Pluginbot</a> and YOU can control me through text commands.<br /><br />
                             I will give you a good start with the basic commands you need to control the music I have to offer :) - if you send me the following command:<br />\
