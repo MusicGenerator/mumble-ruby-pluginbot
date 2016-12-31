@@ -47,7 +47,7 @@ main:
 
 mumble:
   use_vbr: true # If 1, "yes" or true the bot encodes with a variable bitrate. If 0, "no" nor false it encodes with a constant bitrate.
-  bitrate: 72000 # The overall bandwidth the bot is allowed to use. Please not that the bot is able to ask the server for its maximum bandwidth and so can reduce its bitrate if you set it higher than possible.
+  bitrate: 72000 # The overall bandwidth the bot is allowed to use. Please note that the bot is able to ask the server for its maximum bandwidth and so can reduce its bitrate if you set it higher than possible.
   host: m.natenom.com # The hostname or IP address of the Mumble server your bot connects to.
   port: 64738 # The port of the Mumble server your bot connects to.
   name: "MumbleRubyPluginbot" # The name of your bot. Be aware that on most servers you are not allowed to use white spaces or other special characters.
