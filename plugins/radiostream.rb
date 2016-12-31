@@ -182,7 +182,7 @@ class Radiostream < Plugin
                       end
                       if add != "" then
                         @@bot[:mpd].add(add)
-                        messageto(msg.actor, I18n.t("plugin_radiostream.radioselect.added"), :item => add)
+                        messageto(msg.actor, I18n.t("plugin_radiostream.radioselect.added", :item => add))
                       else
                         messageto(msg.actor, I18n.t("plugin_radiostream.radioselect.none"))
                       end
