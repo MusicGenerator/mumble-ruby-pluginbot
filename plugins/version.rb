@@ -37,7 +37,7 @@ class Version < Plugin
 
     if message == "commiturl"
       versionlong = `git rev-parse HEAD`
-      privatemessage("<a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot/commit/#{versionlong}'>#{versionlong.to_s}</a>")
+      privatemessage("<a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot/commit/#{versionlong.to_s}'>#{versionlong.to_s}</a>")
     end
   end
 end
