@@ -44,18 +44,18 @@ class Youtube < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}ytlink <i>URL</i></b> - Will try to download the music from the given URL.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}yts keywords</b> - Will search on Youtube for one or more keywords and print the results to you.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}ytstream <i>URL</i></b> - Stream audio from a video instead of downloading a video. May take some time because of buffering.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}yta <i>number</i> <i>number2</i> <i>number3</i></b> - Let the bot download the given song(s) from the list you got via <i>#{@@bot["main"]["control"]["string"]}yts</i>.<br>Instead of a specific number or multiple numbers, write <b>#{@@bot["main"]["control"]["string"]}yta <i>all</i></b> to let the bot download all found songs.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}ytdl-version</b> - print used download helper version"
+    h << "<b>#{@@bot["main"]["control"]["string"]}ytlink <i>URL</i></b> - #{I18n.t('plugin_youtube.help.ytlink')}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}yts keywords</b> - #{I18n.t('plugin_youtube.help.yts')}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}ytstream <i>URL</i></b> - #{I18n.t('plugin_youtube.help.ytstream')}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}yta <i>number</i> <i>number2</i> <i>number3</i></b> - #{I18n.t('plugin_youtube.help.yta', :controlstring => @@bot["main"]["control"]["string"])}<br>"
+    h << "<b>#{@@bot["main"]["control"]["string"]}ytdl-version</b> - #{I18n.t('plugin_youtube.help.ytdl_version')}"
   end
 
   def handle_chat(msg, message)
     super
 
     if message == "ytdl-version"
-        privatemessage("Youtube uses youtube-dl " + `#{@executable} --version`)
+        privatemessage(I18n.t('plugin_youtube.ytdlversion', :version => `#{@executable} --version`))
     end
 
     if message.start_with?("ytlink <a href=") || message.start_with?("<a href=") then
@@ -67,26 +67,26 @@ class Youtube < Plugin
           Thread.current["actor"]=actor
           Thread.current["process"]="youtube (download)"
 
-          messageto(actor, "Youtube is inspecting link: " + link + "...")
+          messageto(actor, I18n.t('plugin_youtube.inspecting', :link => link ))
           get_song(link).each do |error|
             messageto(actor, error)
           end
           if ( @songlist.size > 0 ) then
             @@bot[:mpd].update(@@bot["plugin"]["youtube"]["folder"]["download"].gsub(/\//,""))
-            messageto(actor, "Waiting for database update complete...")
+            messageto(actor, I18n.t('plugin_youtube.db_update'))
 
             while @@bot[:mpd].status[:updating_db] do
               sleep 0.5
             end
 
-            messageto(actor, "Update done.")
+            messageto(actor, I18n.t('plugin_youtube.db_update_done'))
             while @songlist.size > 0
               song = @songlist.pop
               messageto(actor, song)
               @@bot[:mpd].add(@@bot["plugin"]["youtube"]["folder"]["download"]+song)
             end
           else
-            messageto(actor, "Youtube: The link contains nothing interesting.")
+            messageto(actor, I18n.t('plugin_youtube.badlink'))
           end
         }
       end
@@ -99,7 +99,7 @@ class Youtube < Plugin
           Thread.current["user"]=msg.actor
           Thread.current["process"]="youtube (yts)"
 
-          messageto(msg.actor, "searching for \"#{search}\", please be patient...")
+          messageto(msg.actor, I18n.t('plugin_youtube.yts.search', :search => search ))
           songs = find_youtube_song(CGI.escape(search))
           @keylist[msg.actor] = songs
           index = 0
@@ -116,7 +116,7 @@ class Youtube < Plugin
           messageto(msg.actor, out)
         end
       else
-        messageto(msg.actor, "won't search for nothing!")
+        messageto(msg.actor, I18n.t('plugin_youtube.yts.nofound'))
       end
     end
 
@@ -125,7 +125,7 @@ class Youtube < Plugin
       link.gsub!(/<\/?[^>]*>/, '')
       link.gsub!("&amp;", "&")
 
-      messageto(msg.actor, "Youtube is inspecting link: " + link + "...")
+      messageto(msg.actor, I18n.t('plugin_youtube.inspecting', :link => link ))
 
       streams = `#{@executable} -g "#{link}"`
       streams.each_line do |line|
@@ -133,12 +133,12 @@ class Youtube < Plugin
         @@bot[:mpd].add line if line.include? "mime=audio/mp4"
       end
 
-      messageto(msg.actor, "Added \"#{link}\" to the queue.")
+      messageto(msg.actor, I18n.t("plugin_youtube.ytstream.added", :link => link))
     end
 
     if message.split[0] == 'yta'
       begin
-        out = "<br>Going to download the following songs:<br />"
+        out = "<br>#{I18n.t('plugin_youtube.yta.download')}<br>"
         msg_parameters = message.split[1..-1].join(" ")
         link = []
 
@@ -147,7 +147,7 @@ class Youtube < Plugin
           id_list.each do |id|
             downloadid = @keylist[msg.actor][id.to_i]
             logger downloadid.inspect
-            out << "ID: #{id}, Name: \"#{downloadid[1]}\"<br>"
+            out << "#{I18n.t('plugin_youtube.yta.download', :id => id, :name => downloadid[1])}<br>"
             link << "https://www.youtube.com/watch?v="+downloadid[0]
           end
 
@@ -156,13 +156,13 @@ class Youtube < Plugin
 
         if msg_parameters == "all"
           @keylist[msg.actor].each do |downloadid|
-            out << "Name: \"#{downloadid[1]}\"<br>"
+            out << "#{I18n.t('plugin_youtube.yta.all',:name => downloadid[1])}<br>"
             link << "https://www.youtube.com/watch?v="+downloadid[0]
           end
           messageto(msg.actor, out)
         end
       rescue
-        messageto(msg.actor, "[error](youtube-plugin)- index number is out of bounds!")
+        messageto(msg.actor, I18n.t('plugin_youtube.yta.index_error'))
       end
 
       workingdownload = Thread.new {
@@ -171,23 +171,23 @@ class Youtube < Plugin
         Thread.current["user"]=actor
         Thread.current["process"]="youtube (yta)"
 
-        messageto(actor, "do #{link.length.to_s} time(s)...")
+        messageto(actor, I18n.t('plugin_youtube.yta.times',:times => link.length.to_s))
         link.each do |l|
-            messageto(actor, "fetch and convert")
+            messageto(actor, I18n.t('plugin_youtube.yta.fetchconvert'))
             get_song(l).each do |error|
                 @@bot[:messages.text(actor, error)]
             end
         end
         if ( @songlist.size > 0 ) then
           @@bot[:mpd].update(@@bot["plugin"]["youtube"]["folder"]["download"].gsub(/\//,""))
-          messageto(actor, "Waiting for database update complete...")
+          messageto(actor, I18n.t('plugin_youtube.db_update'))
 
           while @@bot[:mpd].status[:updating_db] do
             sleep 0.5
           end
 
-          messageto(actor, "Update done.")
-          out = "<b>Added:</b><br>"
+          messageto(actor, I18n.t('plugin_youtube.db_update_done'))
+          out = "<b>#{I18n.t('plugin_youtube.yta.added')}</b><br>"
 
           while @songlist.size > 0
             song = @songlist.pop
@@ -195,12 +195,12 @@ class Youtube < Plugin
               @@bot[:mpd].add(@@bot["plugin"]["youtube"]["folder"]["download"]+song)
               out << song + "<br>"
             rescue
-              out << "fixme: " + song + " not found!<br>"
+              out << "#{I18n.t('plugin_youtube.yta.notfound', :song => song)}<br>"
             end
           end
           messageto(actor, out)
         else
-          messageto(actor, "Youtube: The link contains nothing interesting.")
+          messageto(actor, I18n.t('plugin_youtube.badlink'))
         end
       }
     end
