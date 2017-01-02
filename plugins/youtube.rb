@@ -243,7 +243,7 @@ class Youtube < Plugin
         @filetypes.each do |ending|
           if File.exist?("#{@temp}#{name}.#{ending}")
             system ("#{@consoleaddition} convert \"#{@temp}#{name}.jpg\" -resize 320x240 \"#{@destination}#{name}.jpg\" ")
-            if Conf.gvalue("plugin:youtube:to_mpe").nil?
+            if Conf.gvalue("plugin:youtube:to_mp3").nil?
               # Mixin tags without recode on standard
               system ("#{@consoleaddition} ffmpeg -i \"#{@temp}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@destination}#{name}.#{ending}\"") if !File.exist?("#{@destination}#{name}.#{ending}")
               @songlist << name.split("/")[-1] + ".#{ending}"
