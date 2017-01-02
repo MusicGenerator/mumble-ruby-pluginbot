@@ -501,11 +501,10 @@ class MumbleMPD
               end
 
               if message.split[0] == 'set'
-                #if !@settings["main"]["need_binding"] || @settings["main"]["bound"]==msg_userid
                 #FIXME Need some Work.
                 if !Conf.gvalue("main:need_binding") || Conf.gvalue("main:bound")==msg_userid
-                  setting = message.split('=',2)
-                  @settings[setting[0].split[1].to_sym] = setting[1] if setting[0].split[1]
+                  setting = message.split[1].split('=',2)
+                  Conf.svalue(setting[0], setting[1])
                 end
               end
 
@@ -692,12 +691,15 @@ class MumbleMPD
   end
 
   def hash_to_table(hash)
-    return CGI.escapeHTML(hash.to_s) if !hash.kind_of?(Hash)
+    if !hash.kind_of?(Hash)
+      to_ret_val = CGI.escapeHTML(hash.to_s)
+      return "<i>#{to_ret_val}</i> (#{hash.class})"
+    end
     out = "<ul>"
     hash.each do |key, value|
-      Symbol === key ? out << "<li>" : out << "<li>"
-      out << "#{key}:" << "#{hash_to_table(value)}"
-      Symbol === key ? out << "<li>" : out << "<\li>"
+      Hash === value ? out << "<li>" : out << "<li>"
+      out << "#{key}: " << "#{hash_to_table(value)}"
+      Hash === value ? out << "</li>" : out << "</li>"
     end
     out << "</ul>"
     return out
