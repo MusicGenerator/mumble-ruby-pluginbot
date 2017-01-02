@@ -557,7 +557,7 @@ class MumbleMPD
               end
 
               if message == 'duckvol'
-                ä@cli.text_user(msg.actor, I18n.t("ducking.volume.settings", :volume_relative => @settings["main"]["duckvol"]))
+                #@cli.text_user(msg.actor, I18n.t("ducking.volume.settings", :volume_relative => @settings["main"]["duckvol"]))
                 @cli.text_user(msg.actor, I18n.t("ducking.volume.settings", :volume_relative => Conf.gvalue("main:duckvol")))
                 #if @settings["main"]["ducking"] == false
                 if Conf.gvalue("main:ducking") == false
@@ -572,7 +572,7 @@ class MumbleMPD
                 if (volume >=0 ) && (volume <= 100)
                   #@settings["main"]["duckvol"] = volume
                   Conf.svalue("main:duckvol", volume)
-                  @cli.text_user(msg.actor, I18n.t("ducking.volume.set", :volume => volume))
+                  @cli.text_user(msg.actor, I18n.t("ducking.volume.set", :volume_relative => volume))
                 else
                   @cli.text_user(msg.actor, I18n.t("ducking.volume.out_of_range"))
                 end
