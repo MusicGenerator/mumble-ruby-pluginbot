@@ -46,7 +46,8 @@ class Youtube < Plugin
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
     h << "<b>#{@@bot["main"]["control"]["string"]}ytlink <i>URL</i></b> - #{I18n.t('plugin_youtube.help.ytlink')}<br>"
     h << "<b>#{@@bot["main"]["control"]["string"]}yts keywords</b> - #{I18n.t('plugin_youtube.help.yts')}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}ytstream <i>URL</i></b> - #{I18n.t('plugin_youtube.help.ytstream')}<br>"
+#   ytstream does not correct operate at the moment.
+#    h << "<b>#{@@bot["main"]["control"]["string"]}ytstream <i>URL</i></b> - #{I18n.t('plugin_youtube.help.ytstream')}<br>"
     h << "<b>#{@@bot["main"]["control"]["string"]}yta <i>number</i> <i>number2</i> <i>number3</i></b> - #{I18n.t('plugin_youtube.help.yta', :controlstring => @@bot["main"]["control"]["string"])}<br>"
     h << "<b>#{@@bot["main"]["control"]["string"]}ytdl-version</b> - #{I18n.t('plugin_youtube.help.ytdl_version')}"
   end
@@ -120,20 +121,22 @@ class Youtube < Plugin
       end
     end
 
-    if message.split[0] == 'ytstream'
-      link = msg.message.match(/http[s]?:\/\/(.+?)\"/).to_s.chop
-      link.gsub!(/<\/?[^>]*>/, '')
-      link.gsub!("&amp;", "&")
+#    This Code is out of function at the moment.
+#
+#    if message.split[0] == 'ytstream'
+#      link = msg.message.match(/http[s]?:\/\/(.+?)\"/).to_s.chop
+#      link.gsub!(/<\/?[^>]*>/, '')
+#      link.gsub!("&amp;", "&")
+#
+#      messageto(msg.actor, I18n.t('plugin_youtube.inspecting', :link => link ))
+#
+#      streams = `#{@executable} -g "#{link}"`
+#      streams.each_line do |line|
+#        line.chop!
+#        @@bot[:mpd].add line if line.include? "mime=audio/mp4"
+#        messageto(msg.actor, I18n.t("plugin_youtube.ytstream.added", :link => link))
+#      end
 
-      messageto(msg.actor, I18n.t('plugin_youtube.inspecting', :link => link ))
-
-      streams = `#{@executable} -g "#{link}"`
-      streams.each_line do |line|
-        line.chop!
-        @@bot[:mpd].add line if line.include? "mime=audio/mp4"
-      end
-
-      messageto(msg.actor, I18n.t("plugin_youtube.ytstream.added", :link => link))
     end
 
     if message.split[0] == 'yta'
