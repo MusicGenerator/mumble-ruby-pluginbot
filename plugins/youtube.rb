@@ -136,8 +136,8 @@ class Youtube < Plugin
 #        @@bot[:mpd].add line if line.include? "mime=audio/mp4"
 #        messageto(msg.actor, I18n.t("plugin_youtube.ytstream.added", :link => link))
 #      end
-
-    end
+#
+#    end
 
     if message.split[0] == 'yta'
       begin
