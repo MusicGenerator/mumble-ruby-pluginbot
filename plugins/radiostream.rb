@@ -30,13 +30,13 @@ class Radiostream < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}radiostream URL</b> - #{I18n.t("plugin_radiostream.help.radiostream")}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}radioupdate</b> - #{I18n.t("plugin_radiostream.help.radioupdate")}<br>" if @xspf == true
-    h << "<b>#{@@bot["main"]["control"]["string"]}radiocategories</b> - #{I18n.t("plugin_radiostream.help.radiocategories", :controlstring => @@bot["main"]["control"]["string"])}<br>" if @xspf == true
-    h << "<b>#{@@bot["main"]["control"]["string"]}radiocategory</b> <i>search</i> - #{I18n.t("plugin_radiostream.help.radiocategory")}<br>" if @xspf == true
-    h << "<b>#{@@bot["main"]["control"]["string"]}radioselect</b> <i>search number</i> - #{I18n.t("plugin_radiostream.help.radioselect", :controlstring => @@bot["main"]["control"]["string"])}<br>" if @xspf == true
-    h << "<b>#{@@bot["main"]["control"]["string"]}choose</b> - #{I18n.t("plugin_radiostream.help.choose")}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}choose <i>number</i></b> - #{I18n.t("plugin_radiostream.help.choosenumber")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}radiostream URL</b> - #{I18n.t("plugin_radiostream.help.radiostream")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}radioupdate</b> - #{I18n.t("plugin_radiostream.help.radioupdate")}<br>" if @xspf == true
+    h << "<b>#{Conf.gvalue("main:control:string")}radiocategories</b> - #{I18n.t("plugin_radiostream.help.radiocategories", :controlstring => Conf.gvalue("main:control:string"))}<br>" if @xspf == true
+    h << "<b>#{Conf.gvalue("main:control:string")}radiocategory</b> <i>search</i> - #{I18n.t("plugin_radiostream.help.radiocategory")}<br>" if @xspf == true
+    h << "<b>#{Conf.gvalue("main:control:string")}radioselect</b> <i>search number</i> - #{I18n.t("plugin_radiostream.help.radioselect", :controlstring => Conf.gvalue("main:control:string"))}<br>" if @xspf == true
+    h << "<b>#{Conf.gvalue("main:control:string")}choose</b> - #{I18n.t("plugin_radiostream.help.choose")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}choose <i>number</i></b> - #{I18n.t("plugin_radiostream.help.choosenumber")}<br>"
     h << I18n.t("plugin_radiostream.help.info")
   end
 

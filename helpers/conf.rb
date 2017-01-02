@@ -7,7 +7,11 @@ module Conf
   def Conf.gvalue(key)
     hash = @@configuration.clone
     key.split(':').each do |keyv|
-      hash = hash[keyv]
+      begin
+        hash = hash[keyv]
+      rescue
+        nil
+      end
     end
     return hash
   end
@@ -29,40 +33,28 @@ module Conf
   end
 
   def Conf.svalue(key, value)
-    deep_merge!(@@configuration, nvalue(key, value))
+    #deep_merge!(@@configuration, nvalue(key, value))
+    merger = proc{|key, v1, v2|
+      !(Hash === v1) && !(Hash === v2) ? v1 = v2 : v1 = v1
+      Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
+    @@configuration.merge! nvalue(key,value), &merger
   end
 
   def Conf.load(file)
-    deep_merge!(@@configuration, YAML::load_file(file))
+    #deep_merge!(@@configuration, YAML::load_file(file))
+    merger = proc{|key, v1, v2|
+      !(Hash === v1) && !(Hash === v2) ? v1 = v2 : v1 = v1
+      Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
+    @@configuration.merge! YAML::load_file(file), &merger
+  end
+
+  def Conf.overwrite(hash)
+    @@Configuration = hash.clone
   end
 
   def Conf.get
     @@configuration
   end
 
-  def Conf.html
-    hash_to_table(@@configuration)
-  end
-
-  private
-
-  def deep_merge!(target, data)
-    merger = proc{|key, v1, v2|
-      !(Hash === v1) && !(Hash === v2) ? v1 = v2 : v1 = v1
-      Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
-    target.merge! data, &merger
-  end
-
-  def hash_to_table(hash)
-    return CGI.escapeHTML(hash.to_s) if !hash.kind_of?(Hash)
-    out = "<ul>"
-    hash.each do |key, value|
-      Symbol === key ? out << "<li><b>" : out << "<li>"
-      out << "#{key}:" << "#{hash_to_table(value)}"
-      Symbol === key ? out << "<\b><li>" : out << "<\li>"
-    end
-    out << "</ul>"
-    return out
-  end
 
 end

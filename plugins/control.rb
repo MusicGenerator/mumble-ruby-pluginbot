@@ -6,12 +6,8 @@ class Control < Plugin
       logger("INFO: INIT plugin #{self.class.name}.")
       @@bot[:control] = self
       @historysize = 20
-      @@bot["main"]["automute_if_alone"] = false if @@bot["main"]["automute_if_alone"].nil?
-      if @@bot[:control_historysize]
-        @historysize =  @@bot["main"]["control"]["historysize"]
-      else
-          @historysize = 20
-      end
+      Conf.svalue("main:automute_if_alone", false) if Conf.gvalue("main:automute_if_alone").nil?
+      Conf.svalue("main:control:historysize", 20) if Conf.gvalue("main:control:historysize").nil?
       @history = Array.new
       @muted = false
       #@@bot[:cli].mute false
@@ -58,16 +54,16 @@ class Control < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}ch</b> - #{I18n.t("plugin_control.help.ch")}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}debug</b> - #{I18n.t("plugin_control.help.debug")}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}gotobed</b> - #{I18n.t("plugin_control.help.gotobed")}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}wakeup</b> - #{I18n.t("plugin_control.help.wakeup")}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}follow</b> - #{I18n.t("plugin_control.help.follow")}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}unfollow</b> - #{I18n.t("plugin_control.help.unfollow")}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}stick</b> - #{I18n.t("plugin_control.help.stick")}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}unstick</b> - #{I18n.t("plugin_control.help.unstick")}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}history</b> - #{I18n.t("plugin_control.help.history", :historysize => @historysize)}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}automute</b> - #{I18n.t("plugin_control.help.automute")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}ch</b> - #{I18n.t("plugin_control.help.ch")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}debug</b> - #{I18n.t("plugin_control.help.debug")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}gotobed</b> - #{I18n.t("plugin_control.help.gotobed")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}wakeup</b> - #{I18n.t("plugin_control.help.wakeup")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}follow</b> - #{I18n.t("plugin_control.help.follow")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}unfollow</b> - #{I18n.t("plugin_control.help.unfollow")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}stick</b> - #{I18n.t("plugin_control.help.stick")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}unstick</b> - #{I18n.t("plugin_control.help.unstick")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}history</b> - #{I18n.t("plugin_control.help.history", :historysize => @historysize)}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}automute</b> - #{I18n.t("plugin_control.help.automute")}<br>"
   end
 
   def nopermission(msg)
@@ -129,7 +125,7 @@ class Control < Plugin
       end
 
       # If user is in my channel and is unregistered then pause playing if stop_on_unregistered_users is enabled.
-      if ( me.current_channel.channel_id == msg_target.channel_id ) && ( @@bot["main"]["stop_on_unregistered"] == true ) && ( sender_is_registered == false )  && ( @@bot[:mpd].playing? == true )
+      if ( me.current_channel.channel_id == msg_target.channel_id ) && ( Conf.gvalue("main:stop_on_unregistered") == true ) && ( sender_is_registered == false )  && ( @@bot[:mpd].playing? == true )
         current = @@bot[:mpd].current_song
         if current.file.include? "://" #If yes, it is probably some kind of a stream.
           @@bot[:mpd].stop
@@ -174,8 +170,8 @@ class Control < Plugin
     end
 
     if message == 'gotobed'
-      if @@bot["mumble"]["channel"]
-        @@bot[:cli].join_channel(@@bot["mumble"]["channel"])
+      if Conf.gvalue("mumble:channel")
+        @@bot[:cli].join_channel(Conf.gvalue("mumble:channel"))
         @@bot[:mpd].pause = true
         @@bot[:cli].me.deafen true
       begin
@@ -243,7 +239,7 @@ class Control < Plugin
           @alreadyfollowing = false
         rescue TypeError
           logger "#{$!}"
-          privatemessage( I18n.t("plugin_control.unfollow.error", :control => @@bot["main"]["control"]["string"]))
+          privatemessage( I18n.t("plugin_control.unfollow.error", :control => Conf.gvalue("main:control:string")))
         end
       end
     end
@@ -314,12 +310,12 @@ class Control < Plugin
     end
 
     if message == 'automute'
-      if @@bot["main"]["automute_if_alone"] == false
+      if Conf.gvalue("main:automute_if_alone") == false
         privatemessage( I18n.t("plugin_control.automute.enabled"))
-        @@bot["main"]["automute_if_alone"] = true
+        Conf.svalue("main:automute_if_alone", true)
       else
         privatemessage( I18n.t("plugin_control.automute.disabled"))
-        @@bot["main"]["automute_if_alone"] = false
+        Conf.svalue("main:automute_if_alone", false)
       end
     end
   end

@@ -14,9 +14,9 @@ class Version < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}version</b> - #{I18n.t("plugin_version.help.version")}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}branch</b> - #{I18n.t("plugin_version.help.branch")}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}commiturl</b> - #{I18n.t("plugin_version.help.commiturl")}.<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}version</b> - #{I18n.t("plugin_version.help.version")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}branch</b> - #{I18n.t("plugin_version.help.branch")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}commiturl</b> - #{I18n.t("plugin_version.help.commiturl")}.<br>"
     h
   end
 

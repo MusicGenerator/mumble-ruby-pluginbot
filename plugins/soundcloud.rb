@@ -5,8 +5,8 @@ class Soundcloud < Plugin
     if ( @@bot[:mpd] ) && ( @@bot[:messages] ) && ( @@bot[:soundcloud].nil? )
       logger("INFO: INIT plugin #{self.class.name}.")
       begin
-        @destination = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["soundcloud"]["folder"]["download"]
-        @temp = @@bot["main"]["tempdir"] + @@bot["plugin"]["soundcloud"]["folder"]["temp"]
+        @destination = Conf.gvalue("plugin:mpd:musicfolder") + Conf.gvalue("plugin:soundcloud:folder:download")
+        @temp = Conf.gvalue("main:tempdir") + Conf.gvalue("plugin:soundcloud:folder:temp")
 
         Dir.mkdir(@destination) unless File.exists?(@destination)
         Dir.mkdir(@temp) unless File.exists?(@temp)
@@ -15,14 +15,14 @@ class Soundcloud < Plugin
         logger "See pluginbot_conf.yaml"
       end
       begin
-        @ytdloptions = @@bot["plugin"]["soundcloud"]["youtube_dl"]["options"]
+        @ytdloptions = Conf.gvalue("plugin:soundcloud:youtube_dl:options")
       rescue
         @ytdloptions = ""
       end
       @consoleaddition = ""
-      @consoleaddition = @@bot["plugin"]["soundcloud"]["prefixes"] if @@bot["plugin"]["soundcloud"]["prefixes"]
+      @consoleaddition = Conf.gvalue("plugin:soundcloud:prefixes") if Conf.gvalue("plugin:soundcloud:prefixes")
       @executable = "#"
-      @executable = @@bot["plugin"]["soundcloud"]["youtube_dl"]["path"] if @@bot["plugin"]["soundcloud"]["youtube_dl"]["path"]
+      @executable = Conf.gvalue("plugin:soundcloud:youtube_dl:path") if Conf.gvalue("plugin:soundcloud:youtube_dl:path")
       @songlist = Queue.new
       @keylist = Array.new
       @@bot[:soundcloud] = self
@@ -41,8 +41,8 @@ class Soundcloud < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}soundcloud <i>URL</i></b> - #{I18n.t("plugin_soundcloud.help.soundcloud")} <br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}ytdl-version</b> - #{I18n.t("plugin_soundcloud.help.ytdl_version")}"
+    h << "<b>#{Conf.gvalue("main:control:string")}soundcloud <i>URL</i></b> - #{I18n.t("plugin_soundcloud.help.soundcloud")} <br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}ytdl-version</b> - #{I18n.t("plugin_soundcloud.help.ytdl_version")}"
   end
 
   def handle_chat(msg, message)
@@ -63,7 +63,7 @@ class Soundcloud < Plugin
           messageto(actor, I18n.t("plugin_soundcloud.inspecting", :link => link ))
           get_song link
           if ( @songlist.size > 0 ) then
-            @@bot[:mpd].update(@@bot["plugin"]["soundcloud"]["folder"]["download"].gsub(/\//,""))
+            @@bot[:mpd].update(Conf.gvalue("plugin:soundcloud:folder:download").gsub(/\//,""))
             messageto(actor, I18n.t("plugin_soundcloud.db_update"))
 
             while @@bot[:mpd].status[:updating_db] do
@@ -74,7 +74,7 @@ class Soundcloud < Plugin
             while @songlist.size > 0
               song = @songlist.pop
               messageto(actor, song)
-              @@bot[:mpd].add(@@bot["plugin"]["soundcloud"]["folder"]["download"]+song)
+              @@bot[:mpd].add(Conf.gvalue("plugin:soundcloud:folder:download")+song)
             end
           else
             messageto(actor, I18n.t("plugin_soundcloud.badlink"))
@@ -106,7 +106,7 @@ class Soundcloud < Plugin
           if File.exist?("#{@temp}#{name}.#{ending}")
             system ("#{@consoleaddition} convert \"#{@temp}#{name}.jpg\" -resize 320x240 \"#{@destination}#{name}.jpg\" ")
 
-            if @@bot["plugin"]["soundcloud"]["to_mp3"].nil?
+            if Conf.gvalue("plugin:soundcloud:to_mp3").nil?
               # Mixin tags without recode on standard
               system ("#{@consoleaddition} ffmpeg -i \"#{@temp}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@destination}#{name}.#{ending}\"") if !File.exist?("#{@destination}#{name}.#{ending}")
               @songlist << name.split("/")[-1] + ".#{ending}"

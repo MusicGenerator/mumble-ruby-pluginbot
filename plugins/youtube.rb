@@ -7,8 +7,8 @@ class Youtube < Plugin
     if ( @@bot[:mpd] ) && ( @@bot[:messages] ) && ( @@bot[:youtube].nil? )
       logger("INFO: INIT plugin #{self.class.name}.")
       begin
-        @destination = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["youtube"]["folder"]["download"]
-        @temp = @@bot["main"]["tempdir"] + @@bot["plugin"]["youtube"]["folder"]["temp"]
+        @destination = Conf.gvalue("plugin:mpd:musicfolder") + Conf.gvalue("plugin:youtube:folder:download")
+        @temp = Conf.gvalue("main:tempdir") + Conf.gvalue("plugin:youtube:folder:temp")
 
         Dir.mkdir(@destination) unless File.exists?(@destination)
         Dir.mkdir(@temp) unless File.exists?(@temp)
@@ -17,14 +17,14 @@ class Youtube < Plugin
         logger "See ../config/config.yml"
       end
       begin
-        @ytdloptions = @@bot["plugin"]["youtube"]["options"]
+        @ytdloptions = Conf.gvalue("plugin:youtube:options")
       rescue
         @ytdloptions = ""
       end
       @consoleaddition = ""
-      @consoleaddition = @@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"] if @@bot["plugin"]["youtube"]["youtube_dl"]["prefixes"]
+      @consoleaddition = Conf.gvalue("plugin:youtube:youtube_dl:prefixes") if Conf.gvalue("plugin:youtube:youtube_dl:prefixes")
       @executable = "#"
-      @executable = @@bot["plugin"]["youtube"]["youtube_dl"]["path"] if @@bot["plugin"]["youtube"]["youtube_dl"]["path"]
+      @executable = Conf.gvalue("plugin:youtube:youtube_dl:path") if Conf.gvalue("plugin:youtube:youtube_dl:path")
 
       @songlist = Queue.new
       @keylist = Array.new
@@ -44,12 +44,12 @@ class Youtube < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}ytlink <i>URL</i></b> - #{I18n.t('plugin_youtube.help.ytlink')}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}yts keywords</b> - #{I18n.t('plugin_youtube.help.yts')}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}ytlink <i>URL</i></b> - #{I18n.t('plugin_youtube.help.ytlink')}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}yts keywords</b> - #{I18n.t('plugin_youtube.help.yts')}<br>"
 #   ytstream does not correct operate at the moment.
-#    h << "<b>#{@@bot["main"]["control"]["string"]}ytstream <i>URL</i></b> - #{I18n.t('plugin_youtube.help.ytstream')}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}yta <i>number</i> <i>number2</i> <i>number3</i></b> - #{I18n.t('plugin_youtube.help.yta', :controlstring => @@bot["main"]["control"]["string"])}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}ytdl-version</b> - #{I18n.t('plugin_youtube.help.ytdl_version')}"
+#    h << "<b>#{Conf.gvalue("main:control:string")}ytstream <i>URL</i></b> - #{I18n.t('plugin_youtube.help.ytstream')}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}yta <i>number</i> <i>number2</i> <i>number3</i></b> - #{I18n.t('plugin_youtube.help.yta', :controlstring => Conf.gvalue("main:control:string"))}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}ytdl-version</b> - #{I18n.t('plugin_youtube.help.ytdl_version')}"
   end
 
   def handle_chat(msg, message)
@@ -73,7 +73,7 @@ class Youtube < Plugin
             messageto(actor, error)
           end
           if ( @songlist.size > 0 ) then
-            @@bot[:mpd].update(@@bot["plugin"]["youtube"]["folder"]["download"].gsub(/\//,""))
+            @@bot[:mpd].update(Conf.gvalue("plugin:youtube:folder:download").gsub(/\//,""))
             messageto(actor, I18n.t('plugin_youtube.db_update'))
 
             while @@bot[:mpd].status[:updating_db] do
@@ -84,7 +84,7 @@ class Youtube < Plugin
             while @songlist.size > 0
               song = @songlist.pop
               messageto(actor, song)
-              @@bot[:mpd].add(@@bot["plugin"]["youtube"]["folder"]["download"]+song)
+              @@bot[:mpd].add(Conf.gvalue("plugin:youtube:folder:download")+song)
             end
           else
             messageto(actor, I18n.t('plugin_youtube.badlink'))
@@ -182,7 +182,7 @@ class Youtube < Plugin
             end
         end
         if ( @songlist.size > 0 ) then
-          @@bot[:mpd].update(@@bot["plugin"]["youtube"]["folder"]["download"].gsub(/\//,""))
+          @@bot[:mpd].update(Conf.gvalue("plugin:youtube:folder:download").gsub(/\//,""))
           messageto(actor, I18n.t('plugin_youtube.db_update'))
 
           while @@bot[:mpd].status[:updating_db] do
@@ -195,7 +195,7 @@ class Youtube < Plugin
           while @songlist.size > 0
             song = @songlist.pop
             begin
-              @@bot[:mpd].add(@@bot["plugin"]["youtube"]["folder"]["download"]+song)
+              @@bot[:mpd].add(@Conf.gvalue("plugin:youtube:folder:download")+song)
               out << song + "<br>"
             rescue
               out << "#{I18n.t('plugin_youtube.yta.notfound', :song => song)}<br>"
@@ -213,7 +213,7 @@ class Youtube < Plugin
 
   def find_youtube_song song
     songlist = []
-    songs = `#{@executable} --max-downloads #{@@bot["plugin"]["youtube"]["youtube_dl"]["maxresults"]} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
+    songs = `#{@executable} --max-downloads #{Conf.gvalue("plugin:youtube:youtube_dl:maxresults")} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
     temp = songs.split(/\n/)
     while (temp.length >= 2 )
       songlist << [temp.pop , temp.pop]
@@ -243,7 +243,7 @@ class Youtube < Plugin
         @filetypes.each do |ending|
           if File.exist?("#{@temp}#{name}.#{ending}")
             system ("#{@consoleaddition} convert \"#{@temp}#{name}.jpg\" -resize 320x240 \"#{@destination}#{name}.jpg\" ")
-            if @@bot["plugin"]["youtube"]["to_mp3"].nil?
+            if Conf.gvalue("plugin:youtube:to_mpe").nil?
               # Mixin tags without recode on standard
               system ("#{@consoleaddition} ffmpeg -i \"#{@temp}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@destination}#{name}.#{ending}\"") if !File.exist?("#{@destination}#{name}.#{ending}")
               @songlist << name.split("/")[-1] + ".#{ending}"

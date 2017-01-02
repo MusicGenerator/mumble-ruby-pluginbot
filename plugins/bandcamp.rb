@@ -6,8 +6,9 @@ class Bandcamp < Plugin
     if ( !@@bot[:mpd].nil? ) && ( @@bot[:messages] ) && ( @@bot[:bandcamp].nil? )
       logger("INFO: INIT plugin #{self.class.name}.")
       begin
-        @destination = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["bandcamp"]["folder"]["download"]
-        @temp = @@bot["main"]["tempdir"] + @@bot["plugin"]["bandcamp"]["folder"]["temp"]
+        @destination = Conf.gvalue("plugin:mpd:musicfolder") + Conf.gvalue("plugin:bandcamp:folder:download")
+        @temp = Conf.gvalue("main:tempdir") + Conf.gvalue("plugin:bandcamp:folder:temp")
+
         Dir.mkdir(@destination) unless File.exists?(@destination)
         Dir.mkdir(@temp) unless File.exists?(@temp)
       rescue
@@ -17,8 +18,8 @@ class Bandcamp < Plugin
       @ytdloptions = ""
       @consoleaddition = ""
       begin
-        @ytdloptions = @@bot["plugin"]["bandcamp"]["youtube_dl"]["options"]
-        @consoleaddition = @@bot["plugin"]["bandcamp"]["youtube_dl"]["prefixes"]
+        @ytdloptions = Conf.gvalue("plugin:bandcamp:youtube_dl:options")
+        @consoleaddition = Conf.gvalue("plugin:bandcamp:youtube_dl:prefixes")
       rescue
       end
       @songlist = Queue.new
@@ -39,15 +40,15 @@ class Bandcamp < Plugin
 
   def help(h)
       h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-      h << "<b>#{@@bot["main"]["control"]["string"]}bandcamp <i>URL</i></b> - #{I18n.t("plugin_bandcamp.help.bandcamp")}<br>"
-      h << "<b>#{@@bot["main"]["control"]["string"]}ytdl-version</b> - #{I18n.t("plugin_bandcamp.help.ytdl_version")}"
+      h << "<b>#{Conf.gvalue("main:control:string")}bandcamp <i>URL</i></b> - #{I18n.t("plugin_bandcamp.help.bandcamp")}<br>"
+      h << "<b>#{Conf.gvalue("main:control:string")}ytdl-version</b> - #{I18n.t("plugin_bandcamp.help.ytdl_version")}"
   end
 
   def handle_chat(msg, message)
     super
 
     if message == "ytdl-version"
-      privatemessage("#{I18n.t("plugin_bandcamp.ytdlversion", :version => `#{@@bot["plugin"]["bandcamp"]["youtube_dl"]["path"]} --version`)}")
+      privatemessage("#{I18n.t("plugin_bandcamp.ytdlversion", :version => `#{Conf.gvalue("plugin:bandcamp:youtube_dl:path")} --version`)}")
     end
 
     if message.start_with?("bandcamp <a href=") || message.start_with?("<a href=") then
@@ -68,7 +69,7 @@ class Bandcamp < Plugin
           messageto(actor, I18n.t("plugin_bandcamp.inspecting", :link => link ))
           get_song link
           if ( @songlist.size > 0 ) then
-            @@bot[:mpd].update(@@bot["plugin"]["bandcamp"]["folder"]["download"].gsub(/\//,""))
+            @@bot[:mpd].update(Conf.gvalue("plugin:bandcamp:folder:download").gsub(/\//,""))
             messageto(actor, I18n.t("plugin_bandcamp.db_update"))
 
             while @@bot[:mpd].status[:updating_db] do
@@ -79,7 +80,7 @@ class Bandcamp < Plugin
             while @songlist.size > 0
               song = @songlist.pop
               messageto(actor, song)
-              @@bot[:mpd].add(@@bot["plugin"]["bandcamp"]["folder"]["download"]+song)
+              @@bot[:mpd].add(Conf.gvalue("plugin:bandcamp:folder:download")+song)
             end
           else
             messageto(actor, I18n.t("plugin_bandcamp.badlink"))
@@ -110,8 +111,8 @@ class Bandcamp < Plugin
 
       logger site
 
-      filename = `#{@@bot["plugin"]["bandcamp"]["youtube_dl"]["path"]} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`
-      output =`nice -n20 #{@consoleaddition} #{@@bot["plugin"]["bandcamp"]["youtube_dl"]["path"]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
+      filename = `#{Conf.gvalue("plugin:bandcamp:youtube_dl:path")} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`
+      output =`nice -n20 #{@consoleaddition} #{Conf.gvalue("plugin:bandcamp:youtube_dl:path")} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
       filename.split("\n").each do |name|
         name.slice! @temp #This is probably a bad hack but name is here for example "/home/botmaster/temp/youtubeplugin//home/botmaster/temp/youtubeplugin/filename.mp3"
         @filetypes.each do |ending|

@@ -66,16 +66,16 @@ class Plugin
   end
 
   def logger(logline)
-    if @@bot[:debug]
+    if Conf.gvalue("debug")
       logline="#{Time.new.to_s} : #{logline}\n"
-      if @@bot["main"]["logfile"] == nil
+      if Conf.gvalue("main:logfile") == nil
         puts logline.chomp
       else
-        written = IO.write(@@bot["main"]["logfile"], logline, mode: 'a')
+        written = IO.write(Conf.gvalue("main:logfile"), logline, mode: 'a')
         if written != logline.length
-          puts "ERROR: Logfile (#{@@bot['main']['logfile']}) is not writeable, logging to stdout instead"
+          puts "ERROR: Logfile (#{Conf.gvalue("main:logfile")}) is not writeable, logging to stdout instead"
           puts logline.chomp
-          @@bot["main"]["logfile"] = nil
+          Conf.svalue("main:logfile", nil) 
         end
       end
     end

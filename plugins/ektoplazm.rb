@@ -5,9 +5,8 @@ class Ektoplazm < Plugin
     if ( @@bot[:mpd] ) && ( @@bot[:messages] ) && ( @@bot[:ektoplazm].nil? )
       logger("INFO: INIT plugin #{self.class.name}.")
       begin
-        @ektoplazmfolder = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["ektoplazm"]["folder"]["download"]
-        @tempektoplazmfolder = @@bot["main"]["tempdir"] + @@bot["plugin"]["ektoplazm"]["folder"]["temp"]
-
+        @ektoplazmfolder = Conf.gvalue("plugin:mpd:musicfolder") + Conf.gvalue("plugin:ektoplazm:folder:download")
+        @tempektoplazmfolder = Conf.gvalue("main:tempdir") + Conf.gvalue("plugin:ektoplazm:folder:temp")
         Dir.mkdir(@ektoplazmfolder) unless File.exists?(@ektoplazmfolder)
         Dir.mkdir(@tempektoplazmfolder) unless File.exists?(@tempektoplazmfolder)
       rescue
@@ -15,7 +14,7 @@ class Ektoplazm < Plugin
         logger "See config/config.yml"
       end
       @consoleaddition = ""
-      @consoleaddition = @@bot["plugin"]["ektoplazm"]["prefixes"] if @@bot["plugin"]["ektoplazm"]["prefixes"]
+      @consoleaddition = Conf.gvalue("plugin:ektoplazm:prefixes") if Conf.gvalue("plugin:ektoplazm:prefixes")
       @songlist = Queue.new
       @keylist = Array.new
       @@bot[:ektoplazm] = self
@@ -33,7 +32,7 @@ class Ektoplazm < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}ektoplazm <i>URL</i></b> - #{I18n.t("plugin_ektoplazm.help.ektoplazm")}<br />"
+    h << "<b>#{Conf.gvalue("main:control:string")}ektoplazm <i>URL</i></b> - #{I18n.t("plugin_ektoplazm.help.ektoplazm")}<br />"
     h << "<br />#{I18n.t("plugin_ektoplazm.help.information")}"
   end
 
@@ -78,7 +77,7 @@ class Ektoplazm < Plugin
             end
           end
           if ( @songlist.size > 0 ) then
-            @@bot[:mpd].update(@@bot["plugin"]["ektoplazm"]["folder"]["download"].gsub(/\//,""))
+            @@bot[:mpd].update(Conf.gvalue("plugin:ektoplazm:folder:download").gsub(/\//,""))
             messageto(actor, I18n.t("plugin_ektoplazm.db_update"))
 
             begin
@@ -98,7 +97,7 @@ class Ektoplazm < Plugin
             while @songlist.size > 0
               song = @songlist.pop
               messageto(actor, song)
-              @@bot[:mpd].add(@@bot["plugin"]["ektoplazm"]["folder"]["download"]+song)
+              @@bot[:mpd].add(Conf.gvalue("plugin:ektoplazm:folder:download")+song)
             end
           else
             messageto(actor, I18n.t("plugin_ektoplazm.badlink"))

@@ -29,12 +29,12 @@ class Messages < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}+ #(<i>Hashtag</i>)</b> - #{I18n.t("plugin_messages.help.subscribe")}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}- #(<i>Hashtag</i>)</b> - #{I18n.t("plugin_messages.help.unsubscribe")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}+ #(<i>Hashtag</i>)</b> - #{I18n.t("plugin_messages.help.subscribe")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}- #(<i>Hashtag</i>)</b> - #{I18n.t("plugin_messages.help.unsubscribe")}<br>"
     h << "#{I18n.t("plugin_messages.help.values")}<br>"
     h << "volume, random, update, single, xfade, consume, repeat, state<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}*</b> - #{I18n.t("plugin_messages.help.list")}<br>"
-    h << "<br />#{I18n.t("plugin_messages.help.example", :controlstring => @@bot["main"]["control"]["string"])}"
+    h << "<b>#{Conf.gvalue("main:control:string")}*</b> - #{I18n.t("plugin_messages.help.list")}<br>"
+    h << "<br />#{I18n.t("plugin_messages.help.example", :controlstring => Conf.gvalue("main:control:string"))}"
   end
 
   def handle_chat(msg, message)
@@ -86,7 +86,7 @@ class Messages < Plugin
   end
 
   def sendmessage (message, messagetype)
-    channelmessage( message) if ( @@bot["main"]["channel_notify"].to_i & messagetype) != 0
+    channelmessage( message) if ( Conf.gvalue("main:channel_notify").to_i & messagetype) != 0
     if @priv_notify
       @priv_notify.each do |user, notify|
         begin

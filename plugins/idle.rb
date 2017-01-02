@@ -24,14 +24,14 @@ class Idle < Plugin
     if @is_idle == true
       idle_timeframe = (Time.now.getutc - @timestamp_idle_started).to_i
 
-      if (idle_timeframe) >= @@bot["plugin"]["idle"]["maxidletime"]
-        if @@bot["plugin"]["idle"]["idleaction"] == "deafen"
+      if (idle_timeframe) >= Conf.gvalue("plugin:idle:maxidletime")
+        if Conf.gvalue("plugin:idle:idleaction") == "deafen"
           @@bot[:cli].me.deafen true if !@@bot[:cli].me.deafened?
           @is_idle = false
         end
 
-        if @@bot["plugin"]["idle"]["idleaction"] == "channel"
-          @@bot[:cli].join_channel(@@bot["mumble"]["channel"])
+        if Cond.gvalue("plugin:idle:idleaction") == "channel"
+          @@bot[:cli].join_channel(Conf.gvalue("mumble:channel"))
           @is_idle = false
         end
       end
@@ -46,7 +46,7 @@ class Idle < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}idletime</b> - #{I18n.t "plugin_idle.help.idletime"}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}idletime</b> - #{I18n.t "plugin_idle.help.idletime"}<br>"
     h
   end
 
@@ -55,9 +55,9 @@ class Idle < Plugin
     if message == "idletime"
       if @is_idle
         current_idle_time = (Time.now.getutc - @timestamp_idle_started).to_i
-        privatemessage(I18n.t("plugin_idle.ideling", :ideling => current_idle_time.to_s, :idletime => @@bot["plugin"]["idle"]["maxidletime"], :idleaction => @@bot["plugin"]["idle"]["idleaction"]))
+        privatemessage(I18n.t("plugin_idle.ideling", :ideling => current_idle_time.to_s, :idletime => Conf.gvalue("plugin:idle:maxidletime"), :idleaction => Conf.gvalue("plugin:idle:idleaction")))
       else
-        privatemessage(I18n.t("plugin_idle.working", :idletime => @@bot["plugin"]["idle"]["maxidletime"], :idleaction => @@bot["plugin"]["idle"]["idleaction"]))
+        privatemessage(I18n.t("plugin_idle.working", :idletime =>Conf.gvalue("plugin:idle:maxidletime"), :idleaction => Conf.gvalue("plugin:idle:idleaction")))
       end
     end
   end

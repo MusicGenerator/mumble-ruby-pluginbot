@@ -32,10 +32,10 @@ class Timer < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}alarms</b> - #{I18n.t("plugin_timer.help.alarms")}.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}alarm_set <i>(HH:)MM</i></b> - #{I18n.t("plugin_timer.help.alarm_set")}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}alarm_del <i>timecode</i></b> -#{I18n.t("plugin_timer.help.alarm_del")}<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}alarm_quit</b> - #{I18n.t("plugin_timer.help.alarm.quit")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}alarms</b> - #{I18n.t("plugin_timer.help.alarms")}.<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}alarm_set <i>(HH:)MM</i></b> - #{I18n.t("plugin_timer.help.alarm_set")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}alarm_del <i>timecode</i></b> -#{I18n.t("plugin_timer.help.alarm_del")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}alarm_quit</b> - #{I18n.t("plugin_timer.help.alarm.quit")}<br>"
     h
   end
 

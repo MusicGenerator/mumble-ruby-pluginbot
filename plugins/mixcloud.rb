@@ -6,8 +6,8 @@ class Mixcloud < Plugin
     if ( !@@bot[:mpd].nil? ) && ( @@bot[:messages] ) && ( @@bot[:mixcloud].nil? )
       logger("INFO: INIT plugin #{self.class.name}.")
       begin
-        @destination = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["mixcloud"]["folder"]["download"]
-        @temp = @@bot["main"]["tempdir"] + @@bot["plugin"]["mixcloud"]["folder"]["temp"]
+        @destination = Conf.gvalue("plugin:mpd:musicfolder") + Conf.gvalue("plugin:mixcloud:folder:download")
+        @temp = Conf.gvalue("main:tempdir") + Conf.gvalue("plugin:mixcloud:folder:temp")
         Dir.mkdir(@destination) unless File.exists?(@destination)
         Dir.mkdir(@temp) unless File.exists?(@temp)
       rescue
@@ -17,8 +17,8 @@ class Mixcloud < Plugin
       @ytdloptions = ""
       @consoleaddition = ""
       begin
-        @ytdloptions = @@bot["plugin"]["mixcloud"]["youtube_dl"]["options"]
-        @consoleaddition = @@bot["plugin"]["mixcloud"]["youtube_dl"]["prefixes"]
+        @ytdloptions = Conf.gvalue("plugin:mixcloud:youtube_dl:options")
+        @consoleaddition = Conf.gvalue("plugin:mixcloud:youtube_dl:prefixes")
       rescue
       end
       @songlist = Queue.new
@@ -39,15 +39,15 @@ class Mixcloud < Plugin
 
   def help(h)
       h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-      h << "<b>#{@@bot["main"]["control"]["string"]}mixcloud <i>URL</i></b> - #{I18n.t("plugin_mixcloud.help.mixcloud")}<br>"
-      h << "<b>#{@@bot["main"]["control"]["string"]}ytdl-version</b> - #{I18n.t("plugin_mixcloud.help.ytdl_version")}"
+      h << "<b>#{Conf.gvalue("main:control:string")}mixcloud <i>URL</i></b> - #{I18n.t("plugin_mixcloud.help.mixcloud")}<br>"
+      h << "<b>#{Conf.gvalue("main:control:string")}ytdl-version</b> - #{I18n.t("plugin_mixcloud.help.ytdl_version")}"
   end
 
   def handle_chat(msg, message)
     super
 
     if message == "ytdl-version"
-      privatemessage(I18n.t("plugin_mixcloud.ytdlversion", :version => `#{@@bot["plugin"]["mixcloud"]["youtube_dl"]["path"]} --version`))
+      privatemessage(I18n.t("plugin_mixcloud.ytdlversion", :version => `#{Conf.gvalue("plugin:mixcloud:youtube_dl:path")} --version`))
     end
 
     if message.start_with?("mixcloud <a href=") || message.start_with?("<a href=") then
@@ -62,7 +62,7 @@ class Mixcloud < Plugin
           messageto(actor, I18n.t("plugin_mixcloud.inspecting", :link => link))
           get_song link
           if ( @songlist.size > 0 ) then
-            @@bot[:mpd].update(@@bot["plugin"]["mixcloud"]["folder"]["download"].gsub(/\//,""))
+            @@bot[:mpd].update(Conf.gvalue("plugin:mixcloud:folder:download").gsub(/\//,""))
             messageto(actor, I18n.t("plugin_mixcloud.db_update"))
 
             while @@bot[:mpd].status[:updating_db] do
@@ -73,7 +73,7 @@ class Mixcloud < Plugin
             while @songlist.size > 0
               song = @songlist.pop
               messageto(actor, song)
-              @@bot[:mpd].add(@@bot["plugin"]["mixcloud"]["folder"]["download"]+song)
+              @@bot[:mpd].add(Conf.value("plugin:mixcloud:folder:download")+song)
             end
           else
             messageto(actor, I18n.t("plugin_mixcloud.badlink"))
@@ -110,8 +110,8 @@ class Mixcloud < Plugin
 
       logger site
 
-      filename = `#{@@bot["plugin"]["mixcloud"]["youtube_dl"]["path"]} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`
-      output =`nice -n20 #{@consoleaddition} #{@@bot["plugin"]["mixcloud"]["youtube_dl"]["path"]} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
+      filename = `#{Conf.gvalue("plugin:mixcloud:youtube_dl:path")} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`
+      output =`nice -n20 #{@consoleaddition} #{Conf.gvalue("plugin:mixcloud:youtube_dl:path")} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
       filename.split("\n").each do |name|
         name.slice! @temp #This is probably a bad hack but name is here for example "/home/botmaster/temp/youtubeplugin//home/botmaster/temp/youtubeplugin/filename.mp3"
         @filetypes.each do |ending|

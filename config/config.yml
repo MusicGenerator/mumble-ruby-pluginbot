@@ -2,8 +2,8 @@
 config:
   version: 2.1 # Do not change this :)
 
-:debug: true
-:language: en # The language the bot should use. Currently available languages are en and de. FIXME
+debug: true
+language: en # The language the bot should use. Currently available languages are en and de. FIXME
 
 main:
   tempdir: "/home/botmaster/temp/"
@@ -34,7 +34,8 @@ main:
       registered_only: true # If true the bot reacts only to registered users. If false also unregistered users can control the bot.
     historysize: 20 # Store this many entries in the command history of the bot.
   display:
-    comment: true # If true the bot sets its comment to display the current music that is being played.
+    comment:
+      set: true # If true the bot sets its comment to display the current music that is being played.
   need_binding: false # If true the bot reacts only if a user used the bind command.
   bound: nobody # You can predefine a username the bot is bound to.
   certfolder: "/home/botmaster/certs/" # In this folder the bot automatically creates an openssl certificate per username you set up. See mumble: name.
