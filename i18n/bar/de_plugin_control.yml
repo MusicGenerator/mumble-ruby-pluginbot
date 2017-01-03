@@ -1,0 +1,54 @@
+bar:
+  plugin_control:
+    status:
+      stopped:    "gstoppt"
+      paused:     "pausiert"
+
+    unreg_enter:  "A net registrierta is im Kanäu. Drum hob i d'Musi %{action}."
+
+    ch:
+      brain:      "Bleda Aff! Bin ja eh da! :)"
+      going:      "Da %{user} wü das i eahm Musi moch. Schleich mi jetzt. :)"
+
+    debug:        "Spinnst? Was duast denn? :)"
+
+    gotobed:
+      error:      "Da Admin der Sackara hot mir koa Zimma gebm. Jetz bleib i hoit da bis er des richt!
+                    \"mumble -> channel\" "
+
+    follow:
+      newuser:    "Bi zeascht wen andan nochgrennt, oba jetzt bist du mei Schef."
+      user:       "Bin 'Bei Fuß'."
+
+    unfollow:
+      nok:        "I renn neamt nach."
+      ok:         "War a Bledsinn des nachrenna, gö?"
+      error:      "%{control}follow hat nu neamt eitippt!"
+
+    stick:
+      sticked:    "Mi hot scho wer eigsperrt."
+      sticking:   "Warum sperrst mi jetzt ei?"
+
+    unstick:
+      sticked:    "I war eh net eisperrt!"
+      free:       "Dangsche fias aussalassn."
+
+    history:
+      command:    "Beföh"
+      user:       "van Nutza"
+
+    automute:
+      enabled:    "Automatisch stad eigschoit"
+      disabled:   "Automatisch stad ausgschoit"
+
+    help:
+      ch:         "I kim in dein Kanäu wann mi da Serva lasst"
+      debug:      "Zan testn."
+      gotobed:    "I werd mi auf Ohr hau :)"
+      wakeup:     "I steh wieda auf."
+      follow:     "I werd' da nochrenna."
+      unfollow:   "I werd mi nimma dafür interessiert wo'sd higehst."
+      stick:      "Sperrt mi in an Zimma ei"
+      unstick:    "Losst mi wieda aussa"
+      history:    "Zoagt was de letztn %{historysize} Affn mir ogschaft ham."
+      automute:   "Schoit 'Automatisch stad' um. I werd ruhig sei wann neamt do is, und erst wieda an Wirwö macha wann wieder wer kimmt. Des nennt ma Bandbreitn spoan! :)"

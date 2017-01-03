@@ -1,0 +1,139 @@
+bar:
+  plugin_mpd:
+    seek:
+      ok:           "Aktuell bei %{time1}/%{time2}."
+      failed:       "Vieresp&uuml;n geht net"
+
+    clear:          "d'Musi weggramt."
+
+    delete:
+      ok:           "Musi auf Numma <b>'%{pos}'</b> weggramt."
+      failed:       "Ko Nr. <b>'%{pos}'</b> net weggadoa."
+
+    play:
+      empty:        "Koa Musi eigramt, ko net sp&uuml;n."
+      first:        "sp&uuml; des erschde Stick&ouml; (0)."
+      last:         "sp&uuml; des letztn Titel Stick&ouml; (%{id})."
+      notexist:     "Stick&ouml; mit da Numma %{id} gibts net"
+
+    queue:
+      empty:        "Nix in da Listn."
+
+    replaceplaylist:
+      ok:           "Musi in da Listn \"%{name}\" gspeichat."
+      failed:       "Koa Nam' fia'd Listn an'gem."
+
+    save2playlist:
+      new:          "Musi in da neichn Listn mit'n Nam' \"%{name}\" gspeichat."
+      add:          "Musi za da Listn mit'n Nam' \"%{name}\" dazua da."
+      info:         "%{controlstring}playlists zoagt da olle Listn an."
+      failed:       "Koan Nam' fia'd Listn angebm."
+
+    delplaylist:
+      ok:           "De Listn \"%{name}\" weg-ghaut."
+      failed:       "De Listn mit der ID gibts net."
+
+    where:
+      nothing:      "Du suachst na nix!"
+      found:        "gfundn:"
+
+    add:
+      empty:        "Du suachst na nix!"
+      added:        "dazua da:"
+      nothing:      "nix gfundn."
+
+    playlists:      "Foigende Listn kenn I:<br>%{list}"
+
+    playlist:
+      loaded:       "De Listn \"%{name}\" gladn, fang jetzt an."
+      notfound:     "Hab de Listen ID net gfundn."
+
+    status:
+      volume:       "Momentane Lautst&auml;rke:"
+      repeat:       "Wiederholung:"
+      random:       "Zufaiswiedergabe:"
+      single:       "Oanzltitelmodus:"
+      consume:      "Liste vadoa:"
+      playlist:     "Momentane Abspuillistn:"
+      playlistlength: "Anzahl der Titl in da Listn:"
+      mixrampdb:    "Mixramp db:"
+      song:         "Momentaner Titl:"
+      songid:       "Momentane Titl ID:"
+      time:         "Abspuilposition:"
+      elapsed:      "scho gesp&uuml;t:"
+      bitrate:      "Momentante Titlbitraten:"
+      audio:        "Audio Eigenschaften:"
+      nextsong:     "Positionsnumma van nextn Titl:"
+      nextsongid:   "ID van nextn Titl:"
+      _on:          "Ei"
+      _off:         "Aus"
+      play:         "spielad"
+      stop:         "g'stoppt"
+      pause:        "pausiert"
+      unknown:      "Unbekannter Status"
+
+    file:           "Dateinam van aktuelln Titl: %{file}"
+
+    song:
+      no:           "Sp&uuml;t net ab."
+
+    shuffle:        "Misch neich durch."
+
+    volume:
+      current:      "Momentane Lautst&auml;rke %{volume}%."
+      range:        "Lautst&auml;rke muas im Bereich von 0 bis 100 liegn."
+      toolow:       "Lautst&auml;rke kann net auf &lt; 0 gst&ouml;t werdn."
+      toohigh:      "Lautst&auml;rke kann net auf &gt; 100 gst&ouml;t werdn."
+
+    update:
+      run:          "Datenbankudate gestart..."
+      done:         "gmacht."
+
+    displayinfo:
+      comment:      "Anzeige is jetzt im Kommentar"
+      channel:      "Anzeige kimmt jetzt im Kanal"
+
+    mpdconfig:      "Konfiguration kann nur va lokale Programme glesn werdn"
+
+    help:
+      seeka:        "Spuit da da Postiton (in Sekunden). Nimm +value oda -value um va da jetzign position ausz'geh."
+      seekb:        "Spuit da da Postiton. Nimm +value oda -value um va da jetzign position ausz'geh."
+      seekc:        "Spuit da da Postiton. Nimm +value oda -value um va da jetzign position ausz'geh."
+      crossfade:    "&Uuml;bablendzeit in 'value' Sekundn. 0 deaktiviert des &Uuml;berblendn."
+      next:         "Sp&uuml; nextn Titl in da Listn"
+      prev:         "Sp&uuml; vorherign Titl in da Listn"
+      clear:        "L&ouml;sch d'Listn"
+      random:       "Zufaliswiedergabe umschaitn"
+      single:       "Einzelwiedergabe umschaitn"
+      repeat:       "Wiederholungswiedergabe umschaitn"
+      consume:      "Verbrauchswiedergabe umschaitn. Titl wern aus der Wiedergabelistn nach der Wiedergabe entfernt wann des aktiv is."
+      pp:           "Zwischn Pause und Play hin und her schaitn."
+      stop:         "Wiedergabe stoppen."
+      play:         "Wiedergabe startn."
+      play_first:   "Den erstn Titl va da Listn sp&uuml;n."
+      play_last:    "Den letztn Titl va da Listn sp&uuml;n."
+      play_number:  "Sp&uuml;tSpiele Titl af da Position <i>number</i> in da Listn."
+      songlist:     "Zoagt olle Titl an de da Bot in da Datenbank abgelegt hat."
+      playlist:     "Lade de Listn mit der angema ID."
+      save2playlist: "Dua die Listn in de andere Listn mit dem Nam 'name' dazuspeichan."
+      replaceplaylist: "&Uuml;baschreib de Listn mit dem Nam 'name' mit da aktuelln Listn.<br>"
+      delplaylist:  "Entsorg de Listn mit da angegebna ID. Nimm %{controlstring}playlists um olle Listn o-z'oang."
+      song:         "Zoa a poar Informationen zum aktuelln Titl"
+      status:       "Zoagt den Status van MPD."
+      playlists:    "Zoagt olle Listn van MPD."
+      add:          "Suacht Titl wo 'searchstring' drinn is und duarts in die Listn."
+      delete:       "L&ouml;scht oan Titl aus da Listn. Nimm %{controlstring}queue damits'd de passade ID siagst."
+      where:        "Suacht Titl de wo 'searchstring' drin ham und zoagts an."
+      queue:        "Zoagt de aktuelle Listn an."
+      stats:        "Zoagt interessante Statistiken zan MPD-Player."
+      shuffle:      "Gibt de Titl in zuf&auml;lliga Reihenfolge wieda."
+      file:         "Zoagt den Dateinam van akuelln Titl. Nimms wann <b>%{controlstring}song</b> nix ozoagt."
+      vplus:        "Draht um 20% weida auf."
+      vminus:       "Draht 5% leisa."
+      vvalue:       "St&ouml;t de Lautst&auml;rke auf den gegebena Wert."
+      vprint:       "Zoagt de eingest&ouml;te Lautst&auml;rke an."
+      update:       "Mocht a Datenbankupdate."
+      mpdconfig:    "Prowiad de MPD Konfiguration zan lesn."
+      mpdcommands:  "Zoagt an was fire Kommandos da Bot nehma derf. (Net olle werdn a gnumma)."
+      mpdnotcommands: "Zoagt an was fire Kommandos er net nehma derf."
+      mpddecoders:  "Zoagt olle aktivierten Audodecoder an und was se dekodieren kinnan."
