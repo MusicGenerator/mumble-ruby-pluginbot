@@ -1,37 +1,37 @@
 de:
   plugin_radiostream:
     radiostream:
-      results:          "Es gbt %{results} Ergebnisse. Bitte benutze das 'choose' Kommando."
-      added:            "Hinzugef&uuml;gt: %{added}"
-      noradio:          "Radiostream: <b>Kein Sender gefunden</b>"
+      results:          "Es gibt %{results} Ergebnisse. Nimm des 'choose' Kommando."
+      added:            "Dazua gdan: %{added}"
+      noradio:          "Radiostream: <b>Koa Senda gfundn</b>"
 
     choose:
-      can:              "Du kannst w&auml;hlen aus"
-      cant:             "Es gibt keine Auswahl die du treffen kannst!"
-      added:            "Hinzugef&uuml;gt: %{item}"
-      not_exist:        "Auswahl existiert nicht. :("
+      can:              "Du kannst da was aussuacha von"
+      cant:             "Es gibt nix zan aussuacha!"
+      added:            "Dazua gtan: %{item}"
+      not_exist:        "Des gibts net. :("
 
-    radioupdate:        "Senderliste aktualisiert."
+    radioupdate:        "Sendaliste aktualisiert."
 
     radiocategories:
-      found:            "Gefunden: %{item}"
-      nofound:          "Keine Kategorien gefunden. Benutze Komando 'radioupdate'."
+      found:            "Gfundn: %{item}"
+      nofound:          "Koane Kategorien gfundn. Mach a 'radioupdate'."
 
     radiocategory:
-      station:          "Sender"
+      station:          "Senda"
       description:      "Beschreibung"
 
     radioselect:
-      multiple:         "Es gibt %{results} Ergebnisse. Bitte benutze das 'choose' Kommando."
-      added:            "Hinzugef&uuml;gt: %{item}"
-      none:             "Radiosearch: <b>Kein Sender gefunden</b>"
+      multiple:         "Es gibt %{results} Ergebnisse. Nimm des 'choose' Kommando."
+      added:            "Dazua gtan: %{item}"
+      none:             "Radiosearch: <b>Koane Senda gfundn</b>"
 
     help:
-      radiostream:      "Versucht Sender abzuspielen."
-      radioupdate:      "Aktualisiert Senderliste."
-      radiocategories:  "Zeigt gefundene Kategorien aus denen gew&auml;lt werden kann."
-      radiocategory:    "Zeigt Sender aus der Kategorie 'search' an."
-      radioselect:      "W&auml;hlt Sender mit der Positionsnummer 'number' aus der Suche <b>%{controlstring}radiocategory</b> <i>search</i> in die Wiedergabeliste."
-      choose:           "Zeigt an von welchen Sendepunkten das Programm empfangen werden kann, wenn es mehrere gibt. (Du wirst informiert wenn du das Kommando nutzen kannst.)"
-      choosenumber:     "Treffe Auswahl"
-      info:             "Dieses Plugin sollte die meisten Radiostationen wiedergeben k&ouml;nnen von denen du eine URL hast. :)"
+      radiostream:      "Vasoacht Sender ab-zsp&uuml;n."
+      radioupdate:      "Aktualisiert Sendalistn."
+      radiocategories:  "Zoagt gfundne Kategorien aus denen aussuacha kannst."
+      radiocategory:    "Zoagt Sender aus da Kategorie 'search' an."
+      radioselect:      "Nimmt den Senda mit der Numma 'number' va da <b>%{controlstring}radiocategory</b> <i>search</i> Anzeige im'd Listn."
+      choose:           "Zoagt de verschiedenen Qw&auml;ln  an von w&ouml;chan des Programm empfanga werdn kann, wann's mehrere gibt. (Kriagst gsagt wannst des doa soist.)"
+      choosenumber:     "Suacht aus."
+      info:             "Des Plugin soit de meistn Radiostationen asp&uuml;n kinna. :)"
