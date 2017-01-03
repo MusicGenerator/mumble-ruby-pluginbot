@@ -1,4 +1,4 @@
-de:
+bar:
   plugin_youtube:
     ytdlversion:    "Youtube benutzt youtube-dl %{version}"
     inspecting:     "Youtube untersucht %{link} ..."

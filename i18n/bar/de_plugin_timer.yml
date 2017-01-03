@@ -1,4 +1,4 @@
-de:
+bar:
   plugin_timer:
     alarms:         "Benutzer: %{user}, Zeit %{time} Zeitcode (%{timecode})"
     alarm_set:      "Dei Alarm (%{result}) is af %{time} gest&ouml;."

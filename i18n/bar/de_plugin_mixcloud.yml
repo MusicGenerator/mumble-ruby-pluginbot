@@ -1,4 +1,4 @@
-de:
+bar:
   plugin_mixcloud:
     ytdlversion:    "Mixcloud nimmt youtube-dl %{version}"
     inspecting:     "Mixcloud kontrolliert %{link} ..."

@@ -1,4 +1,4 @@
-de:
+bar:
   plugin_soundcloud:
     ytdlversion:    "Soundcloud nimmt youtube-dl %{version}"
     inspecting:     "Soundcloud untersuacht %{link} ..."
