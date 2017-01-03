@@ -1,5 +1,5 @@
 ---
-en:
+fr:
   plugin_timer:
     alarms: Utilisateur:% {user}, Time% {time} Timecode (% {timecode})
     alarm_set: Votre alarme (% {result}) est réglée sur% {time}.

@@ -141,8 +141,8 @@ class MumbleMPD
   def init_settings
     # set up language
     I18n.load_path = Dir["../i18n/**/*yml"]
-    @configured_settings[:language] ||= :en
-    I18n.default_locale=@configured_settings[:language]
+    @configured_settings["language"] ||= "en"
+    I18n.default_locale=@configured_settings["language"].to_sym
     @run = false
     #@cli = Mumble::Client.new(@settings["mumble"]["host"], @settings["mumble"]["port"]) do |conf|
     @cli = Mumble::Client.new(Conf.gvalue("mumble:host"), Conf.gvalue("mumble:port")) do |conf|

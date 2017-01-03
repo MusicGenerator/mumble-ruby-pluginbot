@@ -1,12 +1,12 @@
 bar:
-  about:
+  about: "
     <br />Hallo, ich bin der Mumble-Ruby-Bot.<br />
       <ul>
         <li><a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot'>Hier gibt es meinen Quellcode</a></li>
         <li><a href='http://mumble-ruby-pluginbot.readthedocs.io/'>Anleitung</a></li>
         <li>Ich wurde unter der <a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot/blob/master/LICENSE'>MIT license</a> lizenziert</li>
         <li>Wenn Du Fehler findest oder Probleme mit mir hast, dann melde dich unter <a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot/issues'>https://github.com/MusicGenerator/mumble-ruby-pluginbot/issues</a></li>
-      </ul>
+      </ul>"
 
   command_blacklisted: "Mein Admin hat diesen Befehl gesperrt."
 
