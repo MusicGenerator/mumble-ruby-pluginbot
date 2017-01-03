@@ -140,7 +140,7 @@ class MumbleMPD
 
   def init_settings
     # set up language
-    I18n.load_path = Dir["../i18n/*.yml"]
+    I18n.load_path = Dir["../i18n/**/*yml"]
     @configured_settings[:language] ||= :en
     I18n.default_locale=@configured_settings[:language]
     @run = false

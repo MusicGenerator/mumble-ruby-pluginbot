@@ -1,0 +1,139 @@
+de:
+  plugin_mpd:
+    seek:
+      ok:           "Jetzt auf Position %{time1}/%{time2}."
+      failed:       "Spulen Fehlgeschlagen"
+
+    clear:          "Abspielliste geleert"
+
+    delete:
+      ok:           "Titel auf Position <b>'%{pos}'</b> entfernt."
+      failed:       "Kann Titel auf Position <b>'%{pos}'</b> nicht entfernen."
+
+    play:
+      empty:        "Abspielliste ist leer, kann nicht beginnen."
+      first:        "Spiele den ersten Titel auf der Liste (0)."
+      last:         "Spiele den letzten Titel auf der Liste (%{id})."
+      notexist:     "Titel auf Position %{id} existiert nicht"
+
+    queue:
+      empty:        "Die Abspielliste ist leer."
+
+    replaceplaylist:
+      ok:           "Titel in der Abspielliste \"%{name}\" gespeichert."
+      failed:       "Kein Name f&uuml;r die Abspielliste angegeben."
+
+    save2playlist:
+      new:          "Titel in einer neuen Abspielliste mit dem Namen \"%{name}\" gespeichert."
+      add:          "Titel in die Abspielliste mit dem Namen \"%{name}\" angef&uuml;gt."
+      info:         "Benutze das Kommando %{controlstring}playlists um die verf&uuml;gbaren Abspiellisten anzuzeigen."
+      failed:       "Kein Name f&uuml;r die Abspielliste angegeben."
+
+    delplaylist:
+      ok:           "Die Abspielliste \"%{name}\" gel&ouml;scht."
+      failed:       "Die Abspielliste mit der angegebenen ID existiert nicht."
+
+    where:
+      nothing:      "Du sollst nicht nach nichts suchen!"
+      found:        "gefunden:"
+
+    add:
+      empty:        "Suche ist leer"
+      added:        "hinzugef&uuml;gt:"
+      nothing:      "nichts gefunden."
+
+    playlists:      "Mir sind folgende Abspiellisten bekannt:<br>%{list}"
+
+    playlist:
+      loaded:       "Die Abspielliste \"%{name}\" geladen, fange an abzuspielen."
+      notfound:     "Konnte die angegebene Abspiellisten ID nicht finden."
+
+    status:
+      volume:       "Momentane Lautst&auml;rke:"
+      repeat:       "Wiederholung:"
+      random:       "Zufallswiedergabe:"
+      single:       "Einzeltitelmodus:"
+      consume:      "Liste aufbrauchen:"
+      playlist:     "Momentane Abspielliste:"
+      playlistlength: "Anzahl der Titel in der Liste:"
+      mixrampdb:    "Mixramp db:"
+      song:         "Momentaner Titel:"
+      songid:       "Momentane Titel ID:"
+      time:         "Abspielposition:"
+      elapsed:      "bereits gespielt:"
+      bitrate:      "Momentante Titelbitrate:"
+      audio:        "Audio Eigenschaften:"
+      nextsong:     "Positionsnummer n&auml;chste Titels:"
+      nextsongid:   "ID des n&auml;chsten Titels:"
+      _on:          "Ein"
+      _off:         "Aus"
+      play:         "spielend"
+      stop:         "gestoppt"
+      pause:        "pausiert"
+      unknown:      "Unbekannter Status"
+
+    file:           "Dateiname des aktuellen Titels: %{file}"
+
+    song:
+      no:           "Spiele nicht ab."
+
+    shuffle:        "Mische neu durch."
+
+    volume:
+      current:      "Momentane Lautst&auml;rke %{volume}%."
+      range:        "Lautst&auml;rke muss im Bereich von 0 bis 100 liegen."
+      toolow:       "Lautst&auml;rke kann nicht auf &lt; 0 gesetzt werden."
+      toohigh:      "Lautst&auml;rke kann nicht auf &gt; 100 gesetzt werden."
+
+    update:
+      run:          "Datenbankudate gestartet..."
+      done:         "abgeschlossen."
+
+    displayinfo:
+      comment:      "Ausgabe erfolgt nun im Kommentar"
+      channel:      "Ausgabe erfolgt nun im Kanal"
+
+    mpdconfig:      "Konfiguration ist nur f&uuml;r lokale Programme lesbar"
+
+    help:
+      seeka:        "Spule zur absoluter Postiton (in Sekunden). Nutze +value oder -value um von der jetzigen Abspielposition zu spulen."
+      seekb:        "Spule zur absoluter Postiton. Nutze + oder - um von der jetzigen Abspielposition zu spulen."
+      seekc:        "Spule zur absoluter Postiton. Nutze + oder - um von der jetzigen Abspielposition zu spulen."
+      crossfade:    "&Uuml;berblendzeit in 'value' Sekunden. 0 deaktiviert das &Uuml;berblenden."
+      next:         "Spiele n&auml;chsten Titel in der Abspielliste"
+      prev:         "Spiele vorherigen Titel in der Abspielliste"
+      clear:        "L&ouml;sche Abspielliste"
+      random:       "Zufallswiedergabe umschalten"
+      single:       "Einzelwiedergabe umschalten"
+      repeat:       "Wiederholungswiedergabe umschalten"
+      consume:      "Verbrauchswiedergabe umschalten. Titel werden aus der Wiedergabeliste nach der Wiedergabe entfernt wenn dieser Modus aktiv ist."
+      pp:           "Zwischen Pause und Play hin und her schalten."
+      stop:         "Wiedergabe stoppen."
+      play:         "Wiedergabe beginnen."
+      play_first:   "Den ersten Titel der Liste wiedergeben."
+      play_last:    "Den letzten Titel der Liste wiedergeben."
+      play_number:  "Spiele Titel auf der Position <i>number</i> in der Wiedergabeliste."
+      songlist:     "Zeige alle Titel die der Bot in der Datenbank abgelegt hat."
+      playlist:     "Lade die Abspielliste mit der angegebenen ID."
+      save2playlist: "F&uuml;ge aktuelle Wiedergabeliste in die Abspielliste mit dem Namen 'name' an."
+      replaceplaylist: "&Uuml;berschreibe Abspielliste mit dem Namen 'name' mit der aktuellen Wiedergabeliste.<br>"
+      delplaylist:  "Entferne Abspilliste mit der angengebenen ID. Benutze %{controlstring}playlists um alle Abspiellisten anzuzeigen."
+      song:         "Zeige einige Informationen zum aktuellen Titel"
+      status:       "Zeige den Status von MPD."
+      playlists:    "Zeige alle Abspiellisten von MPD."
+      add:          "Suche Titel mit &Uuml;bereinstimmung in 'searchstring' und f&uuml;ge sie in die aktuelle Wiedergabeliste an."
+      delete:       "L&ouml;sche einen Titel aus der Wiedergabeliste. Benutze %{controlstring}queue damit du die passende ID sehen kannst."
+      where:        "Suche Titel die auf die Suchbeschreibung 'searchstring' passen und zeige sie an."
+      queue:        "Zeige die aktuelle Wiedergabeliste an."
+      stats:        "Zeige interessante Statistiken zum MPD-Player."
+      shuffle:      "Gib die Titel in zuf&auml;lliger Reihenfolge wieder."
+      file:         "Zeige den Dateinamen des aktuellen Titels. N&uuml;tzlich wenn die Datei keine ID3 Tags besitzt und somit das Kommando <b>%{controlstring}song</b> nichts anzeigt."
+      vplus:        "Erh&ouml;ht die Lautst&auml;rke um 20%."
+      vminus:       "Verringert die Lautst&auml;rke um 5%."
+      vvalue:       "Stellt die Lautst&auml;rke auf den gegebenen Wert."
+      vprint:       "Zeigt die eingestellte Lautst&auml;rke."
+      update:       "F&uuml;hrt ein Datenbankupdate durch."
+      mpdconfig:    "Versucht die MPD Konfiguration zu lesen."
+      mpdcommands:  "Zeigt an welche Kommandos dem Bot erlaubt sind. (Nicht alle werden genutzt)."
+      mpdnotcommands: "Zeigt an welche Kommandos der Bot nicht nutzen darf."
+      mpddecoders:  "Zeigt alle aktivierten Audodecoder an und was sie dekodieren k&ouml;nnen."

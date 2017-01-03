@@ -1,0 +1,11 @@
+en:
+  plugin_ektoplazm:
+    inspecting:     "Ektoplazm is inspecting %{link} ..."
+    db_update:      "Waiting for database update complete..."
+    db_update_done: "Database update done."
+    badlink:        "Bandcamp: The link contains nothing interesting."
+    no_ektoplazm:   "No Ektoplazm link?"
+
+    help:
+      ektoplazm:        "Will try to download the music from the given URL."
+      information:      "Note: This plugins supports only .zip archives from ektoplazm.com which means you can use mp3 or flac archives, not wav archives."

@@ -1,0 +1,11 @@
+en:
+  plugin_bandcamp:
+    ytdlversion:    "Bandcamp uses youtube-dl %{version}"
+    inspecting:     "Bandcamp is inspecting %{link} ..."
+    db_update:      "Waiting for database update complete..."
+    db_update_done: "Database update done."
+    badlink:        "Bandcamp: The link contains nothing interesting."
+
+    help:
+      bandcamp:     "Will try to download the music from the given URL. Be aware that due to bandwidth limitations from bandcamp the bot downloads with the a maximum speed that is slightly higher than the streaming speed. Please be patient if you let the bot download a whole album :)"
+      ytdl_version: "print used download helper version"

@@ -1,0 +1,12 @@
+de:
+  plugin_messages:
+    star:
+      listen:         "Folgende Kan&auml;le abonniert:"
+      nolisten:       "Keine Kan&auml;le abonniert."
+
+    help:
+      subscribe:      "Nachricht abonieren"
+      unsubscribe:    "Abonnement beenden."
+      values:         "Aus folgenden Werten kann ausgew&auml;hlt werden: (Ein oder mehrere)"
+      list:           "Zeigt abonnierte Nachrichten an."
+      example:        "<b>Beispiel:</b> Um benachrichtigt zu werden wenn der Wiederholungsmodus ge&auml;ndert wird, muss folgendes Kommando gesendet werden: \"%{controlstring}+ #repeat\""

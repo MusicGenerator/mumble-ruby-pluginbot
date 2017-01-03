@@ -1,0 +1,11 @@
+de:
+  plugin_mixcloud:
+    ytdlversion:    "Mixcloud benutzt youtube-dl %{version}"
+    inspecting:     "Mixcloud untersucht %{link} ..."
+    db_update:      "Warte auf Datenbankupdate..."
+    db_update_done: "Datenbankupdate abgeschlossen."
+    badlink:        "Mixcloud: Keine Songs gefunden."
+
+    help:
+      mixcloud:     "Versucht Musik aus der angegebenen URL herunterzuladen."
+      ytdl_version: "Gibt verwendete youtube-dl version aus."

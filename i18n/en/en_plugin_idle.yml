@@ -1,0 +1,10 @@
+en:
+  plugin_idle:
+    ideling:    "<br />Current idle time is: %{ideling}.
+                  <br />Maximum idle time is set to: %{idletime} seconds.
+                  <br />Idle action is: %{idleaction}."
+    working:    "<br />The bot is currently not idle.
+                  <br />Maximum idle time is set to: %{idletime} seconds.
+                  <br />Idle action is: %{idleaction}."
+    help:
+      idletime: "Show current idle time of the bot."
