@@ -176,7 +176,7 @@ class Youtube < Plugin
 
         messageto(actor, I18n.t('plugin_youtube.yta.times',:times => link.length.to_s))
         link.each do |l|
-            messageto(actor, I18n.t('plugin_youtube.yta.fetchconvert'))
+            messageto(actor, "#{I18n.t('plugin_youtube.yta.fetchconvert')} <a href=\"#{l}\">youtube</a>")
             get_song(l).each do |error|
                 @@bot[:messages.text(actor, error)]
             end
@@ -195,7 +195,7 @@ class Youtube < Plugin
           while @songlist.size > 0
             song = @songlist.pop
             begin
-              @@bot[:mpd].add(@Conf.gvalue("plugin:youtube:folder:download")+song)
+              @@bot[:mpd].add(Conf.gvalue("plugin:youtube:folder:download")+song)
               out << song + "<br>"
             rescue
               out << "#{I18n.t('plugin_youtube.yta.notfound', :song => song)}<br>"
