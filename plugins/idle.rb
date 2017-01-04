@@ -24,15 +24,17 @@ class Idle < Plugin
     if @is_idle == true
       idle_timeframe = (Time.now.getutc - @timestamp_idle_started).to_i
 
-      if (idle_timeframe) >= Conf.gvalue("plugin:idle:maxidletime")
+      if (idle_timeframe) >= Conf.gvalue("plugin:idle:maxidletime").to_i
         if Conf.gvalue("plugin:idle:idleaction") == "deafen"
           @@bot[:cli].me.deafen true if !@@bot[:cli].me.deafened?
           @is_idle = false
+          logger("DEBUG: maxidletime reached. Deafening self.")
         end
 
         if Conf.gvalue("plugin:idle:idleaction") == "channel"
           @@bot[:cli].join_channel(Conf.gvalue("mumble:channel"))
           @is_idle = false
+          logger("DEBUG: maxidletime reached. Switching to mumble:channel.")
         end
       end
     end
