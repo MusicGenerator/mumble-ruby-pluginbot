@@ -22,7 +22,7 @@ en:
     _off:               "Music ducking is off."
     volume:
       settings:         "Ducking volume is set to %{volume_relative}% of normal volume."
-      set:              "Ducking is set to %{volume} of normal volume."
+      set:              "Ducking is set to %{volume_relative} of normal volume."
       out_of_range:     "Ducking volume must an number from 0 to 100"
 
   bitrate:
