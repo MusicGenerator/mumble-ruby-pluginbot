@@ -110,16 +110,16 @@ class Mixcloud < Plugin
 
       logger site
 
-      filename = `#{Conf.gvalue("plugin:mixcloud:youtube_dl:path")} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`
-      output =`nice -n20 #{@consoleaddition} #{Conf.gvalue("plugin:mixcloud:youtube_dl:path")} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
+      filename = `#{Conf.gvalue("plugin:mixcloud:youtube_dl:path")} --get-filename #{@ytdloptions} -i -o '#{@temp}%(title)s' "#{site}"`
+      output =`nice -n20 #{@consoleaddition} #{Conf.gvalue("plugin:mixcloud:youtube_dl:path")} #{@ytdloptions} --write-thumbnail -x --audio-format best -o '#{@temp}%(title)s.%(ext)s' '#{site}' `     #get icon
       filename.split("\n").each do |name|
         name.slice! @temp #This is probably a bad hack but name is here for example "/home/botmaster/temp/youtubeplugin//home/botmaster/temp/youtubeplugin/filename.mp3"
         @filetypes.each do |ending|
           if File.exist?("#{@temp}#{name}.#{ending}")
-            system ("nice -n20 #{@consoleaddition} convert \"#{@temp}#{name}.jpg\" -resize 320x240 \"#{@destination}#{name}.jpg\" ")
+            system ("nice -n20 #{@consoleaddition} convert '#{@temp}#{name}.jpg' -resize 320x240 '#{@destination}#{name}.jpg' ")
             # Mixin tags without recode on standard
 
-            system ("nice -n20 #{@consoleaddition} cp \"#{@temp}#{name}.#{ending}\" \"#{finaldirectory}/#{name}.#{ending}\"") if !File.exist?("#{finaldirectory}/#{name}.#{ending}")
+            system ("nice -n20 #{@consoleaddition} cp '#{@temp}#{name}.#{ending}' '#{finaldirectory}/#{name}.#{ending}'") if !File.exist?("#{finaldirectory}/#{name}.#{ending}")
 
             if is_album
               @songlist << albumname + "/" + name.split("/")[-1] + ".#{ending}"

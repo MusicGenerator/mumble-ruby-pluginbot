@@ -95,8 +95,8 @@ class Soundcloud < Plugin
 
       site.gsub!(/<\/?[^>]*>/, '')
       site.gsub!("&amp;", "&")
-      filename = `#{@executable} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`
-      output =`#{@consoleaddition} #{@executable} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
+      filename = `#{@executable} --get-filename #{@ytdloptions} -i -o '#{@temp}%(title)s' "#{site}"`
+      output =`#{@consoleaddition} #{@executable} #{@ytdloptions} --write-thumbnail -x --audio-format best -o '#{@temp}%(title)s.%(ext)s' '#{site}' `     #get icon
       output.each_line do |line|
         error << line if line.include? "ERROR:"
       end
@@ -104,15 +104,15 @@ class Soundcloud < Plugin
         name.slice! @temp #This is probably a bad hack but name is here for example "/home/botmaster/temp/youtubeplugin//home/botmaster/temp/youtubeplugin/filename.mp3"
         @filetypes.each do |ending|
           if File.exist?("#{@temp}#{name}.#{ending}")
-            system ("#{@consoleaddition} convert \"#{@temp}#{name}.jpg\" -resize 320x240 \"#{@destination}#{name}.jpg\" ")
+            system ("#{@consoleaddition} convert '#{@temp}#{name}.jpg' -resize 320x240 '#{@destination}#{name}.jpg' ")
 
             if Conf.gvalue("plugin:soundcloud:to_mp3").nil?
               # Mixin tags without recode on standard
-              system ("#{@consoleaddition} ffmpeg -i \"#{@temp}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@destination}#{name}.#{ending}\"") if !File.exist?("#{@destination}#{name}.#{ending}")
+              system ("#{@consoleaddition} ffmpeg -y -i '#{@temp}#{name}.#{ending}' -acodec copy -metadata title='#{name}' '#{@destination}#{name}.#{ending}'") if !File.exist?("#{@destination}#{name}.#{ending}")
               @songlist << name.split("/")[-1] + ".#{ending}"
             else
               # Mixin tags and recode it to mp3 (vbr 190kBit)
-              system ("#{@consoleaddition} ffmpeg -i \"#{@temp}#{name}.#{ending}\" -codec:a libmp3lame -qscale:a 2 -metadata title=\"#{name}\" \"#{@destination}#{name}.mp3\"") if !File.exist?("#{@destination}#{name}.mp3")
+              system ("#{@consoleaddition} ffmpeg -y -i '#{@temp}#{name}.#{ending}' -codec:a libmp3lame -qscale:a 2 -metadata title='#{name}' '#{@destination}#{name}.mp3'") if !File.exist?("#{@destination}#{name}.mp3")
               @songlist << name.split("/")[-1] + ".mp3"
             end
           end
