@@ -36,8 +36,12 @@ main:
   display:
     comment:
       set: true # If true the bot sets its comment to display the current music that is being played.
-  need_binding: false # If true the bot reacts only if a user used the bind command.
-  bound: nobody # You can predefine a username the bot is bound to.
+  #need_binding: false # If true the bot reacts only if a user used the bind command.
+  user:
+    superuser: # You can use a userhash and a name shown next line for a Superuseraccount.
+      72x60721xx216x4xx017f3x1x476d4358x48x648: dafoxia # Safety Information: This hash is not valid, it is not possible that any user get SuperUser when you forget to remove it.
+    banned:
+    bound:  # You can predefine a userhash string the bot is bound to.
   certfolder: "/home/botmaster/certs/" # In this folder the bot automatically creates an openssl certificate per username you set up. See mumble: name.
   fifo: "/home/botmaster/mpd1/mpd.fifo" # This fifo must also be used by the MPD the bot connects to.
   logo: "../config/logo/logo.html" # A relative path to the logo the bot uses.

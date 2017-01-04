@@ -49,6 +49,7 @@ module Conf
   end
 
   def Conf.overwrite(hash)
+    @@Configuration = Hash.new
     @@Configuration = hash.clone
   end
 

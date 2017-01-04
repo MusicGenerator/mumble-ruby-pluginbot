@@ -52,12 +52,11 @@ bar:
                             <b>superpassword+restart</b> Startet den Bot neu.<br />
                             <b>superpassword+reset</b> Setzt die Einstellungen zur&uuml;ck.<br />
                             <b>%{cc}about</b> Zeigt Informationen &uuml;ber den Bot.<br />
-                            <b>%{cc}settings</b> Zeigt momentanen Einstellungen.<br />
-                            <b>%{cc}set <i>variable=value</i></b> Setzt einen Variablenwert.<br />
+                            <b>%{cc}settings</b> Zeigt momentanen Einstellungen. Nur SuperUser!<br />
+                            <b>%{cc}set <i>variable=value</i></b> Setzt einen Variablenwert. Nur SuperUser!<br />
                             <b>%{cc}bind</b> Bindet den Bot an einen Benutzer. (Manche Befehle funktionieren nur wenn der Bot an den Benutzer gebunden ist.)<br />
                             <b>%{cc}unbind</b> L&ouml;st die Benutzerbindung.<br />
-                            <b>%{cc}reset</b> Setzt alle Einstellungen zur&uuml;ck. Ben&ouml;tigt Benutzerbindung!<br />
-                            <b>%{cc}restart</b> Startet den Bot neu. Ben&ouml;tigt Benutzerbindung!<br />
+                            <b>%{cc}reset</b> Setzt alle Einstellungen zur&uuml;ck. Nur SuperUser!<br />
                             <b>%{cc}blacklist <i>username</i></b> F&uuml;gt einen Benutzer zur Blacklist hinzu. Ben&ouml;tigt Benutzerbindung!<br />
                             <b>%{cc}register</b> Der Bot registriert sich selbst auf dem Server. Funktioniert nur wenn es der Server zul&auml;sst. Der Botname kann danach nur mehr von einem Administrator ge&auml;ndert werden.<br />
                             <b>%{cc}ducking</b> Schalte Lautst&auml;rkenabsenkung ein/aus <br />

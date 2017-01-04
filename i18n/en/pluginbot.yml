@@ -52,13 +52,12 @@ en:
                             <b>superpassword+restart</b> will restart the bot.<br />
                             <b>superpassword+reset</b> will reset variables to start values.<br />
                             <b>%{cc}about</b> Get information about this bot.<br />
-                            <b>%{cc}settings</b> display current settings.<br />
-                            <b>%{cc}set <i>variable=value</i></b> Set variable to value.<br />
+                            <b>%{cc}settings</b> display current settings. Need SuperUser<br />
+                            <b>%{cc}set <i>variable=value</i></b> Set variable to value. Need SuperUser<br />
                             <b>%{cc}bind</b> Bind bot to a user. (some functions will only work if bot is bound).<br />
                             <b>%{cc}unbind</b> Unbind bot.<br />
-                            <b>%{cc}reset</b> Reset variables to default value. Needs binding!<br />
-                            <b>%{cc}restart</b> Restart Bot. Needs binding.<br />
-                            <b>%{cc}blacklist <i>username</i></b> Add user to blacklist. Needs binding.<br />
+                            <b>%{cc}reset</b> Reset variables to default value. Needs SuperUser!<br />
+                            <b>%{cc}blacklist <i>username</i></b> Add user to blacklist. Need binding.<br />
                             <b>%{cc}register</b> Let the bot register itself on the current server. Works only if server allows it. If it doesn't work ask an administrator of your Mumble server. Be aware that after registration only an administrator can change the name of the bot.<br />
                             <b>%{cc}ducking</b> Toggle voice ducking on/off.<br />
                             <b>%{cc}duckvol <i>volume</i></b> Set the ducking volume (% of normal volume).<br />

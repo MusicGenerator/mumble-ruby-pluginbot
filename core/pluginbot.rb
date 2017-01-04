@@ -128,7 +128,7 @@ class MumbleMPD
     #@settings["main"]["duckvol"] ||= 20
     Conf.svalue("main:duckvol", 20) if !Conf.gvalue("main:duckvol").is_a?(Integer)
     #@configured_settings = @settings.clone
-    @configured_settings = Conf.get
+    @configured_settings = Conf.get.clone
 
     # now it is time to empty early log to logfile if it exist!
     logger "-------------------------Start Logging-------------------------------"
@@ -419,9 +419,8 @@ class MumbleMPD
       # check if User is on a blacklist
       begin
         #if @settings.has_key?(@cli.users[msg.actor].hash.to_sym)
-        if Conf.get.has_key?(@cli.users[msg.actor].hash.to_sym)
+        if Conf.gvalue("main:user:banned").has_key?("#{@cli.users[msg.actor].hash.to_sym }")
           logger "Debug: User with userid \"#{msg_userid}\" is in blacklist! Ignoring him."
-
           sender_is_registered = false # If on blacklist handle user as if he was unregistered.
         end
       rescue
@@ -440,17 +439,6 @@ class MumbleMPD
 
       #blacklisted_commands = @settings["main"]["blacklisted_commands"]
       blacklisted_commands = Conf.gvalue("main:blacklisted_commands")
-
-      #if msg.message == @settings["main"]["superpassword"]+"reset"
-      if msg.message == Conf.gvalue("main:superpassword")+"reset"
-        if blacklisted_commands.include?("superpassword")
-          @cli.text_user(msg.actor, I18n.t('command_blacklisted'))
-          return
-        end
-        #@settings = @configured_settings.clone
-        Conf.overwrite(@configured_settings)
-        @cli.text_channel(@cli.me.current_channel,@superanswer);
-      end
 
       #if (sender_is_registered == true) || (@settings["main"]["control"]["message"]["registered_only"] == false)
       if (sender_is_registered == true) || (Conf.gvalue("main:control:message:registered_only") == false)
@@ -495,50 +483,60 @@ class MumbleMPD
                 @cli.text_user(msg.actor, I18n.t('about'))
               end
 
-              if message == 'settings'
-                #@cli.text_user(msg.actor, hash_to_table(@settings))
-                @cli.text_user(msg.actor, hash_to_table(Conf.get))
+              # This functions need superuser permission
+              if !Conf.gvalue("main:user:superuser").nil?
+                if Conf.gvalue("main:user:superuser").has_key?("#{@cli.users[msg.actor].hash.to_sym }")
+                  # Show settings
+                  if  message == 'settings'
+                    @cli.text_user(msg.actor, hash_to_table(Conf.get))
+                  end
+                  # Modify settings
+                  if message.split[0] == 'set'
+                    setting = message.split[1].split('=',2)
+                    Conf.svalue(setting[0], setting[1])
+                  end
+                  # Reset settings to default value
+                  if message == 'reset'
+                    @cli.text_user(msg.actor, hash_to_table(@configured_settings))
+                    Conf.overwrite(@configured_settings) if Conf.gvalue("main:user:bound") == msg_userid
+                  end
+                end
               end
 
-              if message.split[0] == 'set'
-                #FIXME Need some Work.
-                if !Conf.gvalue("main:need_binding") || Conf.gvalue("main:bound")==msg_userid
-                  setting = message.split[1].split('=',2)
-                  Conf.svalue(setting[0], setting[1])
+              if message.split(" ")[0] == 'showhash'
+                if @cli.find_user(message.split[1..-1].join(" "))
+                  @cli.text_user(msg.actor, "#{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}:  #{message.split[1..-1].join(" ")}")
+                else
+                  @cli.text_user(msg.actor, "#{@cli.users[msg.actor].hash.to_sym}")
                 end
               end
 
               if message == 'bind'
                 #@settings["main"]["bound"] = msg_userid if @settings["main"]["bound"] == "nobody"
-                Conf.svalue("main:bound", msg_userid) if Conf.gvalue("main:bound") == "nobody"
+                Conf.svalue("main:user:bound", "#{@cli.users[msg.actor].hash.to_sym}") if Conf.gvalue("main:user:bound") == nil
               end
 
               if message == 'unbind'
                 #@settings["main"]["bound"] = "nobody" if @settings["main"]["bound"] == msg_userid
-                Conf.svalue("main:bound", "nobody") if Conf.gvalue("main:bound") == msg_userid
+                Conf.svalue("main:user:bound", nil) if Conf.gvalue("main:user:bound") == "#{@cli.users[msg.actor].hash.to_sym}"
               end
 
-              if message == 'reset'
-                #@settings = @configured_settings.clone if @settings["main"]["bound"] == msg_userid
-                #@settings = @configured_settings.clone if @settings["main"]["bound"] == msg_userid
-                Conf.overwrite(@configured_settings) if Conf.gvalue("main:bound") == msg_userid
-              end
+
 
               if message == 'register'
                 #if @settings["main"]["bound"] == msg_userid
-                if Conf.gvalue("main:bound") == msg_userid
+                if Conf.gvalue("main:user:bound") == msg_userid
                   @cli.me.register
                 end
               end
 
               if message.split(" ")[0] == 'blacklist'
                 #if @settings["main"]["bound"] == msg_userid
-                if Conf.gvalue("main:bound") == msg_userid
+                if Conf.gvalue("main:user:bound") == msg_userid
                   if @cli.find_user(message.split[1..-1].join(" "))
-                    #@settings[@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym] = message.split[1..-1].join(" ")
-                    Conf.svalue(@cli.find_user(message.split[1..-1].join(" ").hash.to_sym), message.split[1..-1].join(" "))
+                    Conf.svalue("main:user:banned:#{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}", "#{message.split[1..-1].join(" ")}")
                     @cli.text_user(msg.actor, I18n.t("ban.active"))
-                    @cli.text_user(msg.actor, ":#{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}:  #{message.split[1..-1].join(" ")}")
+                    @cli.text_user(msg.actor, "main: user: banned: #{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}:  #{message.split[1..-1].join(" ")}")
                   else
                     @cli.text_user(msg.actor, I18n.t("user.not.found", :user => message.split[1..-1].join(" ")))
                   end
