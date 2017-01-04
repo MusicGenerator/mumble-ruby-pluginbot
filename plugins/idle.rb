@@ -30,7 +30,7 @@ class Idle < Plugin
           @is_idle = false
         end
 
-        if Cond.gvalue("plugin:idle:idleaction") == "channel"
+        if Conf.gvalue("plugin:idle:idleaction") == "channel"
           @@bot[:cli].join_channel(Conf.gvalue("mumble:channel"))
           @is_idle = false
         end
