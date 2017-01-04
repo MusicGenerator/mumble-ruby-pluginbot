@@ -88,7 +88,7 @@ class Control < Plugin
       user_count += 1 if ( user.channel_id == me_in )
     end
     # if i'm alone
-    if ( user_count < 2 ) && ( @@bot["main"]["automute_if_alone"] == true )
+    if ( user_count < 2 ) && ( Conf.gvalue("main:automute_if_alone") == true )
       # if I'm playing then pause play and save that I've stopped myself
 
       #During bot start there is no mpd plugin loaded yet...
