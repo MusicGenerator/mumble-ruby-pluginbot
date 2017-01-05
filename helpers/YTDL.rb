@@ -42,6 +42,10 @@ class YTDL
     @dest=path
   end
 
+  def version
+    @exe == "" ? nil : `#{@exe} --version`
+  end
+
   def size
     @suffix.size == @song.size ? @song.size : -1
   end
