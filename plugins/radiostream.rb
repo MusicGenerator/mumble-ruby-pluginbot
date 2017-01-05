@@ -47,7 +47,7 @@ class Radiostream < Plugin
       @keylist.delete_if { |key| key[:user] == msg.actor }              #delete last search for this user
       Thread.new do
         user = msg.actor
-        Thread.current["user"]=user
+        Thread.current["user"]=msg.username
         Thread.current["process"]="radiostream"
         add_link( link, user )
         results = (@keylist.count { |key| key[:user] == msg.actor })
@@ -167,7 +167,7 @@ class Radiostream < Plugin
                   @keylist.delete_if { |key| key[:user] == msg.actor }              #delete last search for this user
                   Thread.new do
                     user = msg.actor
-                    Thread.current["user"]=user
+                    Thread.current["user"]=msg.username
                     Thread.current["process"]="radioselect"
                     add_link( link, user )
                     results = (@keylist.count { |key| key[:user] == msg.actor })

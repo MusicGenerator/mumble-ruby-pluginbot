@@ -101,7 +101,7 @@ class Youtube < Plugin
       search = message[4..-1]
       if !(( search.nil? ) || ( search == "" ))
         Thread.new do
-          Thread.current["user"]=msg.actor
+          Thread.current["user"]=msg.username
           Thread.current["process"]="youtube (yts)"
 
           messageto(msg.actor, I18n.t('plugin_youtube.yts.search', :search => search ))
@@ -175,7 +175,7 @@ class Youtube < Plugin
       workingdownload = Thread.new {
         #local variables for this thread!
         actor = msg.actor
-        Thread.current["user"]=actor
+        Thread.current["user"]=msg.username
         Thread.current["process"]="youtube (yta)"
 
         messageto(actor, I18n.t('plugin_youtube.yta.times',:times => link.length.to_s))

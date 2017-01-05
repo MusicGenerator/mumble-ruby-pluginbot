@@ -58,7 +58,7 @@ class Soundcloud < Plugin
         Thread.new do
           #local variables for this thread!
           actor = msg.actor
-          Thread.current["user"]=actor
+          Thread.current["user"]=msg.username
           Thread.current["process"]="soundcloud"
           messageto(actor, I18n.t("plugin_soundcloud.inspecting", :link => link ))
           get_song link

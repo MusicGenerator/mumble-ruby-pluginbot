@@ -56,7 +56,7 @@ class Mixcloud < Plugin
         Thread.new do
           #local variables for this thread!
           actor = msg.actor
-          Thread.current["user"]=actor
+          Thread.current["user"]=msg.username
           Thread.current["process"]="mixcloud"
 
           messageto(actor, I18n.t("plugin_mixcloud.inspecting", :link => link))

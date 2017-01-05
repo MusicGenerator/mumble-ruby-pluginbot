@@ -258,7 +258,7 @@ class Control < Plugin
       @sticky = true
       @alreadysticky = true
       @sticked = Thread.new {
-      Thread.current["user"]=msg.actor
+      Thread.current["user"]=msg.username
       Thread.current["process"]="control/sticking"
 
       while @sticky == true do

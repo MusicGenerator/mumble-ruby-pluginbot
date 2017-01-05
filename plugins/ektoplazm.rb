@@ -44,7 +44,7 @@ class Ektoplazm < Plugin
       workingdownload = Thread.new {
         #local variables for this thread!
         actor = msg.actor
-        Thread.current["user"]=actor
+        Thread.current["user"]=msg.username
         Thread.current["process"]="radiostream"
 
         if ( link.include? "www.ektoplazm.com/files" ) then
