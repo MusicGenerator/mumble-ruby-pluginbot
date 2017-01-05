@@ -62,7 +62,7 @@ class Youtube < Plugin
     if message.start_with?("ytlink <a href=") || message.start_with?("<a href=") then
       link = msg.message.match(/http[s]?:\/\/(.+?)\"/).to_s.chop
       if ( link.include? "www.youtube.com/" ) || ( link.include? "www.youtu.be/" ) || ( link.include? "m.youtube.com/" ) then
-        workingdownload = Thread.new {
+        Thread.new do
           #local variables for this thread!
           actor = msg.actor
           name = msg.username
@@ -94,7 +94,7 @@ class Youtube < Plugin
             messageto(actor, I18n.t('plugin_youtube.badlink'))
           end
           logger "INFO: Youtube end Thread for #{name}."
-        }
+        end
       end
     end
 
@@ -173,7 +173,7 @@ class Youtube < Plugin
         messageto(msg.actor, I18n.t('plugin_youtube.yta.index_error'))
       end
 
-      workingdownload = Thread.new {
+      Thread.new do
         #local variables for this thread!
         actor = msg.actor
         Thread.current["user"]=msg.username
@@ -210,7 +210,7 @@ class Youtube < Plugin
         else
           messageto(actor, I18n.t('plugin_youtube.badlink'))
         end
-      }
+      end
     end
   end
 
