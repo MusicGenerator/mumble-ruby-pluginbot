@@ -65,7 +65,9 @@ class Youtube < Plugin
         workingdownload = Thread.new {
           #local variables for this thread!
           actor = msg.actor
-          Thread.current["actor"]=actor
+          name = msg.username
+          logger "INFO: Youtube start Thread for #{name}."
+          Thread.current["user"]=name
           Thread.current["process"]="youtube (download)"
 
           messageto(actor, I18n.t('plugin_youtube.inspecting', :link => link ))
@@ -90,6 +92,7 @@ class Youtube < Plugin
           else
             messageto(actor, I18n.t('plugin_youtube.badlink'))
           end
+          logger "INFO: Youtube end Thread for #{name}."
         }
       end
     end
