@@ -410,19 +410,18 @@ class MumbleMPD
       # This is hacky because mumble uses -1 for user_id of unregistered users,
       # while mumble-ruby seems to just omit the value for unregistered users.
       # With this hacky thing commands from SuperUser are also being ignored.
-      if @cli.users[msg.actor].user_id.nil?
+      if msg.user_id.nil?
         msg_userid = -1
         sender_is_registered = false
       else
-        msg_userid = @cli.users[msg.actor].user_id
+        msg_userid = msg.user_id
         sender_is_registered = true
       end
 
-      logger "Debug: Got a message from \"#{@cli.users[msg.actor].name}\" (user id: #{msg_userid}, session id: #{msg.actor}). Content: \"#{msg.message}\""
+      logger "Debug: Got a message from \"#{msg.username}\" (user id: #{msg_userid}, session id: #{msg.actor}). Content: \"#{msg.message}\""
       # check if User is on a blacklist
       begin
-        #if @settings.has_key?(@cli.users[msg.actor].hash.to_sym)
-        if Conf.gvalue("main:user:banned").has_key?("#{@cli.users[msg.actor].hash.to_sym }")
+        if Conf.gvalue("main:user:banned").has_key?("#{msg.userhash }")
           logger "Debug: User with userid \"#{msg_userid}\" is in blacklist! Ignoring him."
           sender_is_registered = false # If on blacklist handle user as if he was unregistered.
         end
@@ -488,7 +487,7 @@ class MumbleMPD
 
               # This functions need superuser permission
               if !Conf.gvalue("main:user:superuser").nil?
-                if Conf.gvalue("main:user:superuser").has_key?("#{@cli.users[msg.actor].hash.to_sym }")
+                if Conf.gvalue("main:user:superuser").has_key?("#{msg.userhash }")
                   # Show settings
                   if  message == 'settings'
                     @cli.text_user(msg.actor, hash_to_table(Conf.get))
@@ -510,18 +509,18 @@ class MumbleMPD
                 if @cli.find_user(message.split[1..-1].join(" "))
                   @cli.text_user(msg.actor, "#{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}:  #{message.split[1..-1].join(" ")}")
                 else
-                  @cli.text_user(msg.actor, "#{@cli.users[msg.actor].hash.to_sym}")
+                  @cli.text_user(msg.actor, "#{msg.userhash}")
                 end
               end
 
               if message == 'bind'
                 #@settings["main"]["bound"] = msg_userid if @settings["main"]["bound"] == "nobody"
-                Conf.svalue("main:user:bound", "#{@cli.users[msg.actor].hash.to_sym}") if Conf.gvalue("main:user:bound") == nil
+                Conf.svalue("main:user:bound", "#{msg.userhash}") if Conf.gvalue("main:user:bound") == nil
               end
 
               if message == 'unbind'
                 #@settings["main"]["bound"] = "nobody" if @settings["main"]["bound"] == msg_userid
-                Conf.svalue("main:user:bound", nil) if Conf.gvalue("main:user:bound") == "#{@cli.users[msg.actor].hash.to_sym}"
+                Conf.svalue("main:user:bound", nil) if Conf.gvalue("main:user:bound") == "#{msg.userhash}"
               end
 
 
