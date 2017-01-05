@@ -147,17 +147,15 @@ class Control < Plugin
   def handle_chat(msg, message)
     super
     # Put message in Messagehistory and pop old's if size exceeds max. historysize.
-    msg.username = @@bot[:cli].users[msg.actor].name
     @history << msg
     @history.shift if @history.length > @historysize
 
     if message == 'ch'
-      channeluserisin = @@bot[:cli].users[msg.actor].channel_id
-      if @@bot[:cli].me.current_channel.channel_id.to_i == channeluserisin.to_i
+      if @@bot[:cli].me.current_channel.channel_id.to_i == msg.channel_id.to_i
         privatemessage( I18n.t("plugin_control.ch.brain"))
       else
         @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, I18n.t("plugin_control.ch.going", :user => msg.username))
-        @@bot[:cli].join_channel(channeluserisin)
+        @@bot[:cli].join_channel(msg.channel_id)
 
         #additionally do a "wakeup"
         @@bot[:mpd].pause = false
@@ -259,17 +257,16 @@ class Control < Plugin
       end
       @sticky = true
       @alreadysticky = true
-      channeluserisin = @@bot[:cli].users[msg.actor].channel_id
       @sticked = Thread.new {
       Thread.current["user"]=msg.actor
       Thread.current["process"]="control/sticking"
 
       while @sticky == true do
-        if @@bot[:cli].me.current_channel == channeluserisin
+        if @@bot[:cli].me.current_channel == msg.channel_id
           sleep(1)
         else
           begin
-            @@bot[:cli].join_channel(channeluserisin)
+            @@bot[:cli].join_channel(msg.channel_id)
             sleep(1)
           rescue
             @alreadysticky = false

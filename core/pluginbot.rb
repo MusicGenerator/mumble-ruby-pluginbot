@@ -402,9 +402,10 @@ class MumbleMPD
   end
 
   def handle_text_message(msg)
-    msg.username=@cli.users[msg.actor].name
-    msg.userhash=@cli.users[msg.actor].hash.to_sym
-    msg.user_id =@cli.users[msg.actor].user_id
+    msg.username    = @cli.users[msg.actor].name
+    msg.userhash    = @cli.users[msg.actor].hash.to_sym
+    msg.user_id     = @cli.users[msg.actor].user_id
+    msg.channel_id  = @cli.users[msg.actor].channel_id
     if msg.actor
       # else ignore text messages from the server
       # This is hacky because mumble uses -1 for user_id of unregistered users,
