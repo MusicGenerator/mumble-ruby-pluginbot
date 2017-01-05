@@ -85,10 +85,11 @@ class Youtube < Plugin
             messageto(actor, I18n.t('plugin_youtube.db_update_done'))
             songs = ""
             while @songlist.size > 0
-              songs << "<br> #{@songlist.pop}"
-              @@bot[:mpd].add(Conf.gvalue("plugin:youtube:folder:download")+songs)
+              song = @songlist.pop
+              songs << "<br> #{song}"
+              @@bot[:mpd].add(Conf.gvalue("plugin:youtube:folder:download")+song)
             end
-            messageto(actor, songs) if songs != ""
+            messageto(actor, songs)
           else
             messageto(actor, I18n.t('plugin_youtube.badlink'))
           end
@@ -249,12 +250,12 @@ class Youtube < Plugin
             system ("#{@consoleaddition} convert '#{@temp}#{name}.jpg' -resize 320x240 '#{@destination}#{name}.jpg' ")
             if Conf.gvalue("plugin:youtube:to_mp3").nil?
               # Mixin tags without recode on standard
-              system ("#{@consoleaddition} ffmpeg -y -i '#{@temp}#{name}.#{ending}' -acodec copy -metadata title='#{name}' '#{@destination}#{name}.#{ending}'") if !File.exist?('#{@destination}#{name}.#{ending}')
-              @songlist << name.split("/")[-1] + ".#{ending}" if File.exist?('#{@destination}#{name}.#{ending}')
+              system ("#{@consoleaddition} ffmpeg -i '#{@temp}#{name}.#{ending}' -acodec copy -metadata title='#{name}' '#{@destination}#{name}.#{ending}'") if !File.exist?("#{@destination}#{name}.#{ending}")
+              @songlist << name.split("/")[-1] + ".#{ending}" if File.exist?("#{@destination}#{name}.#{ending}")
             else
               # Mixin tags and recode it to mp3 (vbr 190kBit)
-              system ("#{@consoleaddition} ffmpeg -y -i '#{@temp}#{name}.#{ending}' -codec:a libmp3lame -qscale:a 2 -metadata title='#{name}' '#{@destination}#{name}.mp3'") if !File.exist?('#{@destination}#{name}.mp3')
-              @songlist << name.split("/")[-1] + ".mp3" if File.exist?('#{@destination}#{name}.#{ending}')
+              system ("#{@consoleaddition} ffmpeg -i '#{@temp}#{name}.#{ending}' -codec:a libmp3lame -qscale:a 2 -metadata title='#{name}' '#{@destination}#{name}.mp3'") if !File.exist?('#{@destination}#{name}.mp3')
+              @songlist << name.split("/")[-1] + ".mp3" if File.exist?("#{@destination}#{name}.mp3")
             end
           end
         end
