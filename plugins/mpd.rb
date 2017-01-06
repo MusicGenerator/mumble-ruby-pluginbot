@@ -497,7 +497,7 @@ class Mpd < Plugin
         @@bot[:mpd].play
         @@bot[:cli].me.deafen false if @@bot[:cli].me.deafened?
         @@bot[:cli].me.mute false if @@bot[:cli].me.muted?
-        
+
         privatemessage( I18n.t("plugin_mpd.playlist.loaded", :name => playlist.name) )
       rescue
         privatemessage( I18n.t("plugin_mpd.playlist.notfound") )

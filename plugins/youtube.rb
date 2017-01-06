@@ -1,4 +1,5 @@
 require 'cgi'
+require_relative '../helpers/YTDL.rb'
 
 class Youtube < Plugin
 
@@ -6,31 +7,26 @@ class Youtube < Plugin
     super
     if ( @@bot[:mpd] ) && ( @@bot[:messages] ) && ( @@bot[:youtube].nil? )
       logger("INFO: INIT plugin #{self.class.name}.")
+      @loader = YTDL.new
       begin
-        @destination = Conf.gvalue("plugin:mpd:musicfolder") + Conf.gvalue("plugin:youtube:folder:download")
-        @temp = Conf.gvalue("main:tempdir") + Conf.gvalue("plugin:youtube:folder:temp")
+        dest = Conf.gvalue("plugin:mpd:musicfolder") + Conf.gvalue("plugin:youtube:folder:download")
+        temp = Conf.gvalue("main:tempdir") + Conf.gvalue("plugin:youtube:folder:temp")
+        @loader.dest dest
+        @loader.temp temp
 
-        Dir.mkdir(@destination) unless File.exists?(@destination)
-        Dir.mkdir(@temp) unless File.exists?(@temp)
+        Dir.mkdir(destination) unless File.exists?(dest)
+        Dir.mkdir(temp) unless File.exists?(temp)
       rescue
         logger "Error: Youtube-Plugin didn't find settings for mpd music directory and/or your preferred temporary download directory."
         logger "See ../config/config.yml"
       end
-      begin
-        @ytdloptions = Conf.gvalue("plugin:youtube:options")
-      rescue
-        @ytdloptions = ""
-      end
-      @consoleaddition = ""
-      @consoleaddition = Conf.gvalue("plugin:youtube:youtube_dl:prefixes") if Conf.gvalue("plugin:youtube:youtube_dl:prefixes")
-      @executable = "#"
-      @executable = Conf.gvalue("plugin:youtube:youtube_dl:path") if Conf.gvalue("plugin:youtube:youtube_dl:path")
+      @loader.options Conf.gvalue("plugin:youtube:options")
+      @loader.prefix  Conf.gvalue("plugin:youtube:youtube_dl:prefixes") if Conf.gvalue("plugin:youtube:youtube_dl:prefixes")
+      @loader.executeable Conf.gvalue("plugin:youtube:youtube_dl:path") if Conf.gvalue("plugin:youtube:youtube_dl:path")
 
-      @songlist = Queue.new
-      @keylist = Array.new
       @@bot[:youtube] = self
     end
-    @filetypes= ["ogg", "mp3", "mp2", "m4a", "aac", "wav", "ape", "flac", "opus"]
+    @keylist = Array.new
     return @@bot
   end
 
@@ -56,7 +52,7 @@ class Youtube < Plugin
     super
 
     if message == "ytdl-version"
-        privatemessage(I18n.t('plugin_youtube.ytdlversion', :version => `#{@executable} --version`))
+      privatemessage(I18n.t('plugin_youtube.ytdlversion', :version => @loader.version))
     end
 
     if message.start_with?("ytlink <a href=") || message.start_with?("<a href=") then
@@ -71,23 +67,21 @@ class Youtube < Plugin
           Thread.current["process"]="youtube (download)"
 
           messageto(actor, I18n.t('plugin_youtube.inspecting', :link => link ))
-          get_song(link).each do |error|
-            messageto(actor, error)
-          end
-          if ( @songlist.size > 0 ) then
+
+          @loader.get_files(link)
+
+          if @loader.size > 0 then
             @@bot[:mpd].update(Conf.gvalue("plugin:youtube:folder:download").gsub(/\//,""))
             messageto(actor, I18n.t('plugin_youtube.db_update'))
-
             while @@bot[:mpd].status[:updating_db] do
               sleep 0.5
             end
-
             messageto(actor, I18n.t('plugin_youtube.db_update_done'))
             songs = ""
-            while @songlist.size > 0
-              song = @songlist.pop
-              songs << "<br> #{song}"
-              @@bot[:mpd].add(Conf.gvalue("plugin:youtube:folder:download")+song)
+            while @loader.size > 0
+              title = @loader.get_song
+              songs << "<br> #{title[:name]}"
+              @@bot[:mpd].add(Conf.gvalue("plugin:youtube:folder:download")+title[:name]+title[:extention])
             end
             messageto(actor, songs)
           else
@@ -154,11 +148,9 @@ class Youtube < Plugin
           id_list = msg_parameters.match(/(?:[\d{1,3}\ ?])+/)[0].split
           id_list.each do |id|
             downloadid = @keylist[msg.actor][id.to_i]
-            logger downloadid.inspect
             out << "#{I18n.t('plugin_youtube.yta.download', :id => id, :name => downloadid[1])}<br>"
             link << "https://www.youtube.com/watch?v="+downloadid[0]
           end
-
           messageto(msg.actor, out)
         end
 
@@ -181,29 +173,24 @@ class Youtube < Plugin
 
         messageto(actor, I18n.t('plugin_youtube.yta.times',:times => link.length.to_s))
         link.each do |l|
-            messageto(actor, "#{I18n.t('plugin_youtube.yta.fetchconvert')} <a href=\"#{l}\">youtube</a>")
-            get_song(l).each do |error|
-                @@bot[:messages.text(actor, error)]
-            end
+          messageto(actor, "#{I18n.t('plugin_youtube.yta.fetchconvert')} <a href=\"#{l}\">youtube</a>")
+          @loader.get_files(l)
         end
-        if ( @songlist.size > 0 ) then
+        if ( @loader > 0 ) then
           @@bot[:mpd].update(Conf.gvalue("plugin:youtube:folder:download").gsub(/\//,""))
           messageto(actor, I18n.t('plugin_youtube.db_update'))
-
           while @@bot[:mpd].status[:updating_db] do
             sleep 0.5
           end
-
           messageto(actor, I18n.t('plugin_youtube.db_update_done'))
-          out = "<b>#{I18n.t('plugin_youtube.yta.added')}</b><br>"
-
-          while @songlist.size > 0
-            song = @songlist.pop
+          out = "<b>#{I18n.t('plugin_youtube.yta.added')}</b>"
+          while @loader.size > 0
+            title = @songlist.pop
             begin
-              @@bot[:mpd].add(Conf.gvalue("plugin:youtube:folder:download")+song)
-              out << song + "<br>"
+              @@bot[:mpd].add(Conf.gvalue("plugin:youtube:folder:download")+title[:name]+title[:extention])
+              out << "<br>#{title[:name]}"
             rescue
-              out << "#{I18n.t('plugin_youtube.yta.notfound', :song => song)}<br>"
+              out << "<br>#{I18n.t('plugin_youtube.yta.notfound', :song => (title[:name]+title[:extention]))}<br>"
             end
           end
           messageto(actor, out)
@@ -218,7 +205,7 @@ class Youtube < Plugin
 
   def find_youtube_song song
     songlist = []
-    songs = `#{@executable} --max-downloads #{Conf.gvalue("plugin:youtube:youtube_dl:maxresults")} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
+    songs = `#{Conf.gvalue("plugin:youtube:youtube_dl:path")} --max-downloads #{Conf.gvalue("plugin:youtube:youtube_dl:maxresults")} --get-title --get-id "https://www.youtube.com/results?search_query=#{song}"`
     temp = songs.split(/\n/)
     while (temp.length >= 2 )
       songlist << [temp.pop , temp.pop]
@@ -226,41 +213,4 @@ class Youtube < Plugin
     return songlist
   end
 
-  def get_song(site)
-    error = Array.new
-
-    if ( site.include? "www.youtube.com/" ) || ( site.include? "www.youtu.be/" ) || ( site.include? "m.youtube.com/" ) then
-      if !File.writable?(@temp) || !File.writable?(@destination)
-        logger "I do not have write permissions in \"#{@temp}\" or in \"#{@destination}\"."
-        error << "I do not have write permissions in temp or in music directory. Please contact an admin."
-        return error
-      end
-
-      site.gsub!(/<\/?[^>]*>/, '')
-      site.gsub!("&amp;", "&")
-      filename = `#{@executable} --get-filename #{@ytdloptions} -i -o '#{@temp}%(title)s' "#{site}"`
-      output =`#{@consoleaddition} #{@executable} #{@ytdloptions} --write-thumbnail -x --audio-format best -o '#{@temp}%(title)s.%(ext)s' '#{site}' `     #get icon
-      output.each_line do |line|
-        error << line if line.include? "ERROR:"
-      end
-      filename.split("\n").each do |name|
-        name.slice! @temp #This is probably a bad hack but name is here for example "/home/botmaster/temp/youtubeplugin//home/botmaster/temp/youtubeplugin/filename.mp3"
-        @filetypes.each do |ending|
-          if File.exist?("#{@temp}#{name}.#{ending}")
-            system ("#{@consoleaddition} convert '#{@temp}#{name}.jpg' -resize 320x240 '#{@destination}#{name}.jpg' ")
-            if Conf.gvalue("plugin:youtube:to_mp3").nil?
-              # Mixin tags without recode on standard
-              system ("#{@consoleaddition} ffmpeg -i '#{@temp}#{name}.#{ending}' -acodec copy -metadata title='#{name}' '#{@destination}#{name}.#{ending}'") if !File.exist?("#{@destination}#{name}.#{ending}")
-              @songlist << name.split("/")[-1] + ".#{ending}" if File.exist?("#{@destination}#{name}.#{ending}")
-            else
-              # Mixin tags and recode it to mp3 (vbr 190kBit)
-              system ("#{@consoleaddition} ffmpeg -i '#{@temp}#{name}.#{ending}' -codec:a libmp3lame -qscale:a 2 -metadata title='#{name}' '#{@destination}#{name}.mp3'") if !File.exist?('#{@destination}#{name}.mp3')
-              @songlist << name.split("/")[-1] + ".mp3" if File.exist?("#{@destination}#{name}.mp3")
-            end
-          end
-        end
-      end
-    end
-    return error
-  end
 end

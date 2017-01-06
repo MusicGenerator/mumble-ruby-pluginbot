@@ -45,7 +45,7 @@ class Ektoplazm < Plugin
         #local variables for this thread!
         actor = msg.actor
         Thread.current["user"]=msg.username
-        Thread.current["process"]="radiostream"
+        Thread.current["process"]="ektoplatzm"
 
         if ( link.include? "www.ektoplazm.com/files" ) then
           if !File.writable?(@temp) || !File.writable?(@destination)
