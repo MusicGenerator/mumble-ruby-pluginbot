@@ -80,17 +80,8 @@ class Ektoplazm < Plugin
             @@bot[:mpd].update(Conf.gvalue("plugin:ektoplazm:folder:download").gsub(/\//,""))
             messageto(actor, I18n.t("plugin_ektoplazm.db_update"))
 
-            begin
-              #Caution! following command needs patched ruby-mpd!
-              @@bot[:mpd].idle("update")
-              # find this lines in ruby-mpd/plugins/information.rb (actual 47-49)
-              # def idle(*masks)
-              #  send_command(:idle, *masks)
-              # end
-              # and uncomment it there, then build gem new.
-            rescue
-              logger "[INFO] idle-patch of ruby-mpd not implemented. Sleeping 10 seconds."
-              sleep 10
+            while @@bot[:mpd].status[:updating_db] do
+              sleep 0.5
             end
 
             messageto(actor, I18n.t("plugin_ektoplazm.db_update_done"))
