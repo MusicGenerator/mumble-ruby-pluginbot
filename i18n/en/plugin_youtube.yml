@@ -12,8 +12,8 @@ en:
       nofound:      "won't search for nothing!"
     yta:
       download:     "Going to download the following songs:"
-      id:           "ID: %{id}, Name: \"%{name}\""
-      all:          "Name: \"%{name}\""
+      id:           "ID: %{id}, Key: \"%{name}\""
+      all:          "Keys: \"%{name}\""
       index_error:  "Youtube: Sorry, index number is out of bounds!"
       times:        "do %{times} time(s)..."
       fetchconvert: "fetch and convert"

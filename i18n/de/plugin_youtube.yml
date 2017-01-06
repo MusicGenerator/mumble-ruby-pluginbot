@@ -12,8 +12,8 @@ de:
       nofound:      "Suche nicht nach nichts!"
     yta:
       download:     "Folgende Titel werden heruntergeladen"
-      id:           "ID: %{id}, Name: \"%{name}\""
-      all:          "Name: \"%{name}\""
+      id:           "ID: %{id}, Schl&uuml;ssel: \"%{name}\""
+      all:          "Schl&uuml;ssel: \"%{name}\""
       index_error:  "Youtube: Der angegebene Index liegt ausserhalb des zul&auml;ssigen Bereichs!"
       times:        "F&uuml;hre %{times} mal durch:"
       fetchconvert: "Herunterladen und konvertieren"
