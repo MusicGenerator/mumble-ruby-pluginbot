@@ -82,7 +82,7 @@ class YTDL
       file.slice! @temp
       @filetypes.each do |ending|
         if File.exist?("#{@temp}#{file}.#{ending}")
-          system ("#{@prefixes} convert '#{@temp}#{file}.jpg' -resize 320x240 '#{@dest}#{file}.jpg' ")
+          system ("#{@prefixes} convert '#{@temp}#{file}.jpg' -resize 320x240 '#{@dest}#{file}.jpg' ") if File.exist?("#{@temp}#{file}.jpg")
           if Conf.gvalue("plugin:youtube:to_mp3").nil?
             # Mixin tags without recode on standard
             system ("#{@prefixes} ffmpeg -i '#{@temp}#{file}.#{ending}' -acodec copy -metadata title='#{file}' '#{@dest}#{file}.#{ending}'") if !File.exist?("#{@dest}#{file}.#{ending}")
