@@ -175,27 +175,27 @@ class Youtube < Plugin
         link.each do |l|
           messageto(actor, "#{I18n.t('plugin_youtube.yta.fetchconvert')} <a href=\"#{l}\">youtube</a>")
           @loader.get_files(l)
-        end
-        if ( @loader > 0 ) then
-          @@bot[:mpd].update(Conf.gvalue("plugin:youtube:folder:download").gsub(/\//,""))
-          messageto(actor, I18n.t('plugin_youtube.db_update'))
-          while @@bot[:mpd].status[:updating_db] do
-            sleep 0.5
-          end
-          messageto(actor, I18n.t('plugin_youtube.db_update_done'))
-          out = "<b>#{I18n.t('plugin_youtube.yta.added')}</b>"
-          while @loader.size > 0
-            title = @songlist.pop
-            begin
-              @@bot[:mpd].add(Conf.gvalue("plugin:youtube:folder:download")+title[:name]+title[:extention])
-              out << "<br>#{title[:name]}"
-            rescue
-              out << "<br>#{I18n.t('plugin_youtube.yta.notfound', :song => (title[:name]+title[:extention]))}<br>"
+          if ( @loader > 0 ) then
+            @@bot[:mpd].update(Conf.gvalue("plugin:youtube:folder:download").gsub(/\//,""))
+            messageto(actor, I18n.t('plugin_youtube.db_update'))
+            while @@bot[:mpd].status[:updating_db] do
+              sleep 0.5
             end
+            messageto(actor, I18n.t('plugin_youtube.db_update_done'))
+            out = "<b>#{I18n.t('plugin_youtube.yta.added')}</b>"
+            while @loader.size > 0
+              title = @songlist.pop
+              begin
+                @@bot[:mpd].add(Conf.gvalue("plugin:youtube:folder:download")+title[:name]+title[:extention])
+                out << "<br>#{title[:name]}"
+              rescue
+                out << "<br>#{I18n.t('plugin_youtube.yta.notfound', :song => (title[:name]+title[:extention]))}<br>"
+              end
+            end
+            messageto(actor, out)
+          else
+            messageto(actor, I18n.t('plugin_youtube.badlink'))
           end
-          messageto(actor, out)
-        else
-          messageto(actor, I18n.t('plugin_youtube.badlink'))
         end
       end
     end
