@@ -148,7 +148,7 @@ class Youtube < Plugin
           id_list = msg_parameters.match(/(?:[\d{1,3}\ ?])+/)[0].split
           id_list.each do |id|
             downloadid = @keylist[msg.actor][id.to_i]
-            out << "#{I18n.t('plugin_youtube.yta.download', :id => id, :name => downloadid[1])}<br>"
+            out << "#{I18n.t('plugin_youtube.yta.id', :id => id, :name => downloadid[0])}<br>"
             link << "https://www.youtube.com/watch?v="+downloadid[0]
           end
           messageto(msg.actor, out)
@@ -156,7 +156,7 @@ class Youtube < Plugin
 
         if msg_parameters == "all"
           @keylist[msg.actor].each do |downloadid|
-            out << "#{I18n.t('plugin_youtube.yta.all',:name => downloadid[1])}<br>"
+            out << "#{I18n.t('plugin_youtube.yta.all',:name => downloadid[0])}<br>"
             link << "https://www.youtube.com/watch?v="+downloadid[0]
           end
           messageto(msg.actor, out)
@@ -175,24 +175,23 @@ class Youtube < Plugin
         link.each do |l|
           messageto(actor, "#{I18n.t('plugin_youtube.yta.fetchconvert')} <a href=\"#{l}\">youtube</a>")
           @loader.get_files(l)
-          if ( @loader > 0 ) then
+          if ( @loader.size > 0 ) then
             @@bot[:mpd].update(Conf.gvalue("plugin:youtube:folder:download").gsub(/\//,""))
             messageto(actor, I18n.t('plugin_youtube.db_update'))
             while @@bot[:mpd].status[:updating_db] do
               sleep 0.5
             end
             messageto(actor, I18n.t('plugin_youtube.db_update_done'))
-            out = "<b>#{I18n.t('plugin_youtube.yta.added')}</b>"
+            messageto(actor, "<b>#{I18n.t('plugin_youtube.yta.added')}</b>")
             while @loader.size > 0
-              title = @songlist.pop
+              title = @loader.get_song
               begin
                 @@bot[:mpd].add(Conf.gvalue("plugin:youtube:folder:download")+title[:name]+title[:extention])
-                out << "<br>#{title[:name]}"
+                messageto(actor, "<br>#{title[:name]}")
               rescue
-                out << "<br>#{I18n.t('plugin_youtube.yta.notfound', :song => (title[:name]+title[:extention]))}<br>"
+                messageto(actor, "<br>#{I18n.t('plugin_youtube.yta.notfound', :song => (title[:name]+title[:extention]))}<br>")
               end
             end
-            messageto(actor, out)
           else
             messageto(actor, I18n.t('plugin_youtube.badlink'))
           end
