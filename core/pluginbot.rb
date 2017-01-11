@@ -11,6 +11,7 @@ require 'optparse'
 require 'i18n'
 require 'yaml'
 require 'cgi'
+require 'socket'
 require_relative "../helpers/conf.rb"
 
 
@@ -247,6 +248,28 @@ class MumbleMPD
       logger "OK: Primary Bot Setup complete"
       @run = true
 
+      #init local administration port
+      Thread.new do
+        remoteui = TCPServer.new(7750)
+        Thread.current["user"]=Conf.gvalue("mumble:name")
+        Thread.current["process"]="Remote UI"
+        logger "INFO: RemoteUI ist started"
+        loop {
+          Thread.start(remoteui.accept) { |connection|
+            begin
+              command = connection.gets
+              logger "INFO: RemoteUI Command: #{command.chomp}."
+              answer = remote_command(command)
+              connection << answer
+            rescue
+              bt = $!.backtrace * "\n  "
+              logger "WARNING: RemoteUI failed. Error: #{$!.inspect} \n#{bt}"
+            ensure
+              connection.close
+            end
+          }
+        }
+      end
       #init all plugins
       #init = @settings.clone
       #init = Conf.get.clone       # Compatibility mode
@@ -625,12 +648,35 @@ class MumbleMPD
         written = IO.write(Conf.gvalue("main:logfile"), logline, mode: 'a')
         if written != logline.length
           puts "ERROR: Logfile (#{Conf.gvalue("main:logfile")}) is not writeable, logging to stdout instead"
-		  puts logline.chomp
-      Conf.svalue("main:logfile", nil)
-		end
+		      puts logline.chomp
+          Conf.svalue("main:logfile", nil)
+		    end
       end
     end
   end
+
+  def remote_command(command)
+    command.gsub! "\r\n", ""
+    command.chomp!
+    case command
+    when "userhashes"
+      out=""
+      @cli.users.values.each do |user|
+        out << "#{user.hash}|#{user.name} "
+      end
+      out
+    when "channels"
+      #@cli.channels
+      TODO
+    when "stop"
+      @run = false
+      "stopping"
+    else
+      # ping answer
+      command
+    end
+  end
+
 end
 
 #
