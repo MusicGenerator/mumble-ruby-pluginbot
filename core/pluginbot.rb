@@ -249,26 +249,28 @@ class MumbleMPD
       @run = true
 
       #init local administration port
-      Thread.new do
-        remoteui = TCPServer.new(7750)
-        Thread.current["user"]=Conf.gvalue("mumble:name")
-        Thread.current["process"]="Remote UI"
-        logger "INFO: RemoteUI ist started"
-        loop {
-          Thread.start(remoteui.accept) { |connection|
-            begin
-              command = connection.gets
-              logger "INFO: RemoteUI Command: #{command.chomp}."
-              answer = remote_command(command)
-              connection << answer
-            rescue
-              bt = $!.backtrace * "\n  "
-              logger "WARNING: RemoteUI failed. Error: #{$!.inspect} \n#{bt}"
-            ensure
-              connection.close
-            end
+      if Conf.gvalue("main:remoteui") == true
+        Thread.new do
+          remoteui = TCPServer.new(7750)
+          Thread.current["user"]=Conf.gvalue("mumble:name")
+          Thread.current["process"]="Remote UI"
+          logger "INFO: RemoteUI ist started"
+          loop {
+            Thread.start(remoteui.accept) { |connection|
+              begin
+                command = connection.gets
+                logger "INFO: RemoteUI Command: #{command.chomp}."
+                answer = remote_command(command)
+                connection << answer
+              rescue
+                bt = $!.backtrace * "\n  "
+                logger "WARNING: RemoteUI failed. Error: #{$!.inspect} \n#{bt}"
+              ensure
+                connection.close
+              end
+            }
           }
-        }
+        end
       end
       #init all plugins
       #init = @settings.clone
