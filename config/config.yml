@@ -6,6 +6,7 @@ debug: true
 language: en # The language the bot should use. Currently available languages are en and de. FIXME
 
 main:
+  remoteui: false
   tempdir: "/home/botmaster/temp/"
   logfile: "/home/botmaster/logs/bot1.log"
   ducking: false # If true the bot automatically reduces its volume while users in the channel are talking.
