@@ -4,9 +4,6 @@ require "socket"
 require_relative "../helpers/conf.rb"
 
 
-#@description = YAML::load_file("config/config.description")
-
-
 def table_users(config,parent,user,out)
   config.each do |key, value|
     if value.is_a?(Hash) then

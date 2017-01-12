@@ -57,6 +57,8 @@ if params == {}
   Dir["../plugins/*.yml"].each do |f|
     Conf.load(f)
   end
+  # load overwrite config at last
+  Conf.load("../../bot1_conf_done.yml")
 else
   params.each do |key, value|
     value = value.join.split('[:]').join(':')
@@ -131,6 +133,6 @@ puts "
       <p><label><br><input></label><input type=\"submit\" value=\"ok\"></p>
     </form>
   </div>
-  #{error}
+  #{@error}
 </body>
 </html>"
