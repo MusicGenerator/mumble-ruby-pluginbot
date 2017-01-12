@@ -67,8 +67,15 @@ else
     Conf.svalue(key.to_s[1..-1], value)
   end
 end
-#File.open("../../bot1_conf_done.yml", 'w') {|f| f.write Conf.get.to_yaml }
 
+
+
+@error = ""
+begin
+  File.open("../../bot1_conf_done.yml", 'w') {|f| f.write Conf.get.to_yaml }
+rescue
+  @error << "Warning: Configuration-File is not writeable!<br>"
+end
 
 
 
@@ -124,5 +131,6 @@ puts "
       <p><label><br><input></label><input type=\"submit\" value=\"ok\"></p>
     </form>
   </div>
+  #{error}
 </body>
 </html>"
