@@ -4,29 +4,78 @@
 	line-height: 20px;
 }
 
+.useradm * {
+	font-family: monospace;
+	padding: 5px;
+}
+
+.useradm table {
+	width:	800px;
+}
+
+.useradm tr, th {
+	border: 1px solid black;
+}
+.useradm td {
+	text-align: center;
+}
+.useradm input {
+	width: 60px
+}
+
+.useradm form {
+	border:	1px solid #808080;
+	background-color: #e0e0ff;
+	width: 1000px;
+}
+
+#server {
+	border:	1px solid #808080;
+	background-color: #ffffff;
+}
+
+#config {
+	border:	1px solid #808080;
+	background-color: #ffffe0;
+}
+
+#cert-hash {
+	width:  300px;
+}
+
+#username  {
+	width:  200px;
+}
+
+#checkbox {
+	width:  70px;
+}
+
 .setup input {
-	width: 505px
+	width: 900px
 }
 
 .setup input[type=button]{
 	width: 100px
 }
 .setup input[type=submit]{
-	width: 510px
+	width: 70px;
+	height: 25px;
+	margin: 5px;
 }
 
 .setup label {
-	width: 490px;
+	width: 480px;
 	font-weight: bold;
 }
 
 .setup {
 	border: 1px solid #808080;
 	color: #333333;
-	padding: 10px;
+	padding: 10px 20px 10px 10px;
 	overflow: auto;
-	width: 510px;
-	height: 620px;
+	width: 1000px;
+	height: 640px;
 	background-color: #e0e0ff;
 }
 
@@ -35,7 +84,7 @@
 	color: #333333;
 	padding: 4px;
 	overflow: auto;
-	width: 500px;
+	width: 100%;
 	height: 500px;
 	margin-bottom: 1.5em;
 	background-color: #ffffff;

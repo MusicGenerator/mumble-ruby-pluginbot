@@ -40,6 +40,14 @@ module Conf
     @@configuration.merge! nvalue(key,value), &merger
   end
 
+  def Conf.delsuperuser(del)
+    @@configuration["main"]["user"]["superuser"].delete(del)
+  end
+
+  def Conf.delbanneduser(del)
+    @@configuration["main"]["user"]["banned"].delete(del)
+  end
+
   def Conf.load(file)
     #deep_merge!(@@configuration, YAML::load_file(file))
     merger = proc{|key, v1, v2|
