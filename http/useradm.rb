@@ -54,16 +54,9 @@ end
 @error = ""
 cgi = CGI.new
 params = cgi.params
-if params == {}
-  Conf.load("../../bot1_conf_done.yml")
-  Dir["../plugins/*.yml"].each do |f|
-    Conf.load(f)
-  end
-else
-  Conf.load("../../bot1_conf_done.yml")
-  Dir["../plugins/*.yml"].each do |f|
-    Conf.load(f)
-  end
+Conf.load("../../bot1_conf_done.yml")
+
+if params != {}
   params.each do |key, value|
     Conf.svalue("main:user:superuser:#{value.join}",key[6..-1]) if key[0..4] == "suadd"
     Conf.svalue("main:user:banned:#{value.join}",key[6..-1]) if key[0..4] == "ubann"
@@ -89,7 +82,7 @@ puts "
 <head>
   <title>User Administration</title>
 	<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />
-	<link type=\"text/css\" rel=\"stylesheet\" href=\"css/screen.css?v=%s\" />
+  <link type=\"text/css\" rel=\"stylesheet\" href=\"css/screen.css?v=%s\" />
 </head>
 <body>
   <div class=\"useradm\">
@@ -122,7 +115,11 @@ puts "
           #{table_users(Conf.get,'','superuser','')}#{table_users(Conf.get,'','banned','')}
         </table>
       </div>
-      <input type=\"submit\">
+      <p>
+        <input type=\"submit\">
+        <img src=\"img/arrow-sync.png\" alt=\"reload\" onclick=\"javascript:window.location.href='useradm.rb'\">
+        <img src=\"img/arrow-shuffle.png\" alt=\"switch\" onclick=\"javascript:window.location.href='configset.rb'\">
+      </p>
     </div>
   </form>
   <p>#{@error}</p>

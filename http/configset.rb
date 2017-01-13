@@ -50,16 +50,25 @@ def p_input(config,parent,out)
   out
 end
 
+
+@error = ""
+
 cgi = CGI.new
 params = cgi.params
-if params == {}
-  Conf.load("../config/config.yml")
-  Dir["../plugins/*.yml"].each do |f|
-    Conf.load(f)
-  end
-  # load overwrite config at last
+Conf.load("../config/config.yml")
+Dir["../plugins/*.yml"].each do |f|
+  Conf.load(f)
+end
+#Standard Configuration loaded.
+standard=Conf.get.clone
+
+# load overwrite config at last
+begin
   Conf.load("../../bot1_conf_done.yml")
-else
+rescue
+  @error << "Warning: Personal Configuration not found (will written after any change)!"
+end
+if params != {}
   params.each do |key, value|
     value = value.join.split('[:]').join(':')
     value = value.to_i if value.to_i.to_s == value
@@ -70,17 +79,13 @@ else
   end
 end
 
-
-
-@error = ""
 begin
-  File.open("../../bot1_conf_done.yml", 'w') {|f| f.write Conf.get.to_yaml }
+  #write only differences to Standard Config to Overwrite Config.
+  diff = standard.deep_changes(Conf.get.clone)
+  File.open("../../bot1_conf_done.yml", 'w') {|f| f.write diff.to_yaml }
 rescue
   @error << "Warning: Configuration-File is not writeable!<br>"
 end
-
-
-
 
 puts "
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"
@@ -92,7 +97,7 @@ puts "
 <head>
   <title>Settings</title>
 	<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />
-  <link type=\"text/css\" rel=\"stylesheet\" href=\"css/screen.css?v=%s\" />
+  <link type=\"text/css\" rel=\"stylesheet\" href=\"css/screen.css?v=%y\" />
 	<script type=\"text/javascript\" src=\"js/jquery-1.4.2.min.js\"></script>
 	<script type=\"text/javascript\">
 		$(\'html\').addClass(\'js\');
@@ -130,7 +135,11 @@ puts "
       <div class=\"edit\">
         #{p_input(Conf.get,"","")}
       </div>
-      <p><label><br><input></label><input type=\"submit\" value=\"ok\"></p>
+      <p>
+        <label><br><input style=\"visibility: hidden;\"></label><input type=\"submit\" value=\"ok\">
+        <img src=\"img/arrow-sync.png\" alt=\"reload\" onclick=\"javascript:window.location.href='configset.rb'\">
+        <img src=\"img/arrow-shuffle.png\" alt=\"switch\" onclick=\"javascript:window.location.href='useradm.rb'\">
+      </p>
     </form>
   </div>
   #{@error}

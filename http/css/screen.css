@@ -4,6 +4,19 @@
 	line-height: 20px;
 }
 
+body {
+	background: url(/img/bg.png);
+}
+.setup img {
+	position: relative;
+	top:	7px;
+}
+
+.useradm img {
+	position: relative;
+	top:	12px;
+}
+
 .useradm * {
 	font-family: monospace;
 	padding: 5px;
@@ -52,12 +65,9 @@
 }
 
 .setup input {
-	width: 900px
+	width: 840px
 }
 
-.setup input[type=button]{
-	width: 100px
-}
 .setup input[type=submit]{
 	width: 70px;
 	height: 25px;
