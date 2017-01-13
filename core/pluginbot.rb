@@ -28,6 +28,7 @@ class MumbleMPD
   attr_reader :run
 
   def initialize
+    @remotelog = []
     @logging = []
     # load all plugins
     require './plugin'
@@ -642,6 +643,10 @@ class MumbleMPD
   end
 
   def logger(message)
+    @remotelog.push "#{Time.new.to_s} : #{message}"
+    while @remotelog.size >= 100
+      @remotelog.shift
+    end
     if Conf.gvalue("debug")
       logline="#{Time.new.to_s} : #{message}\n"
       if Conf.gvalue("main:logfile") == nil
@@ -673,6 +678,12 @@ class MumbleMPD
     when "stop"
       @run = false
       "stopping"
+    when "logfile"
+      out = ""
+      @remotelog.each do |line|
+        out << "#{line}<br>"
+      end
+      out
     else
       # ping answer
       command

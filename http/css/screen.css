@@ -7,9 +7,19 @@
 body {
 	background: url(/img/bg.png);
 }
+
 .setup img {
 	position: relative;
 	top:	7px;
+}
+
+.setup button {
+	width: 	100px;
+	height: 100px;
+}
+.setup form {
+	padding: 10px 20px 10px 10px;
+	position: relative;
 }
 
 .useradm img {
@@ -22,17 +32,17 @@ body {
 	padding: 5px;
 }
 
-.useradm table {
+.setup table {
 	width:	800px;
 }
 
-.useradm tr, th {
+.setup tr, th {
 	border: 1px solid black;
 }
-.useradm td {
+.setup td {
 	text-align: center;
 }
-.useradm input {
+.setup input {
 	width: 60px
 }
 
@@ -40,16 +50,22 @@ body {
 	border:	1px solid #808080;
 	background-color: #e0e0ff;
 	width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #server {
 	border:	1px solid #808080;
 	background-color: #ffffff;
+	height:	250px;
+	overflow-y: scroll;
 }
 
 #config {
 	border:	1px solid #808080;
 	background-color: #ffffe0;
+	height:	250px;
+	overflow-y: scroll;
 }
 
 #cert-hash {
@@ -64,8 +80,20 @@ body {
 	width:  70px;
 }
 
+.setup p {
+	width: 980px;
+}
+
 .setup input {
-	width: 840px
+	width: 80%;
+	positon: absolute;
+	top: 591px;
+}
+
+.buttons {
+	position: absolute;
+	top: 562px;
+	right: 10px;
 }
 
 .setup input[type=submit]{
@@ -82,11 +110,13 @@ body {
 .setup {
 	border: 1px solid #808080;
 	color: #333333;
-	padding: 10px 20px 10px 10px;
+
 	overflow: auto;
 	width: 1000px;
 	height: 640px;
 	background-color: #e0e0ff;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .node {

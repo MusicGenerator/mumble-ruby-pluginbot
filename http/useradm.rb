@@ -54,7 +54,7 @@ end
 @error = ""
 cgi = CGI.new
 params = cgi.params
-Conf.load("../../bot1_conf_done.yml")
+Conf.load("../../bot1_conf.yml")
 
 if params != {}
   params.each do |key, value|
@@ -66,7 +66,7 @@ if params != {}
 end
 
 begin
-  File.open("../../bot1_conf_done.yml", 'w') {|f| f.write Conf.get.to_yaml }
+  File.open("../../bot1_conf.yml", 'w') {|f| f.write Conf.get.to_yaml }
 rescue
   error << "Waring: Configuration-File is not writeable!<br>"
 end
@@ -85,7 +85,7 @@ puts "
   <link type=\"text/css\" rel=\"stylesheet\" href=\"css/screen.css?v=%s\" />
 </head>
 <body>
-  <div class=\"useradm\">
+  <div class=\"setup\">
   <form>
     <h2>User Administration</h2>
     <div id=\"userlist\">
@@ -115,11 +115,11 @@ puts "
           #{table_users(Conf.get,'','superuser','')}#{table_users(Conf.get,'','banned','')}
         </table>
       </div>
-      <p>
-        <input type=\"submit\">
+      <div class=\"buttons\">
+        <input type=\"submit\" value=\"Ok\">
         <img src=\"img/arrow-sync.png\" alt=\"reload\" onclick=\"javascript:window.location.href='useradm.rb'\">
         <img src=\"img/arrow-shuffle.png\" alt=\"switch\" onclick=\"javascript:window.location.href='configset.rb'\">
-      </p>
+      </div>
     </div>
   </form>
   <p>#{@error}</p>

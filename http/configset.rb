@@ -64,7 +64,7 @@ standard=Conf.get.clone
 
 # load overwrite config at last
 begin
-  Conf.load("../../bot1_conf_done.yml")
+  Conf.load("../../bot1_conf.yml")
 rescue
   @error << "Warning: Personal Configuration not found (will written after any change)!"
 end
@@ -82,7 +82,7 @@ end
 begin
   #write only differences to Standard Config to Overwrite Config.
   diff = standard.deep_changes(Conf.get.clone)
-  File.open("../../bot1_conf_done.yml", 'w') {|f| f.write diff.to_yaml }
+  File.open("../../bot1_conf.yml", 'w') {|f| f.write diff.to_yaml }
 rescue
   @error << "Warning: Configuration-File is not writeable!<br>"
 end
@@ -99,7 +99,7 @@ puts "
 	<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />
   <link type=\"text/css\" rel=\"stylesheet\" href=\"css/screen.css?v=%y\" />
 	<script type=\"text/javascript\" src=\"js/jquery-1.4.2.min.js\"></script>
-	<script type=\"text/javascript\">
+  <script type=\"text/javascript\">
 		$(\'html\').addClass(\'js\');
 	</script>
 	<script type=\"text/javascript\" src=\"js/functions.js\"></script>
@@ -110,7 +110,7 @@ puts "
       for (i = 0; i < x.length; i++) {
         x[i].style = \"position:absolute; visibility:hidden; top:31px; left:19px;\";
       }
-      document.getElementById(text).style = \"position:absolute; visibility:visible; top:591px; left:19px;\";
+      document.getElementById(text).style = \"position:absolue; visibility:visible; top:591px; left:19px;\";
       x = document.getElementsByTagName(\'li\');
       for (i = 0; i < x.length; i++) {
         x[i].style = \"background-color: #ffffff;\";
@@ -125,7 +125,6 @@ puts "
 
 <body>
   <div class=\"setup\">
-    <h2>Configuration-Tree<h2>
     <form>
       <div class=\"node\"><h2>Settings</h2>
         <ul>
@@ -135,11 +134,12 @@ puts "
       <div class=\"edit\">
         #{p_input(Conf.get,"","")}
       </div>
-      <p>
-        <label><br><input style=\"visibility: hidden;\"></label><input type=\"submit\" value=\"ok\">
+      <label><input style=\"visibility: hidden;\"></label>
+      <div class=\"buttons\">
+        <input type=\"submit\" value=\"Ok\">
         <img src=\"img/arrow-sync.png\" alt=\"reload\" onclick=\"javascript:window.location.href='configset.rb'\">
         <img src=\"img/arrow-shuffle.png\" alt=\"switch\" onclick=\"javascript:window.location.href='useradm.rb'\">
-      </p>
+      </div>
     </form>
   </div>
   #{@error}
