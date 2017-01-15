@@ -10,7 +10,7 @@ puts"
     <title>Mumble-Ruby-Pluginbot</title>
   </head>
   <body>
-  
-    </body>
+
+  </body>
 </html>
 "

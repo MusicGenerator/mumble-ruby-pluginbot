@@ -14,7 +14,7 @@ def command_bot(command)
   rescue
     @error = "Warning: No Connection to RemoteUI Port<br>"
   end
-  users
+  users.force_encoding('utf-8')
 end
 
 
@@ -66,4 +66,4 @@ puts "
   <p>#{@error}</p>
 </body>
 </html>
-" % Time.now
+" 

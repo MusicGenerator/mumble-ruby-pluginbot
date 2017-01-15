@@ -32,7 +32,8 @@ def get_users
     users= @s.gets
     @s.close
 
-    users.split(" ").each do |user|
+    users.split("\t").each do |user|
+      user = user.force_encoding('utf-8')
       hash=user.split('|')[0]
       name=user.split('|')[1..-1].join
       out << "
