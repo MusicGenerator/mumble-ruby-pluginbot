@@ -260,7 +260,6 @@ class MumbleMPD
             Thread.start(remoteui.accept) { |connection|
               begin
                 command = connection.gets
-                logger "INFO: RemoteUI Command: #{command.chomp}."
                 answer = remote_command(command)
                 connection << answer
               rescue
@@ -665,16 +664,24 @@ class MumbleMPD
   def remote_command(command)
     command.gsub! "\r\n", ""
     command.chomp!
-    case command
+    case command.split(" ")[0]
     when "userhashes"
       out=""
       @cli.users.values.each do |user|
-        out << "#{user.hash}|#{user.name} "
+        out << "#{user.hash}|#{user.name}\t"
       end
       out
     when "channels"
-      #@cli.channels
-      TODO
+      out=""
+      @cli.channels.values.each do |channel|
+        out << "#{channel.channel_id}|#{channel.parent_id}|#{channel.name}"
+      end
+      out
+    when "getvar"
+      Conf.gvalue(command.split(" ")[1])
+    when "setvar"
+      Conf.svalue(command.split(" ")[1], command.split(" ")[2..-1])
+      "injected"
     when "stop"
       @run = false
       "stopping"

@@ -3,28 +3,35 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="text/css" rel="stylesheet" href="css/screen.css?v=%s" />
-
+    <link type="text/css" rel="stylesheet" href="css/bot.css?v=2" />
     <title>Mumble-Ruby-Pluginbot</title>
+    <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript">
+  		$('html').addClass('js');
+  	</script>
+  	<script type="text/javascript" src="js/functions.js"></script>
+    <script type="text/javascript" src="js/functionplus.js"></script>
   </head>
-  <body>
-    <div class="setup">
-      <form>
-        <h1>WebUI for Mumble-Ruby_pluginbot!</h1>
-        <p>
-          This is the WebUI for Mumble-Ruby-Pluginbot. This UI is very basic at the moment now.
-          For adminstrate your configuration settings please visit <a href="configset.rb">Config-Edit</a>.<br>
-          For administrate your Users (bann them or hive it to SuperUsers) visit <a href="useradm.rb">User Administration</a>.
-        </p>
-        <p>
-          For stopping (and restart) your Bot please visit <a href="stop.rb">Stop</a>
-        </p>
-        <div class="buttons">
-          <input type="submit" value="Ok">
-          <img src="img/arrow-sync.png" alt="reload" onclick="javascript:window.location.href='configset.rb'">
-          <img src="img/arrow-shuffle.png" alt="switch" onclick="javascript:window.location.href='useradm.rb'">
-        </div>
-      </form>
+  <body onload="start();">
+    <div class="screen">
+    <div class="leftmenu">
+      <button onclick="javascript:showPanel('activelog');">Log</button>
+      <button onclick="javascript:showPanel('serveruser');">User on Server</button>
+      <button onclick="javascript:showPanel('configbanneduser');">Banned Users</button>
+      <button onclick="javascript:showPanel('configsuperuser');">Super Users</button>
+      <button onclick="javascript:showPanel('configuration');">Configuration</button>
+      <button onclick="javascript:showPanel('editfield');">Edit Configuration</button>
+      <button onclick="javascript:command('stop')">Restart</button>
     </div>
+    <div class="maincontent">
+      <div class="node" id="activelog"></div>
+      <div class="node" id="serveruser"></div>
+      <div class="node" id="configbanneduser"></div>
+      <div class="node" id="configsuperuser"></div>
+      <div class="node" id="editfield"></div>
+      <div class="node" id="configuration"></div>
+      <div class="node" id="messages"></div>
+    </div>
+  </div>
   </body>
 </html>
