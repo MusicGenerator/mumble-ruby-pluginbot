@@ -432,14 +432,22 @@ class MumbleMPD
               end
 
               if message == 'bind'
-                Conf.svalue("main:user:bound", "#{msg.userhash}") if Conf.gvalue("main:user:bound") == nil
+                if Conf.gvalue("main:user:bound") == nil
+                  Conf.svalue("main:user:bound", "#{msg.userhash}")
+                  @cli.text_user(msg.actor, "Binding successfull.")
+                else
+                  @cli.text_user(msg.actor, "Binding NOT successfull.")
+                end
               end
 
               if message == 'unbind'
-                Conf.svalue("main:user:bound", nil) if Conf.gvalue("main:user:bound") == "#{msg.userhash}"
+                if Conf.gvalue("main:user:bound") == "#{msg.userhash}"
+                  Conf.svalue("main:user:bound", nil)
+                  @cli.text_user(msg.actor, "Unbinding successfull.")
+                else
+                  @cli.text_user(msg.actor, "Unbinding NOT successfull or you are not bound.")
+                end
               end
-
-
 
               if message == 'register'
                 if Conf.gvalue("main:user:bound") == msg_userid
