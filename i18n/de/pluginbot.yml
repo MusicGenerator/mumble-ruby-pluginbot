@@ -13,6 +13,14 @@ de:
   ban:
     active: "Dieser Bann h&auml;lt nur bis zum Neustart. F&uuml;r einen permantenten Bann f&uuml;ge folgende Zeile in Deine Konfiguration ein:"
 
+  binding:
+    bind:
+      successfull: "Bindung erfolgreich."
+      unsuccessfull: "Bindung NICHT erfolgreich."
+    unbind:
+      successfull: "Entbindung erfolgreich."
+      unsuccessfull: "Entbindung NICHT erfolgreich."
+
   user:
     not:
       found: "Benutzer %{user} wurde nicht gefunden."
