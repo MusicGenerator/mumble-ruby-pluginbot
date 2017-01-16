@@ -42,6 +42,7 @@ end
 puts "
 <html>
 <head>
+<meta http-equiv=\"refresh\" content=\"2;url=index.html\">
 </head>
 <body>
 </body>

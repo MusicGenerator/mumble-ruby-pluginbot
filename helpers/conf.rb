@@ -48,6 +48,10 @@ module Conf
     @@configuration["main"]["user"]["banned"].delete(del)
   end
 
+  def Conf.delkey(del)
+    @@configuration.delete(del)
+  end
+
   def Conf.load(file)
     #deep_merge!(@@configuration, YAML::load_file(file))
     merger = proc{|key, v1, v2|

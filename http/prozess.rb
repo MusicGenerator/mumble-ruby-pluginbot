@@ -45,8 +45,8 @@ def table_server_users(users)
       <td>#{hash}</td>
       <td></td>
       <td>#{name}</td>
-      <td><input type='checkbox' id='suadd' name='suadd:#{name}' value='#{hash}'></td>
-      <td><input type='checkbox' id='ubann' name='ubann:#{name}' value='#{hash}'></td>
+      <td><button id='#{user}' value='#{hash}' onclick=\"javascript:adduser('#{hash}:#{name}')\">SU</button></td>
+      <td><button id='#{user}' value='#{hash}' onclick=\"javascript:banuser('#{hash}:#{name}')\">ban</button></td>
     </tr>"
   end
 end
@@ -71,10 +71,10 @@ def p_input(config,parent,out)
     else
       out << "<div id='show#{parent}:#{key}' name='input' class='input'>\n"
       if value.nil?
-        out << " <label for='#{parent}#{value}'>#{key}<br><input id='#{parent}' name='#{parent}:#{key}' value='nil'>"
+        out << " <label for='#{parent}#{value}'>#{key}<br><input class='textinput' id='#{parent}' name='#{parent}:#{key}' value='nil'>"
       else
         value = value.to_s.split(':').join('[:]')
-        out << " <label for='#{parent}#{value}'>#{key}<br><input id='#{parent}' name='#{parent}:#{key}' value='#{value}'>"
+        out << " <label for='#{parent}#{value}'>#{key}<br><input class='textinput' id='#{parent}' name='#{parent}:#{key}' value='#{value}'>"
       end
       out << "</label>\n</div>"
     end
@@ -163,21 +163,14 @@ if params != {}
       puts command_bot(value)
 
     else
-      puts "super"
-      load_main_config
       load_personal_config
-      value = value.join.split('[:]').join(':')
-      value = value.to_i if value.to_i.to_s == value
-      value = true if value == "true"
-      value = false if value == "false"
-      value = nil if value == "nil"
-      Conf.svalue(key.to_s[1..-1], value)
+      Conf.svalue("main:user:superuser:#{value.join}",key[6..-1]) if key[0..4] == "suadd"
+      Conf.svalue("main:user:banned:#{value.join}",key[6..-1]) if key[0..4] == "ubann"
+      Conf.delkey(value.join) if key[0..4]=="delete"
       begin
-        #write only differences to Standard Config to Overwrite Config.
-        diff = standard.deep_changes(Conf.get.clone)
         File.open("../../bot1_conf.yml", 'w') {|f| f.write diff.to_yaml }
       rescue
-        @error << "Warning: Configuration-File is not writeable! (no changes saved)<br>"
+        @error << "Warning: Configuration-File is not writeable!<br>"
       end
     end
   end

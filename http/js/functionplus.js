@@ -50,10 +50,21 @@ function toggle(id) {
 function deluser(key) {
   alert(key);
 }
+function adduser(key) {
+  var send = "process.rb?suadd="+key;
+  alert(send)
+  sendXhr(send);
+}
+
+function banuser(key) {
+  var send = "process.rb?ubann="+key;
+  alert(send);
+  sendXhr(send);
+}
 
 function showPanel(id) {
   var i;
-  x = document.getElementsByClassName("node");
+  x = document.getElementsByClassName("page");
   for ( i = 0; i < x.length; i++) {
     x[i].style.display = "none"
   }
