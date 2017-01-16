@@ -13,6 +13,14 @@ en:
   ban:
     active: This ban is active until the bot restarts. To permaban add following line to your configuration
 
+  binding:
+    bind:
+      successfull: "Binding sucessfull."
+      unsuccessfull: "Binding NOT successfull."
+    unbind:
+      successfull: "Unbinding sucessfull."
+      unsuccessfull: "Unbinding NOT successfull."
+
   user:
     not:
       found: "User %{user} not found."
