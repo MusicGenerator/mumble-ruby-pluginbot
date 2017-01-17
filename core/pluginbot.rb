@@ -596,10 +596,10 @@ class MumbleMPD
             end
           end
         else
-          logger "DEBUG: Not listening because [:listen_to_private_message_only] is true and message was sent to channel."
+          logger "DEBUG: Not listening because [control:message:private_only] is true and message was sent to channel."
         end
       else
-        logger "DEBUG: Not listening because [:listen_to_registered_users_only] is true and sender is unregistered or on a blacklist."
+        logger "DEBUG: Not listening because [control:message:registered_only] is true and sender is unregistered or on a blacklist."
       end
     end
   end
