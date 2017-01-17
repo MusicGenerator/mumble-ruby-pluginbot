@@ -103,7 +103,7 @@ class MumbleMPD
       end
 
       opts.on("--controllable=", "true if bot should be controlled from chatcommands") do |v|
-        Conf.svalue("main:controlable", v.to_bool)
+        Conf.svalue("main:controllable", v.to_bool)
       end
 
       opts.on("--certdir=", "path to cert") do |v|
