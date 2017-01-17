@@ -32,7 +32,8 @@ class Version < Plugin
 
     if message == "branch"
       branch = `git rev-parse --abbrev-ref HEAD`
-      privatemessage("#{I18n.t("plugin_version.branch")} #{branch.to_s}")
+      tags = `git describe --tags`.chomp
+      privatemessage("#{I18n.t("plugin_version.branch")} #{branch.to_s}, #{tags.to_s}")
     end
 
     if message == "commiturl"
