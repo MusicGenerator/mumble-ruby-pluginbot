@@ -11,6 +11,7 @@ main:
   ducking: false
   automute_if_alone: true
   stop_on_unregistered: true
+  whitelist_enabled: false
   control:
     string: "."
     message:
@@ -19,13 +20,10 @@ main:
     historysize: 20
   fifo: "/home/botmaster/mpd1/mpd.fifo"
   user:
-    superuser:
-      72x60721xx216x4xx017f3x1x476d4358x48x648: dafoxia
-      1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234: anotheruser
-    banned:
-      123452342348234782937ckjfvo32ckj20938473: user3
-      df92lkjvdkfj2okdfh20398vhj209eu2hjd092hn: anotherusername4
-    bound: # "1234567890ABCDEFGHIJKLMN"
+    whitelisted: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-whitelisted
+    superuser: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-superuser
+    banned: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-banned
+    bound: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-bound
 
 mumble:
   use_vbr: 1
