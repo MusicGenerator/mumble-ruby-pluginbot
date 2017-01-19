@@ -437,11 +437,11 @@ class MumbleMPD
                 end
                 # Reset settings to default value
                 if message == 'reset'
-                  @cli.text_user(msg.actor, hash_to_table(@configured_settings))
-                  Conf.overwrite(@configured_settings) if Conf.gvalue("main:user:bound") == msg_userid
+                  if Conf.gvalue("main:user:bound") == "#{msg.userhash}"
+                    Conf.overwrite(@configured_settings)
+                    @cli.text_user(msg.actor, hash_to_table(@configured_settings))
                 end
               end
-
 
               if message.split(" ")[0] == 'showhash'
                 begin
