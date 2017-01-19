@@ -9,6 +9,6 @@ plugin:
       path: "/home/botmaster/src/youtube-dl"
       options: '--external-downloader aria2c --external-downloader-args "-j 6 -k 1M -x 10"'
       prefixes: ''
-    to_mp3:
+    to_mp3: false
 
 #Use a downloader for mixcloude or your download is suspended after a few megabytes for some time.
