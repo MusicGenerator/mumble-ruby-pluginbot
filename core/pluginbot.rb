@@ -343,7 +343,7 @@ class MumbleMPD
       logger "Debug: Got a message from \"#{msg.username}\" (user id: #{msg_userid}, session id: #{msg.actor}). Content: \"#{msg.message}\""
       # check if User is on a blacklist
       begin
-        if Conf.gvalue("main:user:banned").has_key?("#{msg.userhash }")
+        if is_banned(msg.userhash)
           logger "Debug: User with userid \"#{msg_userid}\" is in blacklist! Ignoring him."
           #sender_is_registered = false # If on blacklist handle user as if he was unregistered.
           #This was improved to totally ignore a banned user instead of treating him as being unregistered!
@@ -355,10 +355,10 @@ class MumbleMPD
 
       begin
         if Conf.gvalue("main:whitelist_enabled") == true
-          if Conf.gvalue("main:user:whitelisted").has_key?("#{msg.userhash }")
+          if is_whitelisted(msg.userhash)
             logger "Debug: Whitelist is enabled and user \"#{msg_userid}\" is whitelisted. Accepting message."
           else
-            if Conf.gvalue("main:user:superuser").has_key?("#{msg.userhash }")
+            if is_superuser(msg.userhash)
               logger "Debug: Whitelist is enabled and user \"#{msg_userid}\" is NOT whitelisted but is a superuser. Accepting message."
             else
               logger "Debug: Whitelist is enabled and user \"#{msg_userid}\" is NOT whitelisted and not a superuser. Ignoring message."
@@ -423,24 +423,24 @@ class MumbleMPD
               end
 
               # This functions need superuser permission
-              if !Conf.gvalue("main:user:superuser").nil?
-                if Conf.gvalue("main:user:superuser").has_key?("#{msg.userhash }")
-                  # Show settings
-                  if  message == 'settings'
-                    @cli.text_user(msg.actor, hash_to_table(Conf.get))
-                  end
-                  # Modify settings
-                  if message.split[0] == 'set'
-                    setting = message.split[1].split('=',2)
-                    Conf.svalue(setting[0], setting[1])
-                  end
-                  # Reset settings to default value
-                  if message == 'reset'
-                    @cli.text_user(msg.actor, hash_to_table(@configured_settings))
-                    Conf.overwrite(@configured_settings) if Conf.gvalue("main:user:bound") == msg_userid
-                  end
+
+              if is_superuser(msg.userhash)
+                # Show settings
+                if  message == 'settings'
+                  @cli.text_user(msg.actor, hash_to_table(Conf.get))
+                end
+                # Modify settings
+                if message.split[0] == 'set'
+                  setting = message.split[1].split('=',2)
+                  Conf.svalue(setting[0], setting[1])
+                end
+                # Reset settings to default value
+                if message == 'reset'
+                  @cli.text_user(msg.actor, hash_to_table(@configured_settings))
+                  Conf.overwrite(@configured_settings) if Conf.gvalue("main:user:bound") == msg_userid
                 end
               end
+
 
               if message.split(" ")[0] == 'showhash'
                 begin
@@ -623,6 +623,42 @@ class MumbleMPD
         end
       else
         logger "DEBUG: Not listening because [control:message:registered_only] is true and sender is unregistered or on a blacklist."
+      end
+    end
+  end
+
+  def is_banned(userhash)
+    if Conf.gvalue("main:user:banned").nil?
+      return false
+    else
+      if Conf.gvalue("main:user:banned").has_key?("#{userhash}")
+        return true
+      else
+        return false
+      end
+    end
+  end
+
+  def is_superuser(userhash)
+    if Conf.gvalue("main:user:superuser").nil?
+      return false
+    else
+      if Conf.gvalue("main:user:superuser").has_key?("#{userhash}")
+        return true
+      else
+        return false
+      end
+    end
+  end
+
+  def is_whitelisted(userhash)
+    if Conf.gvalue("main:user:whitelisted").nil?
+      return false
+    else
+      if Conf.gvalue("main:user:whitelisted").has_key?("#{userhash}")
+        return true
+      else
+        return false
       end
     end
   end
