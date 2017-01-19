@@ -8,6 +8,8 @@ bar:
         <li>Wenn Du Fehler findest oder Probleme mit mir hast, dann melde dich unter <a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot/issues'>https://github.com/MusicGenerator/mumble-ruby-pluginbot/issues</a></li>
       </ul>"
 
+  about_control: "Sende <b>%{controlstring}help</b> oder <b>%{controlstring}about</b> f&uuml;r mehr Informationen &uuml;ber mich."
+
   command_blacklisted: "Mein Admin hat diesen Befehl gesperrt."
 
   ban:

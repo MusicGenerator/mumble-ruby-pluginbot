@@ -7,6 +7,7 @@ en:
         <li>I am licensed by the <a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot/blob/master/LICENSE'>MIT license</a></li>
         <li>If you have any issues, bugs or ideas please tell us on <a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot/issues'>https://github.com/MusicGenerator/mumble-ruby-pluginbot/issues</a></li>
       </ul>
+  about_control: "Send <b>%{controlstring}help</b> or <b>%{controlstring}about</b> for more information about me."
 
   command_blacklisted: "My admin has blacklisted this command."
 
