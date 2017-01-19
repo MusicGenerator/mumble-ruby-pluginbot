@@ -440,6 +440,7 @@ class MumbleMPD
                   if Conf.gvalue("main:user:bound") == "#{msg.userhash}"
                     Conf.overwrite(@configured_settings)
                     @cli.text_user(msg.actor, hash_to_table(@configured_settings))
+                  end
                 end
               end
 
