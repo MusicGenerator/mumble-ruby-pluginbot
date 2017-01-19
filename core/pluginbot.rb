@@ -480,13 +480,10 @@ class MumbleMPD
               end
 
               if message.split(" ")[0] == 'blacklist'
-                @cli.text_user(msg.actor, "Step 1")
-
                 if Conf.gvalue("main:user:bound") == "#{msg.userhash}"
-                  @cli.text_user(msg.actor, "486")
-                  # Test whether the given user exists currently on the server
                   targetuser_name = message.split[1..-1].join(" ")
 
+                  # Test whether the given user exists currently on the server
                   if @cli.find_user(targetuser_name)
                     targetuser_hash = @cli.find_user(targetuser_name).hash.to_sym
 
