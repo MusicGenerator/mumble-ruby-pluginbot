@@ -450,7 +450,7 @@ class MumbleMPD
                     @cli.text_user(msg.actor, "#{msg.userhash}")
                   end
                 rescue
-                  @cli.text_user(msg.actor, "The user #{msg.username} does not provide a certificate.")
+                  @cli.text_user(msg.actor, "The user does not provide a certificate.")
                 end
               end
 
