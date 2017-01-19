@@ -443,10 +443,14 @@ class MumbleMPD
               end
 
               if message.split(" ")[0] == 'showhash'
-                if @cli.find_user(message.split[1..-1].join(" "))
-                  @cli.text_user(msg.actor, "#{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}:  #{message.split[1..-1].join(" ")}")
-                else
-                  @cli.text_user(msg.actor, "#{msg.userhash}")
+                begin
+                  if @cli.find_user(message.split[1..-1].join(" "))
+                    @cli.text_user(msg.actor, "#{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}:  #{message.split[1..-1].join(" ")}")
+                  else
+                    @cli.text_user(msg.actor, "#{msg.userhash}")
+                  end
+                rescue
+                  @cli.text_user(msg.actor, "The user #{msg.username} does not provide a certificate.")
                 end
               end
 
