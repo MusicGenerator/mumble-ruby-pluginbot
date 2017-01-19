@@ -351,6 +351,19 @@ class MumbleMPD
         #catch when user hasn't a hash. (not registerd)
       end
 
+      begin
+        if Conf.gvalue("main:whitelist_enabled") == true
+          if Conf.gvalue("main:user:whitelist").has_key?("#{msg.userhash }")
+            logger "Debug: Whitelist is enabled and user \"#{msg_userid}\" is whitelisted. Accepting message."
+          else
+            logger "Debug: Whitelist is enabled and user \"#{msg_userid}\" is NOT whitelisted. Ignoring message."
+            return
+          end
+        end
+      rescue
+        #catch when user hasn't a hash. (not registerd)
+      end
+
       # generating help message.
       # each command adds his own help
       help ="<br />"    # start with empty help
