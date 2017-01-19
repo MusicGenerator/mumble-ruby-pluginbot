@@ -351,6 +351,7 @@ class MumbleMPD
           #sender_is_registered = false # If on blacklist handle user as if he was unregistered.
           #This was improved to totally ignore a banned user instead of treating him as being unregistered!
           return
+        end
       end
 
       begin
