@@ -474,19 +474,27 @@ class MumbleMPD
               end
 
               if message == 'register'
-                if Conf.gvalue("main:user:bound") == msg_userid
+                if Conf.gvalue("main:user:bound") == "#{msg.userhash}"
                   @cli.me.register
                 end
               end
 
               if message.split(" ")[0] == 'blacklist'
-                if Conf.gvalue("main:user:bound") == msg_userid
-                  if @cli.find_user(message.split[1..-1].join(" "))
-                    Conf.svalue("main:user:banned:#{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}", "#{message.split[1..-1].join(" ")}")
+                @cli.text_user(msg.actor, "Step 1")
+
+                if Conf.gvalue("main:user:bound") == "#{msg.userhash}"
+                  @cli.text_user(msg.actor, "486")
+                  # Test whether the given user exists currently on the server
+                  targetuser_name = message.split[1..-1].join(" ")
+
+                  if @cli.find_user(targetuser_name)
+                    targetuser_hash = @cli.find_user(targetuser_name).hash.to_sym
+
+                    Conf.svalue("main:user:banned:#{targetuser_hash}", "#{targetuser_name}")
                     @cli.text_user(msg.actor, I18n.t("ban.active"))
-                    @cli.text_user(msg.actor, "main: user: banned: #{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}:  #{message.split[1..-1].join(" ")}")
+                    @cli.text_user(msg.actor, "main:user:banned: #{targetuser_hash}: #{targetuser_name}")
                   else
-                    @cli.text_user(msg.actor, I18n.t("user.not.found", :user => message.split[1..-1].join(" ")))
+                    @cli.text_user(msg.actor, I18n.t("user.not.found", :user => targetuser_name))
                   end
                 end
               end
