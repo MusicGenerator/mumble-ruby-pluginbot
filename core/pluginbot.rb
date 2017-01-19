@@ -355,11 +355,15 @@ class MumbleMPD
 
       begin
         if Conf.gvalue("main:whitelist_enabled") == true
-          if Conf.gvalue("main:user:whitelist").has_key?("#{msg.userhash }")
+          if Conf.gvalue("main:user:whitelisted").has_key?("#{msg.userhash }")
             logger "Debug: Whitelist is enabled and user \"#{msg_userid}\" is whitelisted. Accepting message."
           else
-            logger "Debug: Whitelist is enabled and user \"#{msg_userid}\" is NOT whitelisted. Ignoring message."
-            return
+            if Conf.gvalue("main:user:superuser").has_key?("#{msg.userhash }")
+              logger "Debug: Whitelist is enabled and user \"#{msg_userid}\" is NOT whitelisted but is a superuser. Accepting message."
+            else
+              logger "Debug: Whitelist is enabled and user \"#{msg_userid}\" is NOT whitelisted and not a superuser. Ignoring message."
+              return
+            end
           end
         end
       rescue
