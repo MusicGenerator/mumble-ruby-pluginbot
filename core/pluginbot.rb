@@ -345,7 +345,9 @@ class MumbleMPD
       begin
         if Conf.gvalue("main:user:banned").has_key?("#{msg.userhash }")
           logger "Debug: User with userid \"#{msg_userid}\" is in blacklist! Ignoring him."
-          sender_is_registered = false # If on blacklist handle user as if he was unregistered.
+          #sender_is_registered = false # If on blacklist handle user as if he was unregistered.
+          #This was improved to totally ignore a banned user instead of treating him as being unregistered!
+          return
         end
       rescue
         #catch when user hasn't a hash. (not registerd)
