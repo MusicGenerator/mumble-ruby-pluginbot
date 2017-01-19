@@ -1,9 +1,6 @@
 ---
 # See http://mumble-ruby-pluginbot.readthedocs.io/en/master/explain_the_config.html for the documentation of this config file.
 
-config:
-  version: 2.1
-
 debug: true
 language: en
 
