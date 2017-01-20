@@ -24,6 +24,7 @@ function update_pluginbot() {
     echo "Updating the mumble-ruby-pluginbot from github..."
     cd ~/src/mumble-ruby-pluginbot/
     git pull origin master
+    git fetch --tags
     return 0
 }
 
