@@ -8,6 +8,7 @@ debug: true
 language: en
 
 main:
+  remoteui: false
   tempdir: "/home/botmaster/temp/"
   logfile: "/home/botmaster/logs/bot1.log"
   ducking: false

@@ -11,6 +11,7 @@ require 'optparse'
 require 'i18n'
 require 'yaml'
 require 'cgi'
+require 'socket'
 require_relative "../helpers/conf.rb"
 
 
@@ -27,6 +28,7 @@ class MumbleMPD
   attr_reader :run
 
   def initialize
+    @remotelog = []
     @logging = []
     # load all plugins
     require './plugin'
@@ -247,6 +249,29 @@ class MumbleMPD
       logger "OK: Primary Bot Setup complete"
       @run = true
 
+      #init local administration port
+      if Conf.gvalue("main:remoteui") == true
+        Thread.new do
+          remoteui = TCPServer.new(7750)
+          Thread.current["user"]=Conf.gvalue("mumble:name")
+          Thread.current["process"]="Remote UI"
+          logger "INFO: RemoteUI ist started"
+          loop {
+            Thread.start(remoteui.accept) { |connection|
+              begin
+                command = connection.gets
+                answer = remote_command(command)
+                connection << answer
+              rescue
+                bt = $!.backtrace * "\n  "
+                logger "WARNING: RemoteUI failed. Error: #{$!.inspect} \n#{bt}"
+              ensure
+                connection.close
+              end
+            }
+          }
+        end
+      end
       #init all plugins
       #init = @settings.clone
       #init = Conf.get.clone       # Compatibility mode
@@ -691,6 +716,10 @@ class MumbleMPD
   end
 
   def logger(message)
+    @remotelog.push "#{Time.new.to_s} : #{message}"
+    while @remotelog.size >= 100
+      @remotelog.shift
+    end
     if Conf.gvalue("debug")
       logline="#{Time.new.to_s} : #{message}\n"
       if Conf.gvalue("main:logfile") == nil
@@ -699,12 +728,49 @@ class MumbleMPD
         written = IO.write(Conf.gvalue("main:logfile"), logline, mode: 'a')
         if written != logline.length
           puts "ERROR: Logfile (#{Conf.gvalue("main:logfile")}) is not writeable, logging to stdout instead"
-		  puts logline.chomp
-      Conf.svalue("main:logfile", nil)
-		end
+		      puts logline.chomp
+          Conf.svalue("main:logfile", nil)
+		    end
       end
     end
   end
+
+  def remote_command(command)
+    command.gsub! "\r\n", ""
+    command.chomp!
+    case command.split(" ")[0]
+    when "userhashes"
+      out=""
+      @cli.users.values.each do |user|
+        out << "#{user.hash}|#{user.name}\t"
+      end
+      out
+    when "channels"
+      out=""
+      @cli.channels.values.each do |channel|
+        out << "#{channel.channel_id}|#{channel.parent_id}|#{channel.name}"
+      end
+      out
+    when "getvar"
+      Conf.gvalue(command.split(" ")[1])
+    when "setvar"
+      Conf.svalue(command.split(" ")[1], command.split(" ")[2..-1])
+      "injected"
+    when "stop"
+      @run = false
+      "stopping"
+    when "logfile"
+      out = ""
+      @remotelog.each do |line|
+        out << "#{line}<br>"
+      end
+      out
+    else
+      # ping answer
+      command
+    end
+  end
+
 end
 
 #

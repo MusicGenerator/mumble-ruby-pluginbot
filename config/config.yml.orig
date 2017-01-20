@@ -1,0 +1,96 @@
+---
+# See http://mumble-ruby-pluginbot.readthedocs.io/en/master/explain_the_config.html for the documentation of this config file.
+
+config:
+  version: 2.2
+
+debug: true
+language: en
+
+main:
+  remoteui: false
+  tempdir: "/home/botmaster/temp/"
+  logfile: "/home/botmaster/logs/bot1.log"
+  ducking: false
+  automute_if_alone: true
+  stop_on_unregistered: true
+  channel_notify: 0
+  controllable: true
+  whitelist_enabled: false
+  control:
+    string: "."
+    message:
+      private_only: false
+      registered_only: true
+    historysize: 20
+  display:
+    comment:
+<<<<<<< HEAD
+      set: true
+    user:
+      whitelisted: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-whitelisted
+      superuser: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-superuser
+      banned: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-banned
+      bound: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-bound
+  certfolder: "/home/botmaster/certs/"
+  fifo: "/home/botmaster/mpd1/mpd.fifo"
+  logo: "../config/logo/logo.html"
+||||||| merged common ancestors
+      set: true # If true the bot sets its comment to display the current music that is being played.
+  #need_binding: false # If true the bot reacts only if a user used the bind command.
+
+  user:
+    # You can define several superusers here. To get a users hash use the command "showhash", see "internals".
+    # The commands "reset", "set" and "settings" can only be used by the defined superusers.
+    # Safety Information: All predefined entries for superuser and banned are only there to show you how it works, they will never work.
+    superuser:
+      72x60721xx216x4xx017f3x1x476d4358x48x648: dafoxia
+      1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234: anotheruser
+
+    # Here the same applies as for "superuser" but these users will not be able to control the bot at all. The bot will ignore them completely.
+    banned:
+      123452342348234782937ckjfvo32ckj20938473: user3
+      df92lkjvdkfj2okdfh20398vhj209eu2hjd092hn: anotherusername4
+
+    # Only ONE user hash as a string. If definied nobody will be able to use the bind command anymore but the defined user. The blacklist command can only be used after being bound.
+    bound: # "1234567890ABCDEFGHIJKLMN"
+
+  certfolder: "/home/botmaster/certs/" # In this folder the bot automatically creates an openssl certificate per username you set up. See mumble: name.
+  fifo: "/home/botmaster/mpd1/mpd.fifo" # This fifo must also be used by the MPD the bot connects to.
+  logo: "../config/logo/logo.html" # A relative path to the logo the bot uses.
+=======
+      set: true # If true the bot sets its comment to display the current music that is being played.
+  #need_binding: false # If true the bot reacts only if a user used the bind command.
+
+  user:
+    # You can define several superusers here. To get a users hash use the command "showhash", see "internals".
+    # The commands "reset", "set" and "settings" can only be used by the defined superusers.
+    # Safety Information: All predefined entries for superuser and banned are only there to show you how it works, they will never work.
+    superuser:
+    #  72x60721xx216x4xx017f3x1x476d4358x48x648: dafoxia
+    #  1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234: anotheruser
+
+    # Here the same applies as for "superuser" but these users will not be able to control the bot at all. The bot will ignore them completely.
+    banned:
+    #  123452342348234782937ckjfvo32ckj20938473: user3
+    #  df92lkjvdkfj2okdfh20398vhj209eu2hjd092hn: anotherusername4
+
+    # Only ONE user hash as a string. If definied nobody will be able to use the bind command anymore but the defined user. The blacklist command can only be used after being bound.
+    bound: # "1234567890ABCDEFGHIJKLMN"
+
+  certfolder: "/home/botmaster/certs/" # In this folder the bot automatically creates an openssl certificate per username you set up. See mumble: name.
+  fifo: "/home/botmaster/mpd1/mpd.fifo" # This fifo must also be used by the MPD the bot connects to.
+  logo: "../config/logo/logo.html" # A relative path to the logo the bot uses.
+>>>>>>> httpdev
+  timer:
+    ticks:  3600
+  blacklisted_commands: ""
+
+mumble:
+  use_vbr: true
+  bitrate: 72000
+  host: m.natenom.com
+  port: 64738
+  name: "MumbleRubyPluginbot"
+  password: ''
+  channel: Bottest
