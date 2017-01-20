@@ -75,7 +75,7 @@ en:
     file:           "Filename of currently played song: %{file}"
 
     song:
-      no:           "No Song is playing."
+      "no":         "No Song is playing."
 
     shuffle:        "Shuffle, shuffle and get a new order. :)"
 
