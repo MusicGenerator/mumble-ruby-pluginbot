@@ -50,6 +50,7 @@ module Conf
 
   def Conf.delkey(del)
     @@configuration.delete(del)
+  end
 
   def Conf.load(file)
     #deep_merge!(@@configuration, YAML::load_file(file))

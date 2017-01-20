@@ -12,7 +12,7 @@ class YTDL
   def initialize
     @filetypes= ["ogg", "mp3", "mp2", "m4a", "aac", "wav", "ape", "flac", "opus"].freeze
     @list = ""
-    @presixes = ""
+    @prefixes = ""
     @exe = ""
     @option = ""
     @temp = ""
@@ -82,17 +82,17 @@ class YTDL
       file.slice! @temp
       @filetypes.each do |ending|
         if File.exist?("#{@temp}#{file}.#{ending}")
-          system ("#{@prefixes} convert '#{@temp}#{file}.jpg' -resize 320x240 '#{@dest}#{file}.jpg' ") if File.exist?("#{@temp}#{file}.jpg")
+          system ("#{@prefixes} convert \"#{@temp}#{file}.jpg\" -resize 320x240 \"#{@dest}#{file}.jpg\" ") if File.exist?("#{@temp}#{file}.jpg")
           if Conf.gvalue("plugin:youtube:to_mp3") == true
             # Mixin tags and recode it to mp3 (vbr 190kBit)
-            system ("#{@prefixes} ffmpeg -i '#{@temp}#{file}.#{ending}' -codec:a libmp3lame -qscale:a 2 -metadata title='#{file}' '#{@dest}#{file}.mp3'") if !File.exist?("#{@dest}#{file}.mp3")
+            system ("#{@prefixes} ffmpeg -i \"#{@temp}#{file}.#{ending}\" -codec:a libmp3lame -qscale:a 2 -metadata title='#{file}' \"#{@dest}#{file}.mp3\"") if !File.exist?("#{@dest}#{file}.mp3")
             if File.exist?("#{@dest}#{file}.mp3")
               @song << file
               @suffix << ".mp3"
             end
           else
             # Mixin tags without recode on standard
-            system ("#{@prefixes} ffmpeg -i '#{@temp}#{file}.#{ending}' -acodec copy -metadata title='#{file}' '#{@dest}#{file}.#{ending}'") if !File.exist?("#{@dest}#{file}.#{ending}")
+            system ("#{@prefixes} ffmpeg -i \"#{@temp}#{file}.#{ending}\" -acodec copy -metadata title=\"#{file}\" \"#{@dest}#{file}.#{ending}\"") if !File.exist?("#{@dest}#{file}.#{ending}")
             if File.exist?("#{@dest}#{file}.#{ending}")
               @song << file
               @suffix << ".#{ending}"
