@@ -75,7 +75,7 @@ de:
     file:           "Dateiname des aktuellen Titels: %{file}"
 
     song:
-      no:           "Spiele nicht ab."
+      "no":           "Spiele nicht ab."
 
     shuffle:        "Mische neu durch."
 

@@ -7,7 +7,10 @@ class Mpd < Plugin
     super
     @@bot = init
     #init default template
-    @infotemplate = "send <b>#{Conf.gvalue("main:control:string")}help</b> or <b>#{Conf.gvalue("main:control:string")}about</b> for more information about me."
+    #@infotemplate = "send <b>#{Conf.gvalue("main:control:string")}help</b> or <b>#{Conf.gvalue("main:control:string")}about</b> for more information about me."
+
+    @infotemplate = I18n.t("about_control", :controlstring => Conf.gvalue("main:control:string"))
+
     if ( @@bot[:messages] ) && ( @@bot[:mpd].nil? ) then
       logger("INFO: INIT plugin #{self.class.name}.")
       @@bot[:mpd] = MPD.new Conf.gvalue("plugin:mpd:host"), Conf.gvalue("plugin:mpd:port").to_i

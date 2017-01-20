@@ -11,6 +11,7 @@ require 'optparse'
 require 'i18n'
 require 'yaml'
 require 'cgi'
+require 'socket'
 require_relative "../helpers/conf.rb"
 
 
@@ -27,6 +28,7 @@ class MumbleMPD
   attr_reader :run
 
   def initialize
+    @remotelog = []
     @logging = []
     # load all plugins
     require './plugin'
@@ -103,7 +105,7 @@ class MumbleMPD
       end
 
       opts.on("--controllable=", "true if bot should be controlled from chatcommands") do |v|
-        Conf.svalue("main:controlable", v.to_bool)
+        Conf.svalue("main:controllable", v.to_bool)
       end
 
       opts.on("--certdir=", "path to cert") do |v|
@@ -247,6 +249,29 @@ class MumbleMPD
       logger "OK: Primary Bot Setup complete"
       @run = true
 
+      #init local administration port
+      if Conf.gvalue("main:remoteui") == true
+        Thread.new do
+          remoteui = TCPServer.new(7750)
+          Thread.current["user"]=Conf.gvalue("mumble:name")
+          Thread.current["process"]="Remote UI"
+          logger "INFO: RemoteUI ist started"
+          loop {
+            Thread.start(remoteui.accept) { |connection|
+              begin
+                command = connection.gets
+                answer = remote_command(command)
+                connection << answer
+              rescue
+                bt = $!.backtrace * "\n  "
+                logger "WARNING: RemoteUI failed. Error: #{$!.inspect} \n#{bt}"
+              ensure
+                connection.close
+              end
+            }
+          }
+        end
+      end
       #init all plugins
       #init = @settings.clone
       #init = Conf.get.clone       # Compatibility mode
@@ -341,11 +366,31 @@ class MumbleMPD
       end
 
       logger "Debug: Got a message from \"#{msg.username}\" (user id: #{msg_userid}, session id: #{msg.actor}). Content: \"#{msg.message}\""
+
       # check if User is on a blacklist
-      begin
-        if Conf.gvalue("main:user:banned").has_key?("#{msg.userhash }")
+      if is_banned(msg.userhash)
+        if is_superuser(msg.userhash)
+          logger "Debug: User with userid \"#{msg_userid}\" is in blacklist, but is a superuser. Accepting message."
+        else
           logger "Debug: User with userid \"#{msg_userid}\" is in blacklist! Ignoring him."
-          sender_is_registered = false # If on blacklist handle user as if he was unregistered.
+          #sender_is_registered = false # If on blacklist handle user as if he was unregistered.
+          #This was improved to totally ignore a banned user instead of treating him as being unregistered!
+          return
+        end
+      end
+
+      begin
+        if Conf.gvalue("main:whitelist_enabled") == true
+          if is_whitelisted(msg.userhash)
+            logger "Debug: Whitelist is enabled and user \"#{msg_userid}\" is whitelisted. Accepting message."
+          else
+            if is_superuser(msg.userhash)
+              logger "Debug: Whitelist is enabled and user \"#{msg_userid}\" is NOT whitelisted but is a superuser. Accepting message."
+            else
+              logger "Debug: Whitelist is enabled and user \"#{msg_userid}\" is NOT whitelisted and not a superuser. Ignoring message."
+              return
+            end
+          end
         end
       rescue
         #catch when user hasn't a hash. (not registerd)
@@ -404,57 +449,75 @@ class MumbleMPD
               end
 
               # This functions need superuser permission
-              if !Conf.gvalue("main:user:superuser").nil?
-                if Conf.gvalue("main:user:superuser").has_key?("#{msg.userhash }")
-                  # Show settings
-                  if  message == 'settings'
-                    @cli.text_user(msg.actor, hash_to_table(Conf.get))
-                  end
-                  # Modify settings
-                  if message.split[0] == 'set'
-                    setting = message.split[1].split('=',2)
-                    Conf.svalue(setting[0], setting[1])
-                  end
-                  # Reset settings to default value
-                  if message == 'reset'
+
+              if is_superuser(msg.userhash)
+                # Show settings
+                if  message == 'settings'
+                  @cli.text_user(msg.actor, hash_to_table(Conf.get))
+                end
+                # Modify settings
+                if message.split[0] == 'set'
+                  setting = message.split[1].split('=',2)
+                  Conf.svalue(setting[0], setting[1])
+                end
+                # Reset settings to default value
+                if message == 'reset'
+                  if Conf.gvalue("main:user:bound") == "#{msg.userhash}"
+                    Conf.overwrite(@configured_settings)
                     @cli.text_user(msg.actor, hash_to_table(@configured_settings))
-                    Conf.overwrite(@configured_settings) if Conf.gvalue("main:user:bound") == msg_userid
                   end
                 end
               end
 
               if message.split(" ")[0] == 'showhash'
-                if @cli.find_user(message.split[1..-1].join(" "))
-                  @cli.text_user(msg.actor, "#{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}:  #{message.split[1..-1].join(" ")}")
-                else
-                  @cli.text_user(msg.actor, "#{msg.userhash}")
+                begin
+                  if @cli.find_user(message.split[1..-1].join(" "))
+                    @cli.text_user(msg.actor, "#{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}:  #{message.split[1..-1].join(" ")}")
+                  else
+                    @cli.text_user(msg.actor, "#{msg.userhash}")
+                  end
+                rescue
+                  @cli.text_user(msg.actor, "The user does not provide a certificate.")
                 end
               end
 
               if message == 'bind'
-                Conf.svalue("main:user:bound", "#{msg.userhash}") if Conf.gvalue("main:user:bound") == nil
+                if Conf.gvalue("main:user:bound") == nil
+                  Conf.svalue("main:user:bound", "#{msg.userhash}")
+                  @cli.text_user(msg.actor, I18n.t("binding.bind.successfull"))
+                else
+                  @cli.text_user(msg.actor, I18n.t("binding.bind.successfull"))
+                end
               end
 
               if message == 'unbind'
-                Conf.svalue("main:user:bound", nil) if Conf.gvalue("main:user:bound") == "#{msg.userhash}"
+                if Conf.gvalue("main:user:bound") == "#{msg.userhash}"
+                  Conf.svalue("main:user:bound", nil)
+                  @cli.text_user(msg.actor, I18n.t("binding.unbind.successfull"))
+                else
+                  @cli.text_user(msg.actor, I18n.t("binding.unbind.unsuccessfull"))
+                end
               end
 
-
-
               if message == 'register'
-                if Conf.gvalue("main:user:bound") == msg_userid
+                if Conf.gvalue("main:user:bound") == "#{msg.userhash}"
                   @cli.me.register
                 end
               end
 
               if message.split(" ")[0] == 'blacklist'
-                if Conf.gvalue("main:user:bound") == msg_userid
-                  if @cli.find_user(message.split[1..-1].join(" "))
-                    Conf.svalue("main:user:banned:#{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}", "#{message.split[1..-1].join(" ")}")
+                if Conf.gvalue("main:user:bound") == "#{msg.userhash}"
+                  targetuser_name = message.split[1..-1].join(" ")
+
+                  # Test whether the given user exists currently on the server
+                  if @cli.find_user(targetuser_name)
+                    targetuser_hash = @cli.find_user(targetuser_name).hash.to_sym
+
+                    Conf.svalue("main:user:banned:#{targetuser_hash}", "#{targetuser_name}")
                     @cli.text_user(msg.actor, I18n.t("ban.active"))
-                    @cli.text_user(msg.actor, "main: user: banned: #{@cli.find_user(message.split[1..-1].join(" ")).hash.to_sym}:  #{message.split[1..-1].join(" ")}")
+                    @cli.text_user(msg.actor, "main:user:banned: #{targetuser_hash}: #{targetuser_name}")
                   else
-                    @cli.text_user(msg.actor, I18n.t("user.not.found", :user => message.split[1..-1].join(" ")))
+                    @cli.text_user(msg.actor, I18n.t("user.not.found", :user => targetuser_name))
                   end
                 end
               end
@@ -588,10 +651,46 @@ class MumbleMPD
             end
           end
         else
-          logger "DEBUG: Not listening because [:listen_to_private_message_only] is true and message was sent to channel."
+          logger "DEBUG: Not listening because [control:message:private_only] is true and message was sent to channel."
         end
       else
-        logger "DEBUG: Not listening because [:listen_to_registered_users_only] is true and sender is unregistered or on a blacklist."
+        logger "DEBUG: Not listening because [control:message:registered_only] is true and sender is unregistered or on a blacklist."
+      end
+    end
+  end
+
+  def is_banned(userhash)
+    if Conf.gvalue("main:user:banned").nil?
+      return false
+    else
+      if Conf.gvalue("main:user:banned").has_key?("#{userhash}")
+        return true
+      else
+        return false
+      end
+    end
+  end
+
+  def is_superuser(userhash)
+    if Conf.gvalue("main:user:superuser").nil?
+      return false
+    else
+      if Conf.gvalue("main:user:superuser").has_key?("#{userhash}")
+        return true
+      else
+        return false
+      end
+    end
+  end
+
+  def is_whitelisted(userhash)
+    if Conf.gvalue("main:user:whitelisted").nil?
+      return false
+    else
+      if Conf.gvalue("main:user:whitelisted").has_key?("#{userhash}")
+        return true
+      else
+        return false
       end
     end
   end
@@ -617,6 +716,10 @@ class MumbleMPD
   end
 
   def logger(message)
+    @remotelog.push "#{Time.new.to_s} : #{message}"
+    while @remotelog.size >= 100
+      @remotelog.shift
+    end
     if Conf.gvalue("debug")
       logline="#{Time.new.to_s} : #{message}\n"
       if Conf.gvalue("main:logfile") == nil
@@ -625,12 +728,49 @@ class MumbleMPD
         written = IO.write(Conf.gvalue("main:logfile"), logline, mode: 'a')
         if written != logline.length
           puts "ERROR: Logfile (#{Conf.gvalue("main:logfile")}) is not writeable, logging to stdout instead"
-		  puts logline.chomp
-      Conf.svalue("main:logfile", nil)
-		end
+		      puts logline.chomp
+          Conf.svalue("main:logfile", nil)
+		    end
       end
     end
   end
+
+  def remote_command(command)
+    command.gsub! "\r\n", ""
+    command.chomp!
+    case command.split(" ")[0]
+    when "userhashes"
+      out=""
+      @cli.users.values.each do |user|
+        out << "#{user.hash}|#{user.name}\t"
+      end
+      out
+    when "channels"
+      out=""
+      @cli.channels.values.each do |channel|
+        out << "#{channel.channel_id}|#{channel.parent_id}|#{channel.name}"
+      end
+      out
+    when "getvar"
+      Conf.gvalue(command.split(" ")[1])
+    when "setvar"
+      Conf.svalue(command.split(" ")[1], command.split(" ")[2..-1])
+      "injected"
+    when "stop"
+      @run = false
+      "stopping"
+    when "logfile"
+      out = ""
+      @remotelog.each do |line|
+        out << "#{line}<br>"
+      end
+      out
+    else
+      # ping answer
+      command
+    end
+  end
+
 end
 
 #

@@ -14,7 +14,7 @@ class Youtube < Plugin
         @loader.dest dest
         @loader.temp temp
 
-        Dir.mkdir(destination) unless File.exists?(dest)
+        Dir.mkdir(dest) unless File.exists?(dest)
         Dir.mkdir(temp) unless File.exists?(temp)
       rescue
         logger "Error: Youtube-Plugin didn't find settings for mpd music directory and/or your preferred temporary download directory."

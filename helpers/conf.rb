@@ -40,14 +40,16 @@ module Conf
     @@configuration.merge! nvalue(key,value), &merger
   end
 
-  def Conf.delkey(key)
-    lastkey=nil
-    key.split(':').reverse_each do |keyv|
-      nkey[keyv]=lastkey
-      lastkey=nkey
-    end
-    @configuration.delete lastkey
+  def Conf.delsuperuser(del)
+    @@configuration["main"]["user"]["superuser"].delete(del)
   end
+
+  def Conf.delbanneduser(del)
+    @@configuration["main"]["user"]["banned"].delete(del)
+  end
+
+  def Conf.delkey(del)
+    @@configuration.delete(del)
 
   def Conf.load(file)
     #deep_merge!(@@configuration, YAML::load_file(file))

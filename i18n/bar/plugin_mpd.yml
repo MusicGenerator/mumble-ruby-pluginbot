@@ -75,7 +75,7 @@ bar:
     file:           "Dateinam van aktuelln Titl: %{file}"
 
     song:
-      no:           "Sp&uuml;t net ab."
+      "no":           "Sp&uuml;t net ab."
 
     shuffle:        "Misch neich durch."
 
