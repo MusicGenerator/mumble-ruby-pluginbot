@@ -44,6 +44,33 @@
 	width: 780px;
 }
 
+.log_status_ok {
+  color: green;
+}
+
+.log_status_info {
+	color: blue;
+}
+
+.log_status_error {
+	color: red;
+}
+
+.log_status_debug{
+	color: grey;
+}
+
+.log_status_else {
+	color: black;
+}
+.log_time {
+	color: dark-grey;
+}
+
+.log_status_message {
+	color: grey;
+}
+
 .page {
 	display: none;
 	overflow:scroll;

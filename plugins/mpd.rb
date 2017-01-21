@@ -82,7 +82,7 @@ class Mpd < Plugin
       end
 
       @@bot[:mpd].on :song do |current|
-        logger("OK: Playing: #{current.file}")
+        logger("OK: Playing: #{current.file}") if !current.nil?
       end
 
       if Conf.gvalue("plugin:mpd:testpipe") == "true"

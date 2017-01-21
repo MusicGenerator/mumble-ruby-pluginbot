@@ -160,7 +160,33 @@ if params != {}
         puts "#{tableend}"
 
     when "command"
-      puts command_bot(value)
+      if value == "logfile"
+        puts command_bot(value)
+      else
+        out = command_bot(value)
+        lines = out.split("<br>")
+        out =""
+        lines.each do |line|
+          columns=line.split(":")
+          out << "<span class=\"log_time\">#{columns[0..2].join}</span>\n"
+          case columns[3].to_s
+          when " OK"
+            out << "<span class=\"log_status_ok\">"
+          when " INFO"
+            out << "<span class=\"log_status_info\">"
+          when " ERROR"
+            out << "<span class=\"log_status_error\">"
+          when " DEBUG"
+            out << "<span class=\"log_status_debug\">"
+          else
+            out << "<span class=\"log_status_else\">"
+          end
+          out << "#{columns[3]}</span>\n"
+          out << "<span class=\"log_status_message\">#{columns[4..-1].join}</span><br>\n"
+        end
+      end
+      puts out
+
 
     else
       load_personal_config
