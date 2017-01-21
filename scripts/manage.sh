@@ -71,13 +71,13 @@ function start_bots() {
 
   ### Start Mumble-Ruby-Bots - MPD instances must already be running. ###
   # Bot 1
-  tmux new-session -d -n bot1 "while true; do LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot1_conf.yml > $HOME/logs/bot1.log 2>&1 ; sleep 10; done"
+  tmux new-session -d -n bot1 "while true; do LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot1_conf.yml >> $HOME/logs/bot1.log 2>&1 ; sleep 10; done"
 
   # Bot 2
-  #tmux new-session -d -n bot2 "while true; do LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot2_conf.yml > $HOME/logs/bot2.log 2>&1; sleep 10; done"
+  #tmux new-session -d -n bot2 "while true; do LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot2_conf.yml >> $HOME/logs/bot2.log 2>&1; sleep 10; done"
 
   # Bot 3
-  #tmux new-session -d -n bot3 "while true; do LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot3_conf.yml > $HOME/logs/bot3.log 2>&1; sleep 10; done"
+  #tmux new-session -d -n bot3 "while true; do LD_LIBRARY_PATH=$HOME/src/celt/lib/ ruby $HOME/src/mumble-ruby-pluginbot/core/pluginbot.rb --config=$HOME/src/bot3_conf.yml >> $HOME/logs/bot3.log 2>&1; sleep 10; done"
 
 }
 
