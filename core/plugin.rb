@@ -40,7 +40,11 @@ class Plugin
   end
 
   def self.getlogsize
-    @@logger.length
+    begin
+      @@logger.length
+    rescue
+      0
+    end
   end
 
   def self.getlog

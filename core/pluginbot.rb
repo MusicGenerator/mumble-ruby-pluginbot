@@ -330,9 +330,8 @@ class MumbleMPD
   def timertick
     ticktime = ( Conf.gvalue("main:timer:ticks") || 3600 )
     while (true==true)
-      Plugin.getlogsize.times do
-        logger Plugin.getlog 
-      end
+      # trigger log writer.
+      logger
       sleep(3600/ticktime)
       time = Time.now
       @plugin.each do |plugin|
@@ -718,13 +717,24 @@ class MumbleMPD
     puts message
   end
 
-  def logger(message)
-    @remotelog.push "#{Time.new.to_s} : #{message}"
+  def logger(message = "")
+    logline = ""
+    time = Time.new.to_s
+    # If a new log-line should be written do
+    # first empty Plugin-log because these are older (depends on timertick-time)
+    Plugin.getlogsize.times do
+      line = Plugin.getlog
+      logline << "#{time} : #{line}\n"
+      @remotelog.push "#{time} : #{line}"
+    end
+    if message != ""
+      logline << "#{time} : #{message}\n"
+      @remotelog.push "#{time} : #{message}"
+    end
     while @remotelog.size >= 100
       @remotelog.shift
     end
-    if Conf.gvalue("debug")
-      logline="#{Time.new.to_s} : #{message}\n"
+    if Conf.gvalue("debug") && logline != ""
       if Conf.gvalue("main:logfile") == nil
         puts logline.chomp
       else
