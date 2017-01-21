@@ -58,8 +58,6 @@ en:
 
   help:
     internal:            "<br /><span style='color:red;'><b>Internal commands</b></span><br />
-                            <b>superpassword+restart</b> will restart the bot.<br />
-                            <b>superpassword+reset</b> will reset variables to start values.<br />
                             <b>%{cc}about</b> Get information about this bot.<br />
                             <b>%{cc}settings</b> display current settings. Need SuperUser<br />
                             <b>%{cc}set <i>variable=value</i></b> Set variable to value. Need SuperUser<br />
