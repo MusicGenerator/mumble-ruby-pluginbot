@@ -1,6 +1,8 @@
 ---
 # See http://mumble-ruby-pluginbot.readthedocs.io/en/master/explain_the_config.html for the documentation of this config file.
 
+# IMPORTANT: Please read http://mumble-ruby-pluginbot.rtfd.io/en/devel/explain_the_config.html#default-configuration-and-override-configuration to understand how this override configuration works.
+
 debug: true
 language: en
 
