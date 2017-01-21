@@ -5,7 +5,7 @@
 #export LANG="en_US.UTF-8"
 
 # Read settings for this script
-source $HOME/src/mumble-ruby-pluginbot/scripts/manage.conf
+source $HOME/src/manage.conf
 
 function show_help() {
     cat<<EOF
