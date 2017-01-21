@@ -330,6 +330,9 @@ class MumbleMPD
   def timertick
     ticktime = ( Conf.gvalue("main:timer:ticks") || 3600 )
     while (true==true)
+      Plugin.getlogsize.times do
+        logger Plugin.getlog 
+      end
       sleep(3600/ticktime)
       time = Time.now
       @plugin.each do |plugin|

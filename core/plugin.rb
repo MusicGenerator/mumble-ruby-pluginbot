@@ -3,6 +3,10 @@ class Plugin
     @plugins ||= []
   end
 
+  def initialize
+    @@logger ||= []
+  end
+
   def self.inherited(klass)
     @plugins ||= []
 
@@ -33,6 +37,14 @@ class Plugin
 
   def init(init)
     @@bot = init
+  end
+
+  def self.getlogsize
+    @@logger.length
+  end
+
+  def self.getlog
+    @@logger.shift if @@logger.length >= 1
   end
 
   private
@@ -67,17 +79,7 @@ class Plugin
 
   def logger(logline)
     if Conf.gvalue("debug")
-      logline="#{Time.new.to_s} : #{logline}\n"
-      if Conf.gvalue("main:logfile") == nil
-        puts logline.chomp
-      else
-        written = IO.write(Conf.gvalue("main:logfile"), logline, mode: 'a')
-        if written != logline.length
-          puts "ERROR: Logfile (#{Conf.gvalue("main:logfile")}) is not writeable, logging to stdout instead"
-          puts logline.chomp
-          Conf.svalue("main:logfile", nil) 
-        end
-      end
+      @@logger.push "#{logline} (#{self.class.name})"
     end
   end
 

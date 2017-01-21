@@ -82,6 +82,7 @@ class Mpd < Plugin
       end
 
       @@bot[:mpd].on :song do |current|
+        logger("OK: Playing: #{current.file}")
       end
 
       if Conf.gvalue("plugin:mpd:testpipe") == "true"
@@ -137,8 +138,8 @@ class Mpd < Plugin
                   channelmessage( "#{current.artist} - #{current.title} (#{current.album})") if (Conf.gvalue("main:channel_notify").to_i && 0x80) != 0
                 end
               end
-            lastcurrent = current
-            logger "OK: [displayinfo] updated."
+              lastcurrent = current
+              logger "OK: [displayinfo] updated."
             end
           end
         end
