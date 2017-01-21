@@ -249,11 +249,28 @@ class MumbleMPD
       logger "OK: Primary Bot Setup complete"
       @run = true
 
-      #init local administration port
+
+      #try to find a free port that can opened for remoteui
       if Conf.gvalue("main:remoteui") == true
+        free = 0
+        port = 7799
+        while port > 7749
+          begin
+            test = TCPSocket.new 'localhost', port
+            test.puts "hello"
+            answer= @s.gets
+            test.close
+            logger "INFO: Other Pluginbot on Port #{port} detected" if answer= "MRPB"
+          rescue
+            free=port
+          end
+          port -= 1
+        end
+        logger "INFO: Using Port #{free} for communication with WEBUI"
+        #init local administration port
         Thread.new do
           # Bind Server on localhost! It should not aviable for others!
-          remoteui = TCPServer.new("127.0.0.1" ,7750)
+          remoteui = TCPServer.new("127.0.0.1" ,free)
           Thread.current["user"]=Conf.gvalue("mumble:name")
           Thread.current["process"]="Remote UI"
           logger "INFO: RemoteUI ist started"
@@ -725,8 +742,10 @@ class MumbleMPD
     # first empty Plugin-log because these are older (depends on timertick-time)
     Plugin.getlogsize.times do
       line = Plugin.getlog
-      logline << "#{time} : #{line}\n"
-      @remotelog.push "#{time} : #{line}"
+      if !line.nil?
+        logline << "#{time} : #{line}\n"
+        @remotelog.push "#{time} : #{line}"
+      end
     end
     if message != ""
       logline << "#{time} : #{message}\n"
