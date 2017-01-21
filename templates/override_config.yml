@@ -5,6 +5,7 @@ debug: true
 language: en
 
 main:
+  logfile: "/home/botmaster/logs/bot1.log"
   ducking: false
   automute_if_alone: true
   stop_on_unregistered: true
