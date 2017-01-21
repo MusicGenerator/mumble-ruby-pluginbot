@@ -59,8 +59,6 @@ de:
 
   help:
     internal:            "<br /><span style='color:red;'><b>Interne Befehle</b></span><br />
-                            <b>superpassword+restart</b> Startet den Bot neu.<br />
-                            <b>superpassword+reset</b> Setzt die Einstellungen zur&uuml;ck.<br />
                             <b>%{cc}about</b> Zeigt Informationen &uuml;ber den Bot.<br />
                             <b>%{cc}settings</b> Zeigt momentanen Einstellungen. Nur SuperUser!<br />
                             <b>%{cc}set <i>variable=value</i></b> Setzt einen Variablenwert. Nur SuperUser!<br />
