@@ -252,7 +252,8 @@ class MumbleMPD
       #init local administration port
       if Conf.gvalue("main:remoteui") == true
         Thread.new do
-          remoteui = TCPServer.new(7750)
+          # Bind Server on localhost! It should not aviable for others!
+          remoteui = TCPServer.new("127.0.0.1" ,7750)
           Thread.current["user"]=Conf.gvalue("mumble:name")
           Thread.current["process"]="Remote UI"
           logger "INFO: RemoteUI ist started"
