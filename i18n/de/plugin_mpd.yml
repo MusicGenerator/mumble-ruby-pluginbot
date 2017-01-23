@@ -1,5 +1,8 @@
 de:
   plugin_mpd:
+    mpd_is_buggy:   "<span style='color:red;'>Vorsicht: Diese MPD Version (%{mpdversion}) ist dafür bekannt, Probleme zu verursachen, <a href='http://mumble-ruby-pluginbot.readthedocs.io/en/master/known_problems.html#mpd-versions-that-cause-problems'>siehe hier</a>.<br />
+    Keine Sorge wegen dieser Nachricht, nur superuser bekommen sie.</span>"
+    
     seek:
       ok:           "Jetzt auf Position %{time1}/%{time2}."
       failed:       "Spulen Fehlgeschlagen"

@@ -1,5 +1,8 @@
 en:
   plugin_mpd:
+    mpd_is_buggy:   "<span style='color:red;'>Caution: This MPD version (%{mpdversion}) is known to cause problems, please refer to <a href='http://mumble-ruby-pluginbot.readthedocs.io/en/master/known_problems.html#mpd-versions-that-cause-problems'>here</a>.<br />
+    Don't worry about this message, only you get it because you are a superuser.</span>"
+    
     seek:
       ok:           "Now on position %{time1}/%{time2}."
       failed:       "Seeking failed"

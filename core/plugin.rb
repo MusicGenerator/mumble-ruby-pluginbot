@@ -87,4 +87,40 @@ class Plugin
     end
   end
 
+  def is_banned(userhash)
+    if Conf.gvalue("main:user:banned").nil?
+      return false
+    else
+      if Conf.gvalue("main:user:banned").has_key?("#{userhash}")
+        return true
+      else
+        return false
+      end
+    end
+  end
+
+  def is_superuser(userhash)
+    if Conf.gvalue("main:user:superuser").nil?
+      return false
+    else
+      if Conf.gvalue("main:user:superuser").has_key?("#{userhash}")
+        return true
+      else
+        return false
+      end
+    end
+  end
+
+  def is_whitelisted(userhash)
+    if Conf.gvalue("main:user:whitelisted").nil?
+      return false
+    else
+      if Conf.gvalue("main:user:whitelisted").has_key?("#{userhash}")
+        return true
+      else
+        return false
+      end
+    end
+  end
+
 end

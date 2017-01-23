@@ -206,6 +206,17 @@ class Mpd < Plugin
     h << "<b>#{Conf.gvalue("main:control:string")}mpddecoders</b> - #{I18n.t("plugin_mpd.help.mpddecoders")}<br>"
   end
 
+  def check_buggy_mpd_version
+    mpd_buggy_versions = ["0.19.1", "0.20.1"]
+    mpd_version = @@bot[:mpd].version
+    
+    if mpd_buggy_versions.include?(mpd_version) then
+      return true
+    else
+      return false
+    end
+  end
+
   def handle_chat(msg,message)
     super
 
@@ -213,6 +224,14 @@ class Mpd < Plugin
 
     if message == 'helpmpd'
         privatemessage( help(""))
+    end
+
+    if message == 'version'
+      if is_superuser(msg.userhash)
+        if check_buggy_mpd_version == true
+          privatemessage(I18n.t("plugin_mpd.mpd_is_buggy", :mpdversion => @@bot[:mpd].version))
+        end
+      end
     end
 
     if message == 'seek'
