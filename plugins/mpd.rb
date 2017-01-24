@@ -180,6 +180,7 @@ class Mpd < Plugin
     h << "<b>#{Conf.gvalue("main:control:string")}play first</b> - #{I18n.t("plugin_mpd.help.play_first")}<br>"
     h << "<b>#{Conf.gvalue("main:control:string")}play last</b> - #{I18n.t("plugin_mpd.help.play_last")}<br>"
     h << "<b>#{Conf.gvalue("main:control:string")}play <i>number</i></b> - #{I18n.t("plugin_mpd.help.play_number")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}move <i>position1</i> <i>position2</i></b> - #{I18n.t("plugin_mpd.help.move_track")}<br>"
     h << "<b>#{Conf.gvalue("main:control:string")}songlist</b> - #{I18n.t("plugin_mpd.help.songlist")}<br>"
     h << "<b>#{Conf.gvalue("main:control:string")}playlist <i>id</i></b> - #{I18n.t("plugin_mpd.help.playlist")}<br>"
     h << "<b>#{Conf.gvalue("main:control:string")}save2playlist <i>name</i></b> - #{I18n.t("plugin_mpd.help.save2playlist")}<br>"
@@ -209,7 +210,7 @@ class Mpd < Plugin
   def check_buggy_mpd_version
     mpd_buggy_versions = ["0.19.1", "0.20.1"]
     mpd_version = @@bot[:mpd].version
-    
+
     if mpd_buggy_versions.include?(mpd_version) then
       return true
     else
@@ -351,6 +352,13 @@ class Mpd < Plugin
       rescue
         privatemessage(I18n.t("plugin_mpd.play.empty"))
       end
+    end
+
+    if message.match(/^move [0-9]{1,3} [0-9]{1,3}$/)
+      move_this = message.match(/^move ([0-9]{1,3}) [0-9]{1,3}$/)[1].to_i
+      move_to = message.match(/^move [0-9]{1,3} ([0-9]{1,3})$/)[1].to_i
+
+      @@bot[:mpd].move(move_this, move_to)
     end
 
     if message == 'play last'

@@ -2,7 +2,7 @@ en:
   plugin_mpd:
     mpd_is_buggy:   "<span style='color:red;'>Caution: This MPD version (%{mpdversion}) is known to cause problems, please refer to <a href='http://mumble-ruby-pluginbot.readthedocs.io/en/master/known_problems.html#mpd-versions-that-cause-problems'>here</a>.<br />
     Don't worry about this message, only you get it because you are a superuser.</span>"
-    
+
     seek:
       ok:           "Now on position %{time1}/%{time2}."
       failed:       "Seeking failed"
@@ -116,6 +116,7 @@ en:
       play_first:   "Play the first song in the queue."
       play_last:    "Play the last song in the queue."
       play_number:  "Play title on position <i>number</i> in queue."
+      move_track:   "Moves the song on position1 after the song at position2."
       songlist:     "Print the list of ALL songs in the MPD collection."
       playlist:     "Load the playlist referenced by the id."
       save2playlist: "Append queue into a playlist named 'name'"

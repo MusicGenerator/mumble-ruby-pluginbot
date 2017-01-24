@@ -2,7 +2,7 @@ de:
   plugin_mpd:
     mpd_is_buggy:   "<span style='color:red;'>Vorsicht: Diese MPD Version (%{mpdversion}) ist dafür bekannt, Probleme zu verursachen, <a href='http://mumble-ruby-pluginbot.readthedocs.io/en/master/known_problems.html#mpd-versions-that-cause-problems'>siehe hier</a>.<br />
     Keine Sorge wegen dieser Nachricht, nur superuser bekommen sie.</span>"
-    
+
     seek:
       ok:           "Jetzt auf Position %{time1}/%{time2}."
       failed:       "Spulen Fehlgeschlagen"
@@ -116,6 +116,7 @@ de:
       play_first:   "Den ersten Titel der Liste wiedergeben."
       play_last:    "Den letzten Titel der Liste wiedergeben."
       play_number:  "Spiele Titel auf der Position <i>number</i> in der Wiedergabeliste."
+      move_track:   "Verschiebt das Lied an position1 hinter position2."
       songlist:     "Zeige alle Titel die der Bot in der Datenbank abgelegt hat."
       playlist:     "Lade die Abspielliste mit der angegebenen ID."
       save2playlist: "F&uuml;ge aktuelle Wiedergabeliste in die Abspielliste mit dem Namen 'name' an."

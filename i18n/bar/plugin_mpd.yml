@@ -2,7 +2,7 @@ bar:
   plugin_mpd:
     mpd_is_buggy:   "<span style='color:red;'>Vorsicht: Diese MPD Version (%{mpdversion}) ist dafür bekannt, Probleme zu verursachen, <a href='http://mumble-ruby-pluginbot.readthedocs.io/en/master/known_problems.html#mpd-versions-that-cause-problems'>siehe hier</a>.<br />
     Keine Sorge wegen dieser Nachricht, nur superuser bekommen sie.</span>"
-    
+
     seek:
       ok:           "Aktuell bei %{time1}/%{time2}."
       failed:       "Vieresp&uuml;n geht net"
@@ -116,6 +116,7 @@ bar:
       play_first:   "Den erstn Titl va da Listn sp&uuml;n."
       play_last:    "Den letztn Titl va da Listn sp&uuml;n."
       play_number:  "Sp&uuml;tSpiele Titl af da Position <i>number</i> in da Listn."
+      move_track:   "Verschiebt das Lied an position1 hinter position2."
       songlist:     "Zoagt olle Titl an de da Bot in da Datenbank abgelegt hat."
       playlist:     "Lade de Listn mit der angema ID."
       save2playlist: "Dua die Listn in de andere Listn mit dem Nam 'name' dazuspeichan."
