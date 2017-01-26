@@ -369,7 +369,13 @@ class MumbleMPD
   def handle_text_message(msg)
     if msg.actor
       msg.username    = @cli.users[msg.actor].name
-      msg.userhash    = @cli.users[msg.actor].hash.to_sym
+
+      if @cli.users[msg.actor].hash.nil?
+        msg.userhash = "0"
+      else
+        msg.userhash = @cli.users[msg.actor].hash.to_sym
+      end
+
       msg.user_id     = @cli.users[msg.actor].user_id
       msg.channel_id  = @cli.users[msg.actor].channel_id
       # else ignore text messages from the server
@@ -530,7 +536,11 @@ class MumbleMPD
 
                   # Test whether the given user exists currently on the server
                   if @cli.find_user(targetuser_name)
-                    targetuser_hash = @cli.find_user(targetuser_name).hash.to_sym
+                    if @cli.find_user(targetuser_name).hash.nil?
+                      targetuser_hash = "0"
+                    else
+                      targetuser_hash = @cli.find_user(targetuser_name).hash.to_sym
+                    end
 
                     Conf.svalue("main:user:banned:#{targetuser_hash}", "#{targetuser_name}")
                     @cli.text_user(msg.actor, I18n.t("ban.active"))
