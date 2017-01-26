@@ -479,6 +479,7 @@ class MumbleMPD
                 # Show settings
                 if  message == 'settings'
                   @cli.text_user(msg.actor, hash_to_table(Conf.get))
+                  @cli.text_user(msg.actor, "See <a href='http://mumble-ruby-pluginbot.readthedocs.io/en/master/explain_the_config.html'>here</a> for the settings documentation.")
                 end
                 # Modify settings
                 if message.split[0] == 'set'
