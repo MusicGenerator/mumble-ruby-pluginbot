@@ -679,40 +679,17 @@ class MumbleMPD
   end
 
   def is_banned(userhash)
-    if Conf.gvalue("main:user:banned").nil?
-      return false
-    else
-      if Conf.gvalue("main:user:banned").has_key?("#{userhash}")
-        return true
-      else
-        return false
-      end
-    end
+    Conf.gvalue("main:user:banned").nil? ? false : Conf.gvalue("main:user:banned").has_key?("#{userhash}")
   end
 
   def is_superuser(userhash)
-    if Conf.gvalue("main:user:superuser").nil?
-      return false
-    else
-      if Conf.gvalue("main:user:superuser").has_key?("#{userhash}")
-        return true
-      else
-        return false
-      end
-    end
+    Conf.gvalue("main:user:superuser").nil? ? false : Conf.gvalue("main:user:superuser").has_key?("#{userhash}")
   end
 
   def is_whitelisted(userhash)
-    if Conf.gvalue("main:user:whitelisted").nil?
-      return false
-    else
-      if Conf.gvalue("main:user:whitelisted").has_key?("#{userhash}")
-        return true
-      else
-        return false
-      end
-    end
+    Conf.gvalue("main:user:whitelisted").nil? ? false : Conf.gvalue("main:user:whitelisted").has_key?("#{userhash}")
   end
+
 
   def hash_to_table(hash)
     if !hash.kind_of?(Hash)
