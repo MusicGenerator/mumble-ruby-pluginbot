@@ -17,22 +17,21 @@ def command_bot(command, port=7750)
   out.force_encoding('utf-8')
 end
 
-def table_config_users(config,parent,out)
+def table_config_users(config,parent)
   config.each do |key, value|
     if value.is_a?(Hash) then
-      table_config_users(value,"#{parent}:#{key}",out)
+      table_config_users(value,"#{parent}:#{key}")
     else
       if parent.include? "user"
         userstring = parent.split(':')
-        certhash = userstring.pop
         type = userstring.pop
+        blah = userstring.pop
         puts "
-          <tr id='tu#{type}'>
-            <td>#{certhash}</td>
-            <td><img src='/img/#{type}.png'></td>
-            <td>#{key}</td>
-            <td><button value='#{key}' onclick=\"javascript:deluser('#{parent}')\">delete</button></td>
-            <td></td>
+          <tr class='tu#{type}'>
+            <td class='certificate'>#{key}</td>
+            <td class='usertype'><img class='usericon' src='/img/#{type}.png'></td>
+            <td class='username'>#{value}</td>
+            <td class='actionselect'><button class='userdelete' value='#{key}' onclick=\"javascript:deluser('#{parent}:#{key}')\">delete</button></td>
           </tr>"
       end
     end
@@ -44,11 +43,11 @@ def table_server_users(users)
     hash=user.split('|')[0]
     name=user.split('|')[1..-1].join
     puts "
-    <tr class='user'>
-      <td>#{hash}</td>
-      <td></td>
-      <td>#{name}</td>
-      <td><select name='user' onchange=\"javascript:userdrop(this);\">
+    <tr class='tuserveruser'>
+      <td class='certificate'>#{hash}</td>
+      <td class='usertype'><img class='usericon' src=\"/img/user.png\"></td>
+      <td class='username'>#{name}</td>
+      <td class='actionselect'><select class= 'select' name='user' onchange=\"javascript:userdrop(this);\">
         <option value=''>choose</option>
         <option value='suadd=#{hash}:#{name}'>SuperUser</option>
         <option value='ubann=#{hash}:#{name}'>ban</option>
@@ -130,10 +129,11 @@ params = cgi.params
 
 tableuser = '
 <table class="legend">
-  <tr><th>User</th><th>Symbol</th></tr>
-  <tr><td>SuperUser</td><td><img src="/img/superuser.png"></td></tr>
-  <tr><td>Whitelisted</td><td><img src="/img/whitelisted.png"></td></tr>
-  <tr><td>Banned User</td><td><img src="/img/banned.png"></td></tr>
+  <tr><th></th><th>Legend:</th></tr>
+  <tr class="tusuperuser"><td><img src="/img/superuser.png"></td><td>SuperUser</td></tr>
+  <tr class="tuwhitelisted"><td><img src="/img/whitelisted.png"></td><td>Whitelisted</td></tr>
+  <tr class="tubanned"><td><img src="/img/banned.png"></td><td>Banned User</td></tr>
+  <tr class="tuserveruser"><td><img src="/img/user.png"></td><td>User is on Server</td></tr>
 </table>
 <table class="userlist">
   <tr>
@@ -163,7 +163,7 @@ if params != {}
   if cgi.has_key?('getconfigusers')
     load_personal_config
     puts "#{tableuser}"
-    table_config_users(Conf.get,'','')
+    table_config_users(Conf.get,'')
     table_server_users(command_bot("userhashes",port))
     puts "#{tableend}"
   end
@@ -186,15 +186,15 @@ if params != {}
         out << "<span class\"log_time}\">#{columns[0..2].join}</span>\n"
         case columns[3].to_s
         when " OK"
-          out << "<span class\"log_status_ok\">"
+          out << "<span class=\"log_status_ok\">"
         when " ERROR"
-          out << "<span class\"log_status_error\">"
+          out << "<span class=\"log_status_error\">"
         when " DEBUG"
-          out << "<span class\"log_status_debug\">"
+          out << "<span class=\"log_status_debug\">"
         when " INFO"
-          out << "<span class\"log_status_info\">"
+          out << "<span class=\"log_status_info\">"
         else
-          out << "<span class\"log_status_else\">"
+          out << "<span class=\"log_status_else\">"
         end
         out << "#{columns[3]}</span>\n"
         out << "<span class=\"log_status_message\">#{columns[4..-1].join}</span><br>\n"
@@ -207,7 +207,7 @@ if params != {}
 
   if cgi.has_key?('suadd')
     load_personal_config
-    Conf.svalue("main:user:superuser:#{cgi['suadd']}","")
+    Conf.svalue("main:user:superuser:#{cgi['suadd'].split(":")[0]}","#{cgi['suadd'].split(":")[1]}")
     begin
       diff = Conf.get.clone
       File.open("../../bot1_conf.yml", 'w') {|f| f.write diff.to_yaml }
@@ -219,7 +219,7 @@ if params != {}
 
   if cgi.has_key?('ubann')
     load_personal_config
-    Conf.svalue("main:user:banned:#{cgi['ubann']}","")
+    Conf.svalue("main:user:banned:#{cgi['ubann'].split(":")[0]}","#{cgi['ubann'].split(":")[1]}")
     begin
       diff = Conf.get.clone
       File.open("../../bot1_conf.yml", 'w') {|f| f.write diff.to_yaml }
@@ -231,7 +231,7 @@ if params != {}
 
   if cgi.has_key?('white')
     load_personal_config
-    Conf.svalue("main:user:whitelisted:#{cgi['white']}","")
+    Conf.svalue("main:user:whitelisted:#{cgi['white'].split(":")[0]}","#{cgi['white'].split(":")[1]}")
     begin
       diff = Conf.get.clone
       File.open("../../bot1_conf.yml", 'w') {|f| f.write diff.to_yaml }

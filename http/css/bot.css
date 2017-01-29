@@ -71,6 +71,43 @@
 	color: grey;
 }
 
+.userlist {
+	width: 100%;
+}
+.certificate {
+	font-family: monospace;
+}
+.usertype {
+	width: 30px;
+	align-content: center;
+}
+.username {
+	width: 300px;
+}
+.usericon {
+	margin: 4px 4px 4px 4px;
+}
+.actionselect {
+	width: 150px;
+	height: 30px;
+}
+.tuserveruser {
+	background-color: #ccccff;
+	height: 30px;
+}
+.tusuperuser {
+	background-color: #ffcccc;
+	height: 30px;
+}
+.tuwhitelisted {
+	background-color: #ccffcc;
+	height: 30px;
+}
+
+.tubanned {
+	background-color: #cccccc;
+	height: 30px;
+}
 .page {
 	display: none;
 	overflow:scroll;
