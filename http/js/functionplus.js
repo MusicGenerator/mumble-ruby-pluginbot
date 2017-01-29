@@ -29,6 +29,9 @@ function sendXhr (uri, id) {
           element.innerHTML = xhr.responseText;
           element.scrollTop = element.scrollHeight;
         }
+        if (id=="configuration") {
+          collapse_tree();
+        }
       }
     }
   );
@@ -62,12 +65,6 @@ function adduser(key) {
   var send = "prozess.rb?"+key;
   sendXhr(send);
   setTimeout(function() {sendXhr('prozess.rb?getconfigusers=true', 'configuser');},1000);
-}
-
-function banuser(key) {
-  var send = "prozess.rb?ubann="+key;
-  sendXhr(send);
-  setTimeout(function() {sendXhr('prozess.rb?getbannedusers=true', 'configbanneduser');},1000);
 }
 
 function showPanel(id) {
@@ -111,6 +108,9 @@ function post(form) {
   }
 }
 
+function userdrop(change){
+  adduser(change.value);
+}
 
 function start() {
   GetLogFile();

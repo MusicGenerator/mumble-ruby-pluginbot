@@ -48,9 +48,12 @@ def table_server_users(users)
       <td>#{hash}</td>
       <td></td>
       <td>#{name}</td>
-      <td><button id='#{user}' value='#{hash}' onclick=\"javascript:adduser('suadd=#{hash}:#{name}')\">SU</button></td>
-      <td><button id='#{user}' value='#{hash}' onclick=\"javascript:adduser('ubann=#{hash}:#{name}')\">ban</button></td>
-      <td><button id='#{user}' value='#{hash}' onclick=\"javascript:adduser('white=#{hash}:#{name}')\">whitelist</button></td>
+      <td><select name='user' onchange=\"javascript:userdrop(this);\">
+        <option value=''>choose</option>
+        <option value='suadd=#{hash}:#{name}'>SuperUser</option>
+        <option value='ubann=#{hash}:#{name}'>ban</option>
+        <option value='white=#{hash}:#{name}'>whitelist</option>
+      </select></td>
     </tr>"
   end
 end
@@ -125,25 +128,19 @@ cgi = CGI.new
 params = cgi.params
 
 
-tableserveruser = '
-<table>
+tableuser = '
+<table class="legend">
+  <tr><th>User</th><th>Symbol</th></tr>
+  <tr><td>SuperUser</td><td><img src="/img/superuser.png"></td></tr>
+  <tr><td>Whitelisted</td><td><img src="/img/whitelisted.png"></td></tr>
+  <tr><td>Banned User</td><td><img src="/img/banned.png"></td></tr>
+</table>
+<table class="userlist">
   <tr>
     <th id=\"cert-hash\">Cert-Hash</th>
     <th>Type</th>
     <th id=\"username\">Name</th>
-    <th id=\"checkbox\">SuperUser</th>
-    <th id=\"checkbox\">Ban</th>
-    <th id=\"checkbox\">Whitelist</th>
-  </tr>
-'
-tableconfiguser = '
-<table>
-  <tr>
-    <th id=\"cert-hash\">Cert-Hash</th>
-    <th>Type</th>
-    <th id=\"username\">Name</th>
-    <th id=\"checkbox\">delete</th>
-    <th id=\"checkbox\"></th>
+    <th id=\"checkbox\">Action</th>
   </tr>
 '
 tableend = '</table>'
@@ -162,23 +159,12 @@ if params != {}
     puts "<form action=\"save.rb\" method=\"post\">#{p_input(Conf.get,"","")}<input type=\"submit\" id=\"submit\" class=\"submit\"></form>"
   end
 
-  if cgi.has_key?('getserverusers')
-    puts "#{tableserveruser}"
-    table_server_users(command_bot("userhashes",port))
-    puts "#{tableend}"
-  end
-
-  if cgi.has_key?("getbannedusers")
-    load_personal_config
-    puts "#{tableconfiguser}"
-    table_config_users(Conf.get,'','banned','')
-    puts "#{tableend}"
-  end
 
   if cgi.has_key?('getconfigusers')
     load_personal_config
-    puts "#{tableconfiguser}"
+    puts "#{tableuser}"
     table_config_users(Conf.get,'','')
+    table_server_users(command_bot("userhashes",port))
     puts "#{tableend}"
   end
 

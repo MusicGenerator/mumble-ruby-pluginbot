@@ -16,9 +16,8 @@
     <div class="screen">
     <div class="leftmenu">
       <button class="menubutton" onclick="javascript:showPanel('activelog');">Log</button><br>
-      <button class="menubutton" onclick="javascript:showPanel('serveruser');">User on Server</button><br>
-      <button class="menubutton" onclick="javascript:showPanel('configuser');">User in Config</button><br>
-      <button class="menubutton" onclick="javascript:showPanel('editconfig');">Edit Configuration</button><br>
+      <button class="menubutton" onclick="javascript:showPanel('configuser');">Manage Users</button><br>
+      <button class="menubutton" onclick="sendXhr('prozess.rb?showconfig=true', 'configuration'); javascript:showPanel('editconfig');">Edit Configuration</button><br>
       <button class="menubutton" onclick="javascript:command('stop')">Restart</button><br>
       <p>Choose Bot</p>
       <fieldset>
