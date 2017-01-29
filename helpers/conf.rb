@@ -49,7 +49,11 @@ module Conf
   end
 
   def Conf.delkey(del)
-    @@configuration.delete(del)
+    path = del.split(':')
+    key = path.pop
+    path.shift
+    path.inject(@@configuration) {|h, element| h[element]}.delete(key)
+    return @@configuration
   end
 
   def Conf.load(file)

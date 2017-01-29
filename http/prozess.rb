@@ -3,10 +3,10 @@ require "socket"
 require_relative "../helpers/conf.rb"
 
 
-def command_bot(command)
+def command_bot(command, port=7750)
   users = ""
   begin
-    @s = TCPSocket.new 'localhost', 7750
+    @s = TCPSocket.new 'localhost', port
     @s.puts command
     out= @s.gets
     @s.close
@@ -17,18 +17,21 @@ def command_bot(command)
   out.force_encoding('utf-8')
 end
 
-def table_config_users(config,parent,user,out)
+def table_config_users(config,parent,out)
   config.each do |key, value|
     if value.is_a?(Hash) then
-      table_config_users(value,"#{parent}:#{key}",user,out)
+      table_config_users(value,"#{parent}:#{key}",out)
     else
-      if parent.include? user
+      if parent.include? "user"
+        userstring = parent.split(':')
+        certhash = userstring.pop
+        type = userstring.pop
         puts "
-          <tr id='tu#{user}'>
+          <tr id='tu#{type}'>
+            <td>#{certhash}</td>
+            <td><img src='/img/#{type}.png'></td>
             <td>#{key}</td>
-            <td>#{user}</td>
-            <td>#{value}</td>
-            <td><button id='#{user}' value='#{key}' onclick=\"javascript:deluser('#{parent}#{key}')\">delete</button></td>
+            <td><button value='#{key}' onclick=\"javascript:deluser('#{parent}')\">delete</button></td>
             <td></td>
           </tr>"
       end
@@ -45,8 +48,9 @@ def table_server_users(users)
       <td>#{hash}</td>
       <td></td>
       <td>#{name}</td>
-      <td><button id='#{user}' value='#{hash}' onclick=\"javascript:adduser('#{hash}:#{name}')\">SU</button></td>
-      <td><button id='#{user}' value='#{hash}' onclick=\"javascript:banuser('#{hash}:#{name}')\">ban</button></td>
+      <td><button id='#{user}' value='#{hash}' onclick=\"javascript:adduser('suadd=#{hash}:#{name}')\">SU</button></td>
+      <td><button id='#{user}' value='#{hash}' onclick=\"javascript:adduser('ubann=#{hash}:#{name}')\">ban</button></td>
+      <td><button id='#{user}' value='#{hash}' onclick=\"javascript:adduser('white=#{hash}:#{name}')\">whitelist</button></td>
     </tr>"
   end
 end
@@ -99,8 +103,23 @@ def load_personal_config
   end
 end
 
+def find_bot_port
+  port = 7750 #Start at Standard Port.
+  while port < 7800
+    begin
+      test = TCPSocket.new 'localhost', port
+      test.puts "hello"
+      @port.push(port) if test.gets == "mrpb"
+      test.close
+    rescue
+    end
+    port += 1
+  end
+  @port.length
+end
 
 @error = ""
+@port = []
 out = ""
 cgi = CGI.new
 params = cgi.params
@@ -113,7 +132,8 @@ tableserveruser = '
     <th>Type</th>
     <th id=\"username\">Name</th>
     <th id=\"checkbox\">SuperUser</th>
-    <th id=\"checkbox\">bann</th>
+    <th id=\"checkbox\">Ban</th>
+    <th id=\"checkbox\">Whitelist</th>
   </tr>
 '
 tableconfiguser = '
@@ -129,75 +149,122 @@ tableconfiguser = '
 tableend = '</table>'
 
 if params != {}
-  params.each do |key, value|
-    cmd = key.to_s
-    case cmd
-    when "showconfig"
-      load_main_config
-      load_personal_config
-      puts "<h2 onclick='collapse_tree()'>Settings</h2><ul><li>#{p_tree(Conf.get,"","")}</ul></li>"
+  cgi.has_key?('port') ? port = cgi.params["port"].join.to_i : port=7750
+  if cgi.has_key?('showconfig')
+    load_main_config
+    load_personal_config
+    puts "<h2 onclick='collapse_tree()'>Settings</h2><ul><li>#{p_tree(Conf.get,"","")}</ul></li>"
+  end
 
-    when "getedits"
-      load_main_config
-      load_personal_config
-      puts "<form action=\"save.rb\" method=\"post\">#{p_input(Conf.get,"","")}<input type=\"submit\" id=\"submit\" class=\"submit\"></form>"
+  if cgi.has_key?('getedits')
+    load_main_config
+    load_personal_config
+    puts "<form action=\"save.rb\" method=\"post\">#{p_input(Conf.get,"","")}<input type=\"submit\" id=\"submit\" class=\"submit\"></form>"
+  end
 
-    when "getserverusers"
-      puts "#{tableserveruser}"
-      table_server_users(command_bot("userhashes"))
-      puts "#{tableend}"
+  if cgi.has_key?('getserverusers')
+    puts "#{tableserveruser}"
+    table_server_users(command_bot("userhashes",port))
+    puts "#{tableend}"
+  end
 
-    when "getbannedusers"
-      load_personal_config
-      puts "#{tableconfiguser}"
-      table_config_users(Conf.get,'','banneduser','')
-      puts "#{tableend}"
+  if cgi.has_key?("getbannedusers")
+    load_personal_config
+    puts "#{tableconfiguser}"
+    table_config_users(Conf.get,'','banned','')
+    puts "#{tableend}"
+  end
 
-    when "getsuperusers"
-        load_personal_config
-        puts "#{tableconfiguser}"
-        table_config_users(Conf.get,'','superuser','')
-        puts "#{tableend}"
+  if cgi.has_key?('getconfigusers')
+    load_personal_config
+    puts "#{tableconfiguser}"
+    table_config_users(Conf.get,'','')
+    puts "#{tableend}"
+  end
 
-    when "command"
-      if value == "logfile"
-        puts command_bot(value)
-      else
-        out = command_bot(value)
-        lines = out.split("<br>")
-        out =""
-        lines.each do |line|
-          columns=line.split(":")
-          out << "<span class=\"log_time\">#{columns[0..2].join}</span>\n"
-          case columns[3].to_s
-          when " OK"
-            out << "<span class=\"log_status_ok\">"
-          when " INFO"
-            out << "<span class=\"log_status_info\">"
-          when " ERROR"
-            out << "<span class=\"log_status_error\">"
-          when " DEBUG"
-            out << "<span class=\"log_status_debug\">"
-          else
-            out << "<span class=\"log_status_else\">"
-          end
-          out << "#{columns[3]}</span>\n"
-          out << "<span class=\"log_status_message\">#{columns[4..-1].join}</span><br>\n"
+  if cgi.has_key?('command')
+    case cgi['command']
+    when "getports"
+      find_bot_port
+      @port.each do |port|
+        puts "<input type=\"radio\" id=\"botselect\" name=\"#{port}\" value=\"#{port}\">"
+        puts "<label for=\"#{port}\">BotPort:#{port}</label>"
+      end
+
+    when "logfile"
+
+      lines = command_bot("logfile",port).split("<br>")
+      out = ""
+      lines.each do |line|
+        columns= line.split(":")
+        out << "<span class\"log_time}\">#{columns[0..2].join}</span>\n"
+        case columns[3].to_s
+        when " OK"
+          out << "<span class\"log_status_ok\">"
+        when " ERROR"
+          out << "<span class\"log_status_error\">"
+        when " DEBUG"
+          out << "<span class\"log_status_debug\">"
+        when " INFO"
+          out << "<span class\"log_status_info\">"
+        else
+          out << "<span class\"log_status_else\">"
         end
+        out << "#{columns[3]}</span>\n"
+        out << "<span class=\"log_status_message\">#{columns[4..-1].join}</span><br>\n"
       end
       puts out
-
-
     else
-      load_personal_config
-      Conf.svalue("main:user:superuser:#{value.join}",key[6..-1]) if key[0..4] == "suadd"
-      Conf.svalue("main:user:banned:#{value.join}",key[6..-1]) if key[0..4] == "ubann"
-      Conf.delkey(value.join) if key[0..4]=="delete"
-      begin
-        File.open("../../bot1_conf.yml", 'w') {|f| f.write diff.to_yaml }
-      rescue
-        @error << "Warning: Configuration-File is not writeable!<br>"
-      end
+      command_bot(cgi['command'],port)
     end
   end
+
+  if cgi.has_key?('suadd')
+    load_personal_config
+    Conf.svalue("main:user:superuser:#{cgi['suadd']}","")
+    begin
+      diff = Conf.get.clone
+      File.open("../../bot1_conf.yml", 'w') {|f| f.write diff.to_yaml }
+    rescue
+      puts "Warning: Configuration-File is not writeable!<br>"
+    end
+    puts "suadd"
+  end
+
+  if cgi.has_key?('ubann')
+    load_personal_config
+    Conf.svalue("main:user:banned:#{cgi['ubann']}","")
+    begin
+      diff = Conf.get.clone
+      File.open("../../bot1_conf.yml", 'w') {|f| f.write diff.to_yaml }
+    rescue
+      puts "Warning: Configuration-File is not writeable!<br>"
+    end
+    puts "ubann"
+  end
+
+  if cgi.has_key?('white')
+    load_personal_config
+    Conf.svalue("main:user:whitelisted:#{cgi['white']}","")
+    begin
+      diff = Conf.get.clone
+      File.open("../../bot1_conf.yml", 'w') {|f| f.write diff.to_yaml }
+    rescue
+      puts "Warning: Configuration-File is not writeable!<br>"
+    end
+    puts "white"
+  end
+
+  if cgi.has_key?('delete')
+    load_personal_config
+    Conf.delkey(cgi['delete'])
+    begin
+      diff = Conf.get.clone
+      File.open("../../bot1_conf.yml", 'w') {|f| f.write diff.to_yaml }
+    rescue
+      puts "Warning: Configuration-File is not writeable!<br>"
+    end
+    puts "done"
+  end
+
 end

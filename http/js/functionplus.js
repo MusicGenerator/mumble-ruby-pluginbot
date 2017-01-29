@@ -36,9 +36,14 @@ function sendXhr (uri, id) {
 }
 
 function GetLogFile () {
+  sendXhr('prozess.rb?command=getports', 'messages');
   x = document.getElementById('activelog')
   if ( x.style.display == "block" ) {
-    sendXhr ('prozess.rb?command=logfile', 'activelog');
+    var value = 7751
+    if (document.getElementById('botselect').checked) {
+      value = document.getElementById('botselect').value
+    }
+    sendXhr ('prozess.rb?command=logfile&port='+value, 'activelog');
   }
   setTimeout(GetLogFile, 1000);
 }
@@ -48,18 +53,21 @@ function toggle(id) {
 }
 
 function deluser(key) {
-  alert(key);
+  var send = "prozess.rb?delete="+key;
+  var status = sendXhr(send);
+  setTimeout(function() {sendXhr('prozess.rb?getconfigusers=true', 'configuser');},1000);
 }
+
 function adduser(key) {
-  var send = "process.rb?suadd="+key;
-  alert(send)
+  var send = "prozess.rb?"+key;
   sendXhr(send);
+  setTimeout(function() {sendXhr('prozess.rb?getconfigusers=true', 'configuser');},1000);
 }
 
 function banuser(key) {
-  var send = "process.rb?ubann="+key;
-  alert(send);
+  var send = "prozess.rb?ubann="+key;
   sendXhr(send);
+  setTimeout(function() {sendXhr('prozess.rb?getbannedusers=true', 'configbanneduser');},1000);
 }
 
 function showPanel(id) {
@@ -89,7 +97,12 @@ function hide(id) {
 }
 
 function command(command) {
-  sendXhr('prozess.rb?command=stop', 'messages')
+  var value = 7751
+  if (document.getElementById('botselect').checked) {
+    value = document.getElementById('botselect').value
+  }
+  alert(value+command)
+  sendXhr('prozess.rb?command='+command+'&port='+value, 'messages')
 }
 
 function post(form) {
@@ -102,8 +115,7 @@ function post(form) {
 function start() {
   GetLogFile();
   sendXhr('prozess.rb?getserverusers=true', 'serveruser');
-  sendXhr('prozess.rb?getsuperusers=true', 'configsuperuser');
-  sendXhr('prozess.rb?getbannedusers=true', 'configbanneduser');
+  sendXhr('prozess.rb?getconfigusers=true', 'configuser');
   sendXhr('prozess.rb?getedits=true', 'editfield');
   sendXhr('prozess.rb?showconfig=true', 'configuration');
   var i;

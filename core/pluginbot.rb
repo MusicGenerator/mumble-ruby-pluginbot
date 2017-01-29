@@ -258,9 +258,8 @@ class MumbleMPD
           begin
             test = TCPSocket.new 'localhost', port
             test.puts "hello"
-            answer= @s.gets
+            logger "INFO: Other Pluginbot on Port #{port} detected" if test.gets== "mrpb"
             test.close
-            logger "INFO: Other Pluginbot on Port #{port} detected" if answer= "MRPB"
           rescue
             free=port
           end
@@ -798,6 +797,8 @@ class MumbleMPD
         out << "#{line}<br>"
       end
       out
+    when "hello"
+      "mrpb"
     else
       # ping answer
       command
