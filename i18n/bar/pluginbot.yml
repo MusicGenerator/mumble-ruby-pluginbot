@@ -79,8 +79,11 @@ bar:
 
     default:              "<br />\
                             Hallo ich bin ein <a href='http://mumble-ruby-pluginbot.rtfd.org/'>Mumble-Ruby-Pluginbot</a> und DU kannst mich mit Textkommandos steuern.<br /><br />
-                            Benutze folgendes Kommando um meine Bedienung kennenzulernen:<br />\
+                            Eine Anleitung für meine Benutzung gibt es online, siehe <a href='http://mumble-ruby-pluginbot.readthedocs.io/en/master/usage.html'>hier</a>.<br /><br />
+                            Benutze folgende Kommandos um meine Bedienung kennenzulernen:<br />\
                             <b>%{cc}help mpd</b><br />
+                            und <br />
+                            <b>%{cc}help control</b><br />
                             <br />\
                             N&auml;here Informationen &uuml;ber mich erh&auml;ltst Du mit:<br />\
                             <b>%{cc}about</b><br />\
