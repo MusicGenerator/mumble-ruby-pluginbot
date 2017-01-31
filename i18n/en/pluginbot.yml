@@ -77,8 +77,11 @@ en:
                             <b>%{cc}plugins</b> - Shows activated plugins.<br />"
     default:              "<br />\
                             Hi, I am a <a href='http://mumble-ruby-pluginbot.rtfd.org/'>Mumble-Ruby-Pluginbot</a> and YOU can control me through text commands.<br /><br />
-                            I will give you a good start with the basic commands you need to control the music I have to offer :) - if you send me the following command:<br />\
+                            A tutorial how to control me is available online, see <a href='http://mumble-ruby-pluginbot.readthedocs.io/en/master/usage.html'>here</a>.<br /><br />
+                            Though I will give you a good start with the basic commands you need to control the music I have to offer :) - if you send me the following commands:<br />\
                             <b>%{cc}help mpd</b><br />
+                            and <br />
+                            <b>%{cc}help control</b><br />
                             <br />\
                             If you are more interested in who/what I am, send to me:<br />\
                             <b>%{cc}about</b><br />\
