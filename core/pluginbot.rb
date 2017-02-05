@@ -37,7 +37,6 @@ class MumbleMPD
       earlylog "OK: Plugin \"#{f}\" loaded."
     end
     @plugin = Array.new
-    @set_private = Hash.new()
     #Initialize default values
     #Read config file if available
     begin
@@ -290,8 +289,6 @@ class MumbleMPD
         end
       end
       #init all plugins
-      #init = @settings.clone
-      #init = Conf.get.clone       # Compatibility mode
       init = Hash.new           # New Method! (Breaks compatibility with old plugins)
       init[:cli] = @cli
 
