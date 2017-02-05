@@ -191,6 +191,7 @@ class Mpd < Plugin
     h << "<b>#{Conf.gvalue("main:control:string")}playlists</b> - #{I18n.t("plugin_mpd.help.playlists")}<br>"
     h << "<b>#{Conf.gvalue("main:control:string")}add <i>searchstring</i></b> - #{I18n.t("plugin_mpd.help.searchstring")}<br>"
     h << "<b>#{Conf.gvalue("main:control:string")}delete <i>ID</i></b> - #{I18n.t("plugin_mpd.help.delete", :controlstring => Conf.gvalue("main:control:string"))}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}queueunify- #{I18n.t("plugin_mpd.help.queueunify", :controlstring => Conf.gvalue("main:control:string"))}<br>"
     h << "<b>#{Conf.gvalue("main:control:string")}where <i>searchstring</i></b> - #{I18n.t("plugin_mpd.help.where")}<br>"
     h << "<b>#{Conf.gvalue("main:control:string")}queue</b> - #{I18n.t("plugin_mpd.help.queue")}<br>"
     h << "<b>#{Conf.gvalue("main:control:string")}stats</b> - #{I18n.t("plugin_mpd.help.stats")}<br>"
