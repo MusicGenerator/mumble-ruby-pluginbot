@@ -21,6 +21,8 @@ en:
 
     queue:
       empty:        "The queue is empty."
+      no_doubles_deleted: "no double entries found."
+      doubles_deleted: "double entries deleted."
 
     replaceplaylist:
       ok:           "Songs saved in playlist \"%{name}\"."

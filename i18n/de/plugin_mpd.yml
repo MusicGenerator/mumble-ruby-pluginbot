@@ -21,6 +21,8 @@ de:
 
     queue:
       empty:        "Die Abspielliste ist leer."
+      no_doubles_deleted: "Keine Dubletten gefunden."
+      doubles_deleted: "Dubletten entfernt"
 
     replaceplaylist:
       ok:           "Titel in der Abspielliste \"%{name}\" gespeichert."

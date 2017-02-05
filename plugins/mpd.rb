@@ -435,6 +435,20 @@ class Mpd < Plugin
       privatemessage( text_out)
     end
 
+    if message == 'queueunify'
+      text_out = I18n.t("plugin_mpd.queue.no_doubles_deleted")
+      queue = @@bot[:mpd].queue
+      queue.each do |check|
+        @@bot[:mpd].queue.each do |song|
+          if song.file==check.file && song.id != check.id
+            text_out = I18n.t("plugin_mpd.queue.doubles_deleted")
+            @@bot[:mpd].delete (song.pos)
+          end
+        end
+      end
+      privatemessage(text_out)
+    end
+
     if message[0,15] == 'replaceplaylist'
       name = message.gsub("replaceplaylist", "").lstrip
       if name != ""
