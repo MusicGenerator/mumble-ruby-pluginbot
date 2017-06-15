@@ -4,8 +4,15 @@
 ### Also make sure that the locale it is activated in /etc/locale.gen
 #export LANG="en_US.UTF-8"
 
+MANAGE_SCRIPT_SETTINGS_FILE="$HOME/src/manage.conf"
+
 # Read settings for this script
-source $HOME/src/manage.conf
+if [ -f "${MANAGE_SCRIPT_SETTINGS_FILE}" ]; then
+  source "${MANAGE_SCRIPT_SETTINGS_FILE}"
+else
+  # Start only bot1 as fallback if manage.conf does not exist.
+  BOTS_ENABLED="1"
+fi
 
 function show_help() {
     cat<<EOF
