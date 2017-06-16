@@ -20,6 +20,16 @@
 	width: 299px;
 }
 
+.buttons {
+	margin: 30px;
+}
+.pb {
+	width: 42px;
+	height: 30px;
+}
+.pbico {
+	margin: 0px 0px 0px -10px;
+}
 .maincontent {
 	position: absolute;
 	min-width: 800px;
@@ -34,7 +44,7 @@
 }
 
 .menubutton {
-	width: 250px;
+	width: 230px;
 	height: 50px;
 	color: #000000;
 	background: #80ff80;

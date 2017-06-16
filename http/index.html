@@ -19,6 +19,15 @@
       <button class="menubutton" onclick="javascript:sendXhr('prozess.rb?getconfigusers=true', 'configuser'); javascript:showPanel('configuser');">Manage Users</button><br>
       <button class="menubutton" onclick="javascript:sendXhr('prozess.rb?showconfig=true', 'configuration'); javascript:showPanel('editconfig');">Edit Configuration</button><br>
       <button class="menubutton" onclick="javascript:command('stop')">Restart</button><br>
+      <div class="player">
+        <div class="buttons">
+          <button class="pb" onclick="javascript:command('mpd-last')"><img class="pbico" src="/img/media-rewind.png"></button>
+          <button class="pb" onclick="javascript:command('mpd-pause')"><img class="pbico" src="/img/media-pause.png"></button>
+          <button class="pb" onclick="javascript:command('mpd-play')"><img class="pbico" src="/img/media-play.png"></button>
+          <button class="pb" onclick="javascript:command('mpd-stop')"><img class="pbico" src="/img/media-stop.png"></button>
+          <button class="pb" onclick="javascript:command('mpd-next')"><img class="pbico" src="/img/media-fast-forward.png"></button>
+        </div>
+      </div>
       <p>Choose Bot</p>
       <fieldset>
         <input type="radio" id="botselect" value="7750" name="standard">
