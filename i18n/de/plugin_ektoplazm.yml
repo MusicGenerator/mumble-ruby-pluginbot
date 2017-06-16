@@ -1,0 +1,11 @@
+de:
+  plugin_ektoplazm:
+    inspecting:     "Ektoplazm untersucht %{link} ..."
+    db_update:      "Warte auf Datenbankupdate..."
+    db_update_done: "Datenbankupdate abgeschlossen."
+    badlink:        "Ektoplazm: Keine Songs gefunden."
+    no_ektoplazm:   "Kein Ektoplazm link?"
+
+    help:
+      ektoplazm:        "Versucht Musik von der angegebenen URL herunterzuladen."
+      information:      "Hinweis: Dieses Plugin unterst&uuml;tzt nur ZIP-Dateien. Das bedeutet das nur MP3 oder FLAC Archive geladen werden k&ouml;nnen. WAV-Archive funktionieren nicht."

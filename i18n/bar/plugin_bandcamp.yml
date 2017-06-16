@@ -1,0 +1,11 @@
+bar:
+  plugin_bandcamp:
+    ytdlversion:    "Bandcamp nimmt youtube-dl %{version}"
+    inspecting:     "Bandcamp inschbiziat %{link} ..."
+    db_update:      "Wart af Apdet..."
+    db_update_done: "Apdet gmocht."
+    badlink:        "Bandcamp: Koane Liada gfundn."
+
+    help:
+      bandcamp:     "Pobiert Liada zan owalona. Des ko scheisslangsam geh. Oiso deafst net drawi sei wannst glei mehr wüst! :)"
+      ytdl_version: "Zoagt da de youtube-dl Versionsnumma an."

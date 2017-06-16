@@ -1,0 +1,12 @@
+en:
+  plugin_messages:
+    star:
+      listen:         "You listen to following MPD-Channels:"
+      nolisten:       "You listen to no MPD-Channels"
+
+    help:
+      subscribe:      "Subscribe to a notification."
+      unsubscribe:    "Unsubscribe from a notification."
+      values:         "You can choose one or more of the following values:"
+      list:           "List subscribed notifications."
+      example:        "<b>Example:</b> To get a message when the repeat mode changes send the command \"%{controlstring}+ #repeat\""

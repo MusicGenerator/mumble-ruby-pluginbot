@@ -1,0 +1,11 @@
+bar:
+  plugin_ektoplazm:
+    inspecting:     "Ektoplazm schau %{link} oh."
+    db_update:      "Wart' af'd Datenbank"
+    db_update_done: "Datenbank is ferde."
+    badlink:        "Ektoplazm: Ha nix gscheids gfundn."
+    no_ektoplazm:   "Koa Ektoplazm link?"
+
+    help:
+      ektoplazm:        "Prowiad Musi van Link owazlana."
+      information:      "Obacht! Des Plugin ka netta ZIP-Dateien. Des hoasst das'd netta MP3 oda FLAC Zeig owalona kannst. WAV geht net."

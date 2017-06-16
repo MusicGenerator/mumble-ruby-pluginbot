@@ -2,8 +2,11 @@ class Idle < Plugin
 
   def init(init)
     super
-    logger("INFO: INIT plugin #{self.class.name}.")
-    @@bot[:bot] = self
+    # prevent multible initiation.
+    if @@bot[:idle].nil?
+      logger("INFO: INIT plugin #{self.class.name}.")
+      @@bot[:idle] = self
+    end
     return @@bot
   end
 
@@ -21,41 +24,42 @@ class Idle < Plugin
     if @is_idle == true
       idle_timeframe = (Time.now.getutc - @timestamp_idle_started).to_i
 
-      if (idle_timeframe) >= @@bot["plugin"]["idle"]["maxidletime"]
-        if @@bot["plugin"]["idle"]["idleaction"] == "deafen"
+      if (idle_timeframe) >= Conf.gvalue("plugin:idle:maxidletime").to_i
+        if Conf.gvalue("plugin:idle:idleaction") == "deafen"
           @@bot[:cli].me.deafen true if !@@bot[:cli].me.deafened?
           @is_idle = false
+          logger("DEBUG: maxidletime reached. Deafening self.")
         end
 
-        if @@bot["plugin"]["idle"]["idleaction"] == "channel"
-          @@bot[:cli].join_channel(@@bot["mumble"]["channel"])
+        if Conf.gvalue("plugin:idle:idleaction") == "channel"
+          @@bot[:cli].join_channel(Conf.gvalue("mumble:channel"))
           @is_idle = false
+          logger("DEBUG: maxidletime reached. Switching to mumble:channel.")
         end
       end
     end
   end
 
   def name
-    self.class.name
+    if  !@@bot[:bot].nil?
+      self.class.name
+    end
   end
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}idletime</b> - Show current idle time of the bot.<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}idletime</b> - #{I18n.t "plugin_idle.help.idletime"}<br>"
     h
   end
 
   def handle_chat(msg, message)
     super
     if message == "idletime"
-      status_message = "<br />Maximum idle time is set to: #{@@bot["plugin"]["idle"]["maxidletime"]} seconds.
-                        <br />Idle action is: #{@@bot["plugin"]["idle"]["idleaction"]}."
-
       if @is_idle
         current_idle_time = (Time.now.getutc - @timestamp_idle_started).to_i
-        privatemessage("<br />Current idle time is: #{current_idle_time.to_s} seconds. #{status_message}")
+        privatemessage(I18n.t("plugin_idle.ideling", :ideling => current_idle_time.to_s, :idletime => Conf.gvalue("plugin:idle:maxidletime"), :idleaction => Conf.gvalue("plugin:idle:idleaction")))
       else
-        privatemessage("<br />The bot is currently not idle.#{status_message}")
+        privatemessage(I18n.t("plugin_idle.working", :idletime =>Conf.gvalue("plugin:idle:maxidletime"), :idleaction => Conf.gvalue("plugin:idle:idleaction")))
       end
     end
   end

@@ -1,0 +1,54 @@
+de:
+  plugin_control:
+    status:
+      stopped:    "gestoppt"
+      paused:     "pausiert"
+
+    unreg_enter:  "Ein unregistrierter Benutzer ist im Kanal. Ich habe die Musik %{action}."
+
+    ch:
+      brain:      "Herr Ingineur, ich bin schon im Kanal :)"
+      going:      "Mich hat %{user} freundlich um Musik gebeten. Mache das jetzt. Servus. :)"
+
+    debug:        "Halt! Nicht weitermachen! :)"
+
+    gotobed:
+      error:      "Mir wurde kein Schlafraum zugewiesen. Jetzt muss ich hier bleiben bis mein Admin
+                    in der Konfiguration einen Raum zuteilt. \"mumble -> channel\" "
+
+    follow:
+      newuser:    "Ich folgte bereits jemanden, aber jetzt folge ich dir Meister."
+      user:       "Ich folge dir &uuml;beral hin."
+
+    unfollow:
+      nok:        "Ich folge niemanden."
+      ok:         "Ich höre auf jemanden zu folgen."
+      error:      "%{control}follow wurde noch nicht aufgerufen!"
+
+    stick:
+      sticked:    "Ich bin schon eingesperrt. Neu einsperren..."
+      sticking:   "Du hast mich im Kanal eingesperrt."
+
+    unstick:
+      sticked:    "Ich bin zur Zeit nirgends eingesperrt."
+      free:       "Du hast mich frei gelassen."
+
+    history:
+      command:    "Befehl"
+      user:       "von Benutzer"
+
+    automute:
+      enabled:    "Automute ist jetzt aktiv"
+      disabled:   "Automute ist jetzt inaktiv"
+
+    help:
+      ch:         "Der Bot kommt in deinen Kanal wenn er die Rechte dazu besitzt"
+      debug:      "Testkommando."
+      gotobed:    "Bot wird ins Bett gehen :)"
+      wakeup:     "Weckt den Bot auf."
+      follow:     "Der Bot wird bei dir bleiben."
+      unfollow:   "Dem Bot h&ouml;rt auf dir nachzulaufen."
+      stick:      "Bot im Raum einsperren"
+      unstick:    "Bot aus Raum befreien"
+      history:    "Zeigt die letzten %{historysize} Befehle und Benutzer."
+      automute:   "Schaltet Automute um. Der Bot stellt sich stumm wenn niemand sonst im Raum ist und pausiert die Wiedergabe bis wieder jemand kommt wenn Automute aktiv ist. Dies spart eine Menge Bandbreite! :)"

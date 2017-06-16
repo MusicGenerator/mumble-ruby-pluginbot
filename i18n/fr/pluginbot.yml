@@ -1,0 +1,37 @@
+---
+fr:
+  about: Br
+  command_blacklisted: Mon administrateur a inscrit cette commande dans la liste noire.
+  ban:
+    active: Cette interdiction est active jusqu'à ce que le robot redémarre. Pour
+      permaban ajouter la ligne suivante à votre configuration
+  user:
+    not:
+      found: L'utilisateur% {user} n'a pas été trouvé.
+  ducking:
+    _on: Music ducking est activé.
+    _off: Music ducking est désactivé.
+    volume:
+      settings: Ducking volume est réglé sur% {volume_relative}% du volume normal.
+      set: Ducking est réglé sur% {volume} du volume normal.
+      out_of_range: Le volume de Ducking doit avoir un nombre de 0 à 100
+  bitrate:
+    set: Le codage est défini sur% {bitrate} bit
+    error: Vous avez vraiment besoin du mumble-ruby de dafoxia!
+  bandwidth:
+    set: La largeur de bande globale calculée est% bit {bandwidth}
+    max: Bande passante du serveur autorisée:% {bande passante} bit
+    settings: Br
+  framesize:
+    set: Envoi dans% {framesize} ms frames.
+    error: Vous avez vraiment besoin du mumble-ruby de dafoxia!
+  plugins:
+    loaded:
+      _shead: Br
+      _ehead: "<"
+    general_help: Br
+  jobs:
+    status: "% {Process} est à l'état% {status} pour l'utilisateur% {name}. <br>"
+  help:
+    internal: Br
+    default: Br

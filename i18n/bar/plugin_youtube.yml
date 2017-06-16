@@ -1,0 +1,28 @@
+bar:
+  plugin_youtube:
+    ytdlversion:    "Youtube benutzt youtube-dl %{version}"
+    inspecting:     "Youtube untersucht %{link} ..."
+    db_update:      "Warten auf Datenbankupdate..."
+    db_update_done: "Datenbankupdate abgeschlossen."
+    badlink:        "Youtube: Konnte keine Musik finden."
+    ytstream:
+      added:        "\"%{link}\" zur Wiedergabeliste hinzuge&uuml;gt."
+    yts:
+      search:       "Suche nach \"%{search}\", bitte etwas Geduld..."
+      nofound:      "Suche nicht nach nichts!"
+    yta:
+      download:     "Folgende Titel werden heruntergeladen"
+      id:           "ID: %{id}, Name: \"%{name}\""
+      all:          "Name: \"%{name}\""
+      index_error:  "Youtube: Der angegebene Index liegt ausserhalb des zul&auml;ssigen Bereichs!"
+      times:        "F&uuml;hre %{times} mal durch:"
+      fetchconvert: "Herunterladen und konvertieren"
+      added:        "Hinzugef&uuml;gt"
+      notfound:     "fixme: %{song} nicht gefunden."
+
+    help:
+      ytlink:       "Versucht Musik aus der angegebenen URL holen"
+      yts:          "Durchsucht Youbube nach einem oder mehreren Schl&uuml;sselw&ouml;rtern und zeigt die Ergebnisse an."
+      yta:          "Holt die Musik mit den angebebenen Nummern aus der Liste die du mit <i>%{controlstring}yts</i> angezeigt bekommen hast.<br>Anstatt einzelne Nummern anzugeben kannst du auch mit <b>%{controlstring}yta <i>all</i></b> alle gefundenen Titel holen lassen."
+      ytstream:     "Die Musik wird gestreamt anstatt sie zuerst herunterzuladen. Es kann einige Zeit dauern bis gestartet wird, weil vorher gepuffert werden muss."
+      ytdl_version: "Zeigt die verwendete youbube-dl version an."

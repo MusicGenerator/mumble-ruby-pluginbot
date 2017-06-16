@@ -1,0 +1,11 @@
+de:
+  plugin_bandcamp:
+    ytdlversion:    "Bandcamp benutzt youtube-dl %{version}"
+    inspecting:     "Bandcamp untersucht %{link} ..."
+    db_update:      "Warte auf Datenbankupdate..."
+    db_update_done: "Datenbankupdate abgeschlossen."
+    badlink:        "Bandcamp: Keine Songs gefunden."
+
+    help:
+      bandcamp:     "Versucht Musik aus der angegebenen URL herunterzuladen. Durch Bandbreitenlimitierung kommt es zu langen Wartezeiten. Sei geduldig wenn Du ein ganzes Album anforderst! :)"
+      ytdl_version: "Gibt verwendete youtube-dl version aus."

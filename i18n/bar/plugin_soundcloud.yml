@@ -1,0 +1,11 @@
+bar:
+  plugin_soundcloud:
+    ytdlversion:    "Soundcloud nimmt youtube-dl %{version}"
+    inspecting:     "Soundcloud untersuacht %{link} ..."
+    db_update:      "Wart af Datenbankupdate..."
+    db_update_done: "Datenbankupdate abgschlossn."
+    badlink:        "Soundcloud: Koane Liada gfundn."
+
+    help:
+      soundcloud:   "Versuacht Musik aus da angema URL obazlana."
+      ytdl_version: "Zoagt de verwendte youtube-dl version an."

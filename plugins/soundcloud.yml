@@ -1,13 +1,13 @@
 ---
 
-  
+
 plugin:
   soundcloud:
-    folder: 
+    folder:
       download: downloadedfromsc/
       temp: soundcloudplugin/
     youtube_dl:
       path: "/home/botmaster/src/youtube-dl"
       options: ''
       prefixes: ''
-    to_mp3: 
+    to_mp3: false

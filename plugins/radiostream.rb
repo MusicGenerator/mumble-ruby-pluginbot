@@ -30,15 +30,14 @@ class Radiostream < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}radiostream URL</b> - Will try to forward the radio stream.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}radioupdate</b> - Update internal stationlist<br>" if @xspf == true
-    h << "<b>#{@@bot["main"]["control"]["string"]}radiocategories</b> - Show categories you can search with <b>#{@@bot["main"]["control"]["string"]}radioserach</b><br>" if @xspf == true
-    h << "<b>#{@@bot["main"]["control"]["string"]}radiocategory</b> <i>search</i> - List stations found in category 'search'<br>" if @xspf == true
-    h << "<b>#{@@bot["main"]["control"]["string"]}radioselect</b> <i>search number</i> - Add sation from position 'number' in <b>#{@@bot["main"]["control"]["string"]}radiocategory</b> <i>search</i> to the playqueue<br>" if @xspf == true
-    h << "<b>#{@@bot["main"]["control"]["string"]}choose</b> - Shows a list if remote playlist has more choices. (You will get informed if you can use this command).<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}choose <i>number</i></b> - Choose stream.</b><br><br>"
-    h << "   This module should be able to handle most Radio stream URLs you can find :)<br />"
-    h << "   If you find anything that does not work don't hesitate to create an issue on GitHub."
+    h << "<b>#{Conf.gvalue("main:control:string")}radiostream URL</b> - #{I18n.t("plugin_radiostream.help.radiostream")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}radioupdate</b> - #{I18n.t("plugin_radiostream.help.radioupdate")}<br>" if @xspf == true
+    h << "<b>#{Conf.gvalue("main:control:string")}radiocategories</b> - #{I18n.t("plugin_radiostream.help.radiocategories", :controlstring => Conf.gvalue("main:control:string"))}<br>" if @xspf == true
+    h << "<b>#{Conf.gvalue("main:control:string")}radiocategory</b> <i>search</i> - #{I18n.t("plugin_radiostream.help.radiocategory")}<br>" if @xspf == true
+    h << "<b>#{Conf.gvalue("main:control:string")}radioselect</b> <i>search number</i> - #{I18n.t("plugin_radiostream.help.radioselect", :controlstring => Conf.gvalue("main:control:string"))}<br>" if @xspf == true
+    h << "<b>#{Conf.gvalue("main:control:string")}choose</b> - #{I18n.t("plugin_radiostream.help.choose")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}choose <i>number</i></b> - #{I18n.t("plugin_radiostream.help.choosenumber")}<br>"
+    h << I18n.t("plugin_radiostream.help.info")
   end
 
   def handle_chat(msg, message)
@@ -48,12 +47,12 @@ class Radiostream < Plugin
       @keylist.delete_if { |key| key[:user] == msg.actor }              #delete last search for this user
       Thread.new do
         user = msg.actor
-        Thread.current["user"]=user
+        Thread.current["user"]=msg.username
         Thread.current["process"]="radiostream"
         add_link( link, user )
         results = (@keylist.count { |key| key[:user] == msg.actor })
         if results > 1 then
-          messageto(msg.actor, "There are #{results} results, please choose with choose command")
+          messageto(msg.actor, I18n.t("plugin_radiostream.radiostream.results", :results => results) )
         else
           add = ""
           @keylist.each do |key|
@@ -63,9 +62,9 @@ class Radiostream < Plugin
           end
           if add != "" then
             @@bot[:mpd].add(add)
-            messageto(msg.actor, "Added: #{add}")
+            messageto(msg.actor, I18n.t("plugin_radiostream.radiostream.added", :added => add) )
           else
-            messageto(msg.actor, "Radiostream: <b>no radio found</b>")
+            messageto(msg.actor, I18n.t("plugin_radiostream.radiostream.noradio"))
           end
         end
       end
@@ -73,7 +72,7 @@ class Radiostream < Plugin
 
     if message == "choose"
       counter = 0
-      output = "You can choose from <br><table>"
+      output = "#{I18n.t("plugin_radiostream.choose.can")}<br><table>"
       @keylist.each do |key|
         if key[:user] == msg.actor then
           output << ("<tr><td>#{counter.to_s}</td><td>#{key[:link]}</td></tr>")
@@ -81,7 +80,7 @@ class Radiostream < Plugin
         end
       end
       output << "</table>"
-      output = "There is nothing where you can choose from!" if counter == 0
+      output = I18n.t("plugin_radiostream.choose.cant") if counter == 0
       messageto(msg.actor, output)
     end
 
@@ -99,11 +98,11 @@ class Radiostream < Plugin
 
         id_list.each do |id|
           @@bot[:mpd].add(chooselist[id.to_i])
-          messageto(msg.actor, "Added #{chooselist[id.to_i]}")
+          messageto(msg.actor, I18n.t("plugin_radiostream.choose.added", :item => chooselist[id.to_i]))
         end
 
       rescue
-        messageto(msg.actor, "Does not exist. :(")
+        messageto(msg.actor, I18n.t("plugin_radiostream.choose.not_exist"))
       end
     end
 
@@ -118,7 +117,7 @@ class Radiostream < Plugin
           end
         end
       end
-      messageto(msg.actor, "Stationlist updated.")
+      messageto(msg.actor, I18n.t("plugin_radiostream.radioupdate"))
     end
 
     if message == "radiocategories" && @xspf
@@ -133,14 +132,14 @@ class Radiostream < Plugin
           bold = !bold
       end
       if categories == "" then
-        messageto(msg.actor, "No categories found, use 'radioupdate'")
+        messageto(msg.actor, I18n.t("plugin_radiostream.radiocategories.nofound"))
       else
-        messageto(msg.actor, "Found: #{categories}")
+        messageto(msg.actor, I18n.t("plugin_radiostream.radiocategories.found", :item => categories))
       end
     end
 
     if message[0..12] == "radiocategory" && @xspf
-      reply = "<table><th><td>station</td><td>description</td></th>"
+      reply = "<table><th><td>#{I18n.t("plugin_radiostream.radiocategory.station")}</td><td>#{I18n.t("plugin_radiostream.radiocategory.description")}</td></th>"
       nr = 0
       @radiolist.each do |key, values|
         if key.to_s.downcase.include?(message.split[1].downcase)
@@ -167,12 +166,12 @@ class Radiostream < Plugin
                   @keylist.delete_if { |key| key[:user] == msg.actor }              #delete last search for this user
                   Thread.new do
                     user = msg.actor
-                    Thread.current["user"]=user
+                    Thread.current["user"]=msg.username
                     Thread.current["process"]="radioselect"
                     add_link( link, user )
                     results = (@keylist.count { |key| key[:user] == msg.actor })
                     if results > 1 then
-                      messageto(msg.actor, "There are #{results} results, please choose with choose command")
+                      messageto(msg.actor, I18n.t("plugin_radiostream.radioselect.multiple", :results => results))
                     else
                       add = ""
                       @keylist.each do |key|
@@ -182,9 +181,9 @@ class Radiostream < Plugin
                       end
                       if add != "" then
                         @@bot[:mpd].add(add)
-                        messageto(msg.actor, "Added: #{add}")
+                        messageto(msg.actor, I18n.t("plugin_radiostream.radioselect.added", :item => add))
                       else
-                        messageto(msg.actor, "Radiosearch: <b>no radio found</b>")
+                        messageto(msg.actor, I18n.t("plugin_radiostream.radioselect.none"))
                       end
                     end
                   end

@@ -3,6 +3,10 @@ class Plugin
     @plugins ||= []
   end
 
+  def initialize
+    @@logger ||= []
+  end
+
   def self.inherited(klass)
     @plugins ||= []
 
@@ -33,6 +37,18 @@ class Plugin
 
   def init(init)
     @@bot = init
+  end
+
+  def self.getlogsize
+    begin
+      @@logger.length
+    rescue
+      0
+    end
+  end
+
+  def self.getlog
+    @@logger.shift if @@logger.length >= 1
   end
 
   private
@@ -66,19 +82,21 @@ class Plugin
   end
 
   def logger(logline)
-    if @@bot[:debug]
-      logline="#{Time.new.to_s} : #{logline}\n"
-      if @@bot["main"]["logfile"] == nil
-        puts logline.chomp
-      else
-        written = IO.write(@@bot["main"]["logfile"], logline, mode: 'a')
-        if written != logline.length
-          puts "ERROR: Logfile (#{@@bot['main']['logfile']}) is not writeable, logging to stdout instead"
-          puts logline.chomp
-          @@bot["main"]["logfile"] = nil
-        end
-      end
+    if Conf.gvalue("debug")
+      @@logger.push "#{logline} (#{self.class.name})"
     end
+  end
+
+  def is_banned(userhash)
+    Conf.gvalue("main:user:banned").nil? ? false : Conf.gvalue("main:user:banned").has_key?("#{userhash}")
+  end
+
+  def is_superuser(userhash)
+    Conf.gvalue("main:user:superuser").nil? ? false : Conf.gvalue("main:user:superuser").has_key?("#{userhash}")
+  end
+
+  def is_whitelisted(userhash)
+    Conf.gvalue("main:user:whitelisted").nil? ? false : Conf.gvalue("main:user:whitelisted").has_key?("#{userhash}")
   end
 
 end

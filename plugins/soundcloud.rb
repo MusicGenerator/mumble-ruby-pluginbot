@@ -5,8 +5,8 @@ class Soundcloud < Plugin
     if ( @@bot[:mpd] ) && ( @@bot[:messages] ) && ( @@bot[:soundcloud].nil? )
       logger("INFO: INIT plugin #{self.class.name}.")
       begin
-        @destination = @@bot["plugin"]["mpd"]["musicfolder"] + @@bot["plugin"]["soundcloud"]["folder"]["download"]
-        @temp = @@bot["main"]["tempdir"] + @@bot["plugin"]["soundcloud"]["folder"]["temp"]
+        @destination = Conf.gvalue("plugin:mpd:musicfolder") + Conf.gvalue("plugin:soundcloud:folder:download")
+        @temp = Conf.gvalue("main:tempdir") + Conf.gvalue("plugin:soundcloud:folder:temp")
 
         Dir.mkdir(@destination) unless File.exists?(@destination)
         Dir.mkdir(@temp) unless File.exists?(@temp)
@@ -15,14 +15,14 @@ class Soundcloud < Plugin
         logger "See pluginbot_conf.yaml"
       end
       begin
-        @ytdloptions = @@bot["plugin"]["soundcloud"]["youtube_dl"]["options"]
+        @ytdloptions = Conf.gvalue("plugin:soundcloud:youtube_dl:options")
       rescue
         @ytdloptions = ""
       end
       @consoleaddition = ""
-      @consoleaddition = @@bot["plugin"]["soundcloud"]["prefixes"] if @@bot["plugin"]["soundcloud"]["prefixes"]
+      @consoleaddition = Conf.gvalue("plugin:soundcloud:prefixes") if Conf.gvalue("plugin:soundcloud:prefixes")
       @executable = "#"
-      @executable = @@bot["plugin"]["soundcloud"]["youtube_dl"]["path"] if @@bot["plugin"]["soundcloud"]["youtube_dl"]["path"]
+      @executable = Conf.gvalue("plugin:soundcloud:youtube_dl:path") if Conf.gvalue("plugin:soundcloud:youtube_dl:path")
       @songlist = Queue.new
       @keylist = Array.new
       @@bot[:soundcloud] = self
@@ -41,15 +41,15 @@ class Soundcloud < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}soundcloud <i>URL</i></b> - Will try to download the music from the given URL. <br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}ytdl-version</b> - print used download helper version"
+    h << "<b>#{Conf.gvalue("main:control:string")}soundcloud <i>URL</i></b> - #{I18n.t("plugin_soundcloud.help.soundcloud")} <br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}ytdl-version</b> - #{I18n.t("plugin_soundcloud.help.ytdl_version")}"
   end
 
   def handle_chat(msg, message)
     super
 
     if message == "ytdl-version"
-      privatemessage("Soundcloud uses youtube-dl " + `#{@executable} --version`)
+      privatemessage(I18n.t("plugin_soundcloud.ytdlversion" , :version => `#{@executable} --version`) )
     end
 
     if message.start_with?("soundcloud <a href=") || message.start_with?("<a href=") then
@@ -58,26 +58,26 @@ class Soundcloud < Plugin
         Thread.new do
           #local variables for this thread!
           actor = msg.actor
-          Thread.current["user"]=actor
+          Thread.current["user"]=msg.username
           Thread.current["process"]="soundcloud"
-          messageto(actor, "Soundcloud is inspecting link: " + link + "...")
+          messageto(actor, I18n.t("plugin_soundcloud.inspecting", :link => link ))
           get_song link
           if ( @songlist.size > 0 ) then
-            @@bot[:mpd].update(@@bot["plugin"]["soundcloud"]["folder"]["download"].gsub(/\//,""))
-            messageto(actor, "Waiting for database update complete...")
+            @@bot[:mpd].update(Conf.gvalue("plugin:soundcloud:folder:download").gsub(/\//,""))
+            messageto(actor, I18n.t("plugin_soundcloud.db_update"))
 
             while @@bot[:mpd].status[:updating_db] do
               sleep 0.5
             end
 
-            messageto(actor, "Update done.")
+            messageto(actor, I18n.t("plugin_soundcloud.db_update_done"))
             while @songlist.size > 0
               song = @songlist.pop
               messageto(actor, song)
-              @@bot[:mpd].add(@@bot["plugin"]["soundcloud"]["folder"]["download"]+song)
+              @@bot[:mpd].add(Conf.gvalue("plugin:soundcloud:folder:download")+song)
             end
           else
-            messageto(actor, "Soundcloud: The link contains nothing interesting.")
+            messageto(actor, I18n.t("plugin_soundcloud.badlink"))
           end
         end
       end
@@ -95,8 +95,8 @@ class Soundcloud < Plugin
 
       site.gsub!(/<\/?[^>]*>/, '')
       site.gsub!("&amp;", "&")
-      filename = `#{@executable} --get-filename #{@ytdloptions} -i -o \"#{@temp}%(title)s\" "#{site}"`
-      output =`#{@consoleaddition} #{@executable} #{@ytdloptions} --write-thumbnail -x --audio-format best -o \"#{@temp}%(title)s.%(ext)s\" \"#{site}\" `     #get icon
+      filename = `#{@executable} --get-filename #{@ytdloptions} -i -o '#{@temp}%(title)s' "#{site}"`
+      output =`#{@consoleaddition} #{@executable} #{@ytdloptions} --write-thumbnail -x --audio-format best -o '#{@temp}%(title)s.%(ext)s' '#{site}' `     #get icon
       output.each_line do |line|
         error << line if line.include? "ERROR:"
       end
@@ -104,16 +104,16 @@ class Soundcloud < Plugin
         name.slice! @temp #This is probably a bad hack but name is here for example "/home/botmaster/temp/youtubeplugin//home/botmaster/temp/youtubeplugin/filename.mp3"
         @filetypes.each do |ending|
           if File.exist?("#{@temp}#{name}.#{ending}")
-            system ("#{@consoleaddition} convert \"#{@temp}#{name}.jpg\" -resize 320x240 \"#{@destination}#{name}.jpg\" ")
+            system ("#{@consoleaddition} convert '#{@temp}#{name}.jpg' -resize 320x240 '#{@destination}#{name}.jpg' ")
 
-            if @@bot["plugin"]["soundcloud"]["to_mp3"].nil?
-              # Mixin tags without recode on standard
-              system ("#{@consoleaddition} ffmpeg -i \"#{@temp}#{name}.#{ending}\" -acodec copy -metadata title=\"#{name}\" \"#{@destination}#{name}.#{ending}\"") if !File.exist?("#{@destination}#{name}.#{ending}")
-              @songlist << name.split("/")[-1] + ".#{ending}"
-            else
+            if Conf.gvalue("plugin:soundcloud:to_mp3") == true
               # Mixin tags and recode it to mp3 (vbr 190kBit)
-              system ("#{@consoleaddition} ffmpeg -i \"#{@temp}#{name}.#{ending}\" -codec:a libmp3lame -qscale:a 2 -metadata title=\"#{name}\" \"#{@destination}#{name}.mp3\"") if !File.exist?("#{@destination}#{name}.mp3")
+              system ("#{@consoleaddition} ffmpeg -i '#{@temp}#{name}.#{ending}' -codec:a libmp3lame -qscale:a 2 -metadata title='#{name}' '#{@destination}#{name}.mp3'") if !File.exist?("#{@destination}#{name}.mp3")
               @songlist << name.split("/")[-1] + ".mp3"
+            else
+              # Mixin tags without recode on standard
+              system ("#{@consoleaddition} ffmpeg -i '#{@temp}#{name}.#{ending}' -acodec copy -metadata title='#{name}' '#{@destination}#{name}.#{ending}'") if !File.exist?("#{@destination}#{name}.#{ending}")
+              @songlist << name.split("/")[-1] + ".#{ending}"
             end
           end
         end

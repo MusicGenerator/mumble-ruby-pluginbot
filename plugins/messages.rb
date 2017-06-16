@@ -29,12 +29,12 @@ class Messages < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}+ #(<i>Hashtag</i>)</b> - Subscribe to a notification.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}- #(<i>Hashtag</i>)</b> - Unsubscribe from a notification.<br>"
-    h << "You can choose one or more of the following values:<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}+ #(<i>Hashtag</i>)</b> - #{I18n.t("plugin_messages.help.subscribe")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}- #(<i>Hashtag</i>)</b> - #{I18n.t("plugin_messages.help.unsubscribe")}<br>"
+    h << "#{I18n.t("plugin_messages.help.values")}<br>"
     h << "volume, random, update, single, xfade, consume, repeat, state<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}*</b> - List subscribed notifications.<br>"
-    h << "<br /><b>Example:</b> To get a message when the repeat mode changes send the command \"#{@@bot["main"]["control"]["string"]}+ #repeat\""
+    h << "<b>#{Conf.gvalue("main:control:string")}*</b> - #{I18n.t("plugin_messages.help.list")}<br>"
+    h << "<br />#{I18n.t("plugin_messages.help.example", :controlstring => Conf.gvalue("main:control:string"))}"
   end
 
   def handle_chat(msg, message)
@@ -77,16 +77,16 @@ class Messages < Plugin
       send << " #repeat" if (@priv_notify[msg.actor] & Crepeat) > 0
       send << " #state" if (@priv_notify[msg.actor] & Cstate) > 0
       if send != ""
-        send = "You listen to following MPD-Channels:" + send + "."
+        send = I18n.t("plugin_messages.star.listen") + send + "."
       else
-        send << "You listen to no MPD-Channels"
+        send << I18n.t("plugin_messages.star.nolisten")
       end
       @@bot[:cli].text_user(msg.actor, send)
     end
   end
 
   def sendmessage (message, messagetype)
-    channelmessage( message) if ( @@bot["main"]["channel_notify"].to_i & messagetype) != 0
+    channelmessage( message) if ( Conf.gvalue("main:channel_notify").to_i & messagetype) != 0
     if @priv_notify
       @priv_notify.each do |user, notify|
         begin

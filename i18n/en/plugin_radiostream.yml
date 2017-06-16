@@ -1,0 +1,37 @@
+en:
+  plugin_radiostream:
+    radiostream:
+      results:          "There are %{results} results, please choose with choose command."
+      added:            "Added: %{added}"
+      noradio:          "Radiostream: <b>no radio found</b>"
+
+    choose:
+      can:              "You can choose from"
+      cant:             "There is nothing where you can choose from!"
+      added:            "Added: %{item}"
+      not_exist:        "Does not exist. :("
+
+    radioupdate:        "Stationlist updated."
+
+    radiocategories:
+      found:            "Found: %{item}"
+      nofound:          "No categories found, use 'radioupdate'"
+
+    radiocategory:
+      station:          "Station"
+      description:      "Description"
+
+    radioselect:
+      multiple:         "There are %{results} results, please choose with choose command"
+      added:            "Added: %{item}"
+      none:             "Radiosearch: <b>no radio found</b>"
+
+    help:
+      radiostream:      "Will try to forward the radio stream."
+      radioupdate:      "Update internal stationlist."
+      radiocategories:  "Show categories you can search with <b>%{controlstring}radioserach</b>."
+      radiocategory:    "List stations found in category 'search'<br>"
+      radioselect:      "Add sation from position 'number' in <b>%{controlstring}radiocategory</b> <i>search</i> to the playqueue."
+      choose:           "Shows a list if remote playlist has more choices. (You will get informed if you can use this command)."
+      choosenumber:     "Choose stream."
+      info:             "This module should be able to handle most Radio stream URLs you can find :)"

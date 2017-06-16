@@ -1,11 +1,14 @@
 ---
-config:
-  version: 2.1
+# See http://mumble-ruby-pluginbot.readthedocs.io/en/master/explain_the_config.html for the documentation of this config file.
 
-:debug: true
-:language: en
+config:
+  version: 2.2
+
+debug: true
+language: en
 
 main:
+  remoteui: false
   tempdir: "/home/botmaster/temp/"
   logfile: "/home/botmaster/logs/bot1.log"
   ducking: false
@@ -13,6 +16,7 @@ main:
   stop_on_unregistered: true
   channel_notify: 0
   controllable: true
+  whitelist_enabled: false
   control:
     string: "."
     message:
@@ -20,22 +24,25 @@ main:
       registered_only: true
     historysize: 20
   display:
-    comment: true
-  need_binding: false
-  bound: nobody
+    comment:
+      set: true
+  user:
+    whitelisted: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-whitelisted
+    superuser: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-superuser
+    banned: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-banned
+    bound: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-bound
   certfolder: "/home/botmaster/certs/"
   fifo: "/home/botmaster/mpd1/mpd.fifo"
   logo: "../config/logo/logo.html"
   timer:
     ticks:  3600
-  superpassword: "kaguBe gave me all the power and I want to "
-  blacklisted_commands: "settings set superpassword"
+  blacklisted_commands: ""
 
 mumble:
-  use_vbr: 1
+  use_vbr: true
   bitrate: 72000
   host: m.natenom.com
   port: 64738
-  name: MumbleRubyPluginbot
+  name: "MumbleRubyPluginbot"
   password: ''
   channel: Bottest

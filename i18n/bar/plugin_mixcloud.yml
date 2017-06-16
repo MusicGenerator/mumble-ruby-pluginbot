@@ -1,0 +1,11 @@
+bar:
+  plugin_mixcloud:
+    ytdlversion:    "Mixcloud nimmt youtube-dl %{version}"
+    inspecting:     "Mixcloud kontrolliert %{link} ..."
+    db_update:      "Wart auf'd Datenbank..."
+    db_update_done: "Datenbank is ferte."
+    badlink:        "Mixcloud: Koa Musi gefundn."
+
+    help:
+      mixcloud:     "Prowiad Musik va da URL owazlana."
+      ytdl_version: "Zoagt de youtube-dl version an."

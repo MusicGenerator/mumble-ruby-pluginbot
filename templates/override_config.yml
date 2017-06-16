@@ -1,15 +1,17 @@
 ---
+# See http://mumble-ruby-pluginbot.readthedocs.io/en/master/explain_the_config.html for the documentation of this config file.
 
-config:
-  version: 2.1
+# IMPORTANT: Please read http://mumble-ruby-pluginbot.rtfd.io/en/devel/explain_the_config.html#default-configuration-and-override-configuration to understand how this override configuration works.
 
-:debug: true
-:language: en
+debug: true
+language: en
 
 main:
+  logfile: "/home/botmaster/logs/bot1.log"
   ducking: false
   automute_if_alone: true
   stop_on_unregistered: true
+  whitelist_enabled: false
   control:
     string: "."
     message:
@@ -17,7 +19,11 @@ main:
       registered_only: true
     historysize: 20
   fifo: "/home/botmaster/mpd1/mpd.fifo"
-  superpassword: "kaguBe gave me all the power and I want to "
+  user:
+    whitelisted: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-whitelisted
+    superuser: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-superuser
+    banned: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-banned
+    bound: # See http://mumble-ruby-pluginbot.rtfd.io/en/master/explain_the_config.html#main-user-bound
 
 mumble:
   use_vbr: 1
@@ -34,5 +40,5 @@ plugin:
     host: localhost
     port: 7701
   idle:
-    maxidletime: 600 #in seconds
-    idleaction: 'channel' #Can be "deafen" or "channel" different to let the bot join his default channel.
+    maxidletime: 600
+    idleaction: 'channel'

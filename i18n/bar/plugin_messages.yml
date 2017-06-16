@@ -1,0 +1,12 @@
+bar:
+  plugin_messages:
+    star:
+      listen:         "De  Kan&auml;le host abonniert:"
+      nolisten:       "Koane Kan&auml;le abonniert."
+
+    help:
+      subscribe:      "Nachricht abonieren"
+      unsubscribe:    "Abonnement beenden."
+      values:         "Aus de Sachan kannst da was aussuacha (Oas oder mehr)"
+      list:           "Zoagt da an was'd abonniert hast."
+      example:        "<b>Beisp&uuml;h:</b> Um a Nachricht zah kriagn ob da Wiedaholungsmodus g&auml;ndat wird, muass'd folgendes Kommando schicka: \"%{controlstring}+ #repeat\""

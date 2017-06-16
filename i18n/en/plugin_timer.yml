@@ -1,0 +1,13 @@
+en:
+  plugin_timer:
+    alarms:         "User: %{user}, Time %{time} Timecode (%{timecode})"
+    alarm_set:      "Your alarm (%{result}) is set to %{time}."
+    alarm_del:
+      deleted:      "Alarm deleted."
+      error:        "This is not your alarm, deleting denied."
+
+    help:
+      alarms:       "Show all Timers."
+      alarm_set:    "Alarm rings in HH:SS."
+      alarm_del:    "Delete your alarm."
+      alarm_quit:   "Quit/Delete running alarm."

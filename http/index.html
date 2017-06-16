@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="css/bot.css?v=2" />
+    <title>Mumble-Ruby-Pluginbot</title>
+    <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript">
+  		$('html').addClass('js');
+  	</script>
+  	<script type="text/javascript" src="js/functions.js"></script>
+    <script type="text/javascript" src="js/functionplus.js"></script>
+  </head>
+  <body onload="start();">
+    <div class="screen">
+    <div class="leftmenu">
+      <button class="menubutton" onclick="javascript:showPanel('activelog');">Log</button><br>
+      <button class="menubutton" onclick="javascript:sendXhr('prozess.rb?getconfigusers=true', 'configuser'); javascript:showPanel('configuser');">Manage Users</button><br>
+      <button class="menubutton" onclick="javascript:sendXhr('prozess.rb?showconfig=true', 'configuration'); javascript:showPanel('editconfig');">Edit Configuration</button><br>
+      <button class="menubutton" onclick="javascript:command('stop')">Restart</button><br>
+      <p>Choose Bot</p>
+      <fieldset>
+        <input type="radio" id="botselect" value="7750" name="standard">
+        <label for="standard">Standardport</label>
+        <div id="messages">
+        </div>
+      </fieldset>
+    </div>
+    <div class="maincontent">
+      <div class="page" id="empty"></div>
+      <div class="page" id="activelog"></div>
+      <div class="page" id="serveruser"></div>
+      <div class="page" id="configuser"></div>
+      <div class="page" id="editconfig">
+        <div class="edit" id="editfield"></div>
+        <div class="node" id="configuration"></div>
+      </div>
+    </div>
+
+  </div>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+de:
+  plugin_timer:
+    alarms:         "Benutzer: %{user}, Zeit %{time} Zeitcode (%{timecode})"
+    alarm_set:      "Dein Alarm (%{result}) wurde auf %{time} gesetzt."
+    alarm_del:
+      deleted:      "Alarm gel&ouml;scht."
+      error:        "Dieser Alarm ist nicht von dir. Zugriff verweigert."
+
+    help:
+      alarms:       "Zeige alle Alarme."
+      alarm_set:    "Alarm wird HH:SS ausgel&ouml;st."
+      alarm_del:    "L&ouml;scht deinen Alarm."
+      alarm_quit:   "Quitiert/Entfernt aktiven Alarm."

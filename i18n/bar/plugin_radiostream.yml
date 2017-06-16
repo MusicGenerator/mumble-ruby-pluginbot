@@ -1,0 +1,37 @@
+bar:
+  plugin_radiostream:
+    radiostream:
+      results:          "Es gibt %{results} Ergebnisse. Nimm des 'choose' Kommando."
+      added:            "Dazua gdan: %{added}"
+      noradio:          "Radiostream: <b>Koa Senda gfundn</b>"
+
+    choose:
+      can:              "Du kannst da was aussuacha von"
+      cant:             "Es gibt nix zan aussuacha!"
+      added:            "Dazua gtan: %{item}"
+      not_exist:        "Des gibts net. :("
+
+    radioupdate:        "Sendaliste aktualisiert."
+
+    radiocategories:
+      found:            "Gfundn: %{item}"
+      nofound:          "Koane Kategorien gfundn. Mach a 'radioupdate'."
+
+    radiocategory:
+      station:          "Senda"
+      description:      "Beschreibung"
+
+    radioselect:
+      multiple:         "Es gibt %{results} Ergebnisse. Nimm des 'choose' Kommando."
+      added:            "Dazua gtan: %{item}"
+      none:             "Radiosearch: <b>Koane Senda gfundn</b>"
+
+    help:
+      radiostream:      "Vasoacht Sender ab-zsp&uuml;n."
+      radioupdate:      "Aktualisiert Sendalistn."
+      radiocategories:  "Zoagt gfundne Kategorien aus denen aussuacha kannst."
+      radiocategory:    "Zoagt Sender aus da Kategorie 'search' an."
+      radioselect:      "Nimmt den Senda mit der Numma 'number' va da <b>%{controlstring}radiocategory</b> <i>search</i> Anzeige im'd Listn."
+      choose:           "Zoagt de verschiedenen Qw&auml;ln  an von w&ouml;chan des Programm empfanga werdn kann, wann's mehrere gibt. (Kriagst gsagt wannst des doa soist.)"
+      choosenumber:     "Suacht aus."
+      info:             "Des Plugin soit de meistn Radiostationen asp&uuml;n kinna. :)"

@@ -1,14 +1,20 @@
 class Null < Plugin
 
   def init(init)
-      super
-    @@bot[:bot] = self
+    super
+    if @@bot[:null].nil?
+      @@bot[:null] = self
+    end
     return @@bot
     #nothing to init
   end
 
   def name
-    self.class.name
+    if !@@bot[:null].nil?
+      self.class.name
+    else
+      "false"
+    end
   end
 
   def help(h)

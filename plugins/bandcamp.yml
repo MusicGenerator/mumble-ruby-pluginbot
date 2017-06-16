@@ -1,5 +1,5 @@
 ---
-  
+
 plugin:
   bandcamp:
     folder:
@@ -9,4 +9,4 @@ plugin:
       path: "/home/botmaster/src/youtube-dl"
       options: ''
       prefixes: ''
-    to_mp3: 
+    to_mp3: false

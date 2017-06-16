@@ -1,0 +1,13 @@
+bar:
+  plugin_timer:
+    alarms:         "Benutzer: %{user}, Zeit %{time} Zeitcode (%{timecode})"
+    alarm_set:      "Dei Alarm (%{result}) is af %{time} gest&ouml;."
+    alarm_del:
+      deleted:      "Alarm gl&ouml;scht."
+      error:        "Der Alarm is net va dir. Zugriff vaweigat."
+
+    help:
+      alarms:       "Zoagt olle Alarme."
+      alarm_set:    "Alarm wird HH:SS ausgl&ouml;st."
+      alarm_del:    "L&ouml;scht dein Alarm."
+      alarm_quit:   "Quitiert/Entfernt aktivn Alarm."

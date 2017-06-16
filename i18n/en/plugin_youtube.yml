@@ -1,0 +1,28 @@
+en:
+  plugin_youtube:
+    ytdlversion:    "Youtube uses youtube-dl %{version}"
+    inspecting:     "Youtube is inspecting %{link} ..."
+    db_update:      "Waiting for database update complete..."
+    db_update_done: "Database update done."
+    badlink:        "Youtube: The link contains nothing interesting."
+    ytstream:
+      added:        "Added \"%{link}\" to the queue."
+    yts:
+      search:       "searching for \"%{search}\", please be patient..."
+      nofound:      "won't search for nothing!"
+    yta:
+      download:     "Going to download the following songs:"
+      id:           "ID: %{id}, Key: \"%{name}\""
+      all:          "Keys: \"%{name}\""
+      index_error:  "Youtube: Sorry, index number is out of bounds!"
+      times:        "do %{times} time(s)..."
+      fetchconvert: "fetch and convert"
+      added:        "Added:"
+      notfound:     "fixme: %{song} not found!"
+
+    help:
+      ytlink:       "Will try to download the music from the given URL."
+      yts:          "Will search on Youtube for one or more keywords and print the results to you."
+      yta:          "Let the bot download the given song(s) from the list you got via <i>%{controlstring}yts</i>.<br>Instead of a specific number or multiple numbers, write <b>%{controlstring}yta <i>all</i></b> to let the bot download all found songs."
+      ytstream:     "Stream audio from a video instead of downloading a video. May take some time because of buffering."
+      ytdl_version: "print used download helper version"

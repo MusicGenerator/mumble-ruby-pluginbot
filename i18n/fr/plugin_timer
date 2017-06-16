@@ -1,0 +1,13 @@
+---
+fr:
+  plugin_timer:
+    alarms: Utilisateur:% {user}, Time% {time} Timecode (% {timecode})
+    alarm_set: Votre alarme (% {result}) est réglée sur% {time}.
+    alarm_del:
+      deleted: Alarme supprimée.
+      error: Ce n'est pas votre alarme, supprimant refusé.
+    help:
+      alarms: Afficher tous les Timers.
+      alarm_set: 'Anneau d''alarme en HH: SS.'
+      alarm_del: Supprimez votre alarme.
+      alarm_quit: Quitter

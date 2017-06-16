@@ -1,0 +1,98 @@
+en:
+  about:
+    <br />Hi, I am the Mumble-Ruby-Pluginbot.<br />
+      <ul>
+        <li><a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot'>Get my source code</a></li>
+        <li><a href='http://mumble-ruby-pluginbot.readthedocs.io/'>Read my documentation</a></li>
+        <li>I am licensed by the <a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot/blob/master/LICENSE'>MIT license</a></li>
+        <li>If you have any issues, bugs or ideas please tell us on <a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot/issues'>https://github.com/MusicGenerator/mumble-ruby-pluginbot/issues</a></li>
+      </ul>
+  about_control: "Send <b>%{controlstring}help</b> or <b>%{controlstring}about</b> for more information about me."
+
+  command_blacklisted: "My admin has blacklisted this command."
+
+  ban:
+    active: This ban is active until the bot restarts. To permaban add following line to your configuration
+
+  binding:
+    bind:
+      successfull: "Binding sucessfull."
+      unsuccessfull: "Binding NOT successfull."
+    unbind:
+      successfull: "Unbinding sucessfull."
+      unsuccessfull: "Unbinding NOT successfull."
+
+  user:
+    not:
+      found: "User %{user} not found."
+
+  ducking:
+    _on:                "Music ducking is on."
+    _off:               "Music ducking is off."
+    volume:
+      settings:         "Ducking volume is set to %{volume_relative}% of normal volume."
+      set:              "Ducking is set to %{volume_relative} of normal volume."
+      out_of_range:     "Ducking volume must an number from 0 to 100"
+
+  bitrate:
+    set:                "Encoding is set to %{bitrate} bit/s."
+    error:              "You really need dafoxia's mumble-ruby!"
+
+  bandwidth:
+    set:                "Calculated overall bandwidth is %{bandwidth} bit/s."
+    max:                "Allowed server bandwidth: %{bandwidth} bit/s."
+    settings:           "<br /><u>Current bandwidth related settings:</u><br />The calculated overall bandwidth (audio + overhead): %{overall} bit/s<br />Audio encoding bandwidth: %{audio} bit/s<br />Framesize: %{framesize} ms"
+
+  framesize:
+    set:                "Sending in %{framesize} ms frames."
+    error:              "You really need dafoxia's mumble-ruby!"
+
+  plugins:
+    loaded:
+      _shead:            "<br /><span style='color:red;'>Loaded plugins:<br /><b>"
+      _ehead:            "</b></span>"
+    general_help:        "<br /><b>%{control}help <i>pluginname</i></b> Get the help text for the specific plugin.<br /><br />For example send the following text to get some basic control commands of the bot:<br /><b>%{control}help mpd</b><br />"
+
+  jobs:
+    status:              "%{process} is in state %{status} for user %{name}.<br>"
+
+  help:
+    internal:            "<br /><span style='color:red;'><b>Internal commands</b></span><br />
+                            <b>%{cc}about</b> Get information about this bot.<br />
+                            <b>%{cc}settings</b> display current settings. Need SuperUser<br />
+                            <b>%{cc}set <i>variable=value</i></b> Set variable to value. Need SuperUser<br />
+                            <b>%{cc}bind</b> Bind bot to a user. (some functions will only work if bot is bound).<br />
+                            <b>%{cc}unbind</b> Unbind bot.<br />
+                            <b>%{cc}reset</b> Reset variables to default value. Needs SuperUser!<br />
+                            <b>%{cc}blacklist <i>username</i></b> Add user to blacklist. Need binding.<br />
+                            <b>%{cc}register</b> Let the bot register itself on the current server. Works only if server allows it. If it doesn't work ask an administrator of your Mumble server. Be aware that after registration only an administrator can change the name of the bot.<br />
+                            <b>%{cc}ducking</b> Toggle voice ducking on/off.<br />
+                            <b>%{cc}duckvol <i>volume</i></b> Set the ducking volume (% of normal volume).<br />
+                            <b>%{cc}duckvol</b> Show current ducking volume.<br />
+                            <b>%{cc}bitrate <i>rate in kbit/s</i></b> Set audio encoding rate. Note that the bot needs additional bandwidth for overhead so the overall bandwidth is higher than this bitrate.<br />
+                            <b>%{cc}framesize</b> Print current framesize.<br />
+                            <b>%{cc}framesize <i>size in msec</i></b> Set framesize in milliseconds. Greater values causes smaller overhead. Valid values are 10, 20, 40 and 60 msec<br />
+                            <b>%{cc}bandwidth</b> Show information about the overall bandwidth, audo bandwidth (bitrate) and framesize.<br />
+                            <b>%{cc}jobs</b> Shows current jobs of the bot.<br />
+                            <b>%{cc}plugins</b> - Shows activated plugins.<br />"
+    default:              "<br />\
+                            Hi, I am a <a href='http://mumble-ruby-pluginbot.rtfd.org/'>Mumble-Ruby-Pluginbot</a> and YOU can control me through text commands.<br /><br />
+                            A tutorial how to control me is available online, see <a href='http://mumble-ruby-pluginbot.readthedocs.io/en/master/usage.html'>here</a>.<br /><br />
+                            Though I will give you a good start with the basic commands you need to control the music I have to offer :) - if you send me the following commands:<br />\
+                            <b>%{cc}help mpd</b><br />
+                            and <br />
+                            <b>%{cc}help control</b><br />
+                            <br />\
+                            If you are more interested in who/what I am, send to me:<br />\
+                            <b>%{cc}about</b><br />\
+                            <br />\
+                            <b><u>Commands for advanced users:</b></u><br />\
+                            <b>%{cc}plugins</b> - Get a list of available plugins.<br />\
+                            <br />\
+                            Note: Every plugin has its own help text; to get it send the command:<br />\
+                            <b>%{cc}help name_of_the_plugin</b><br />\
+                            For example:<br />\
+                            <b>%{cc}help mpd</b><br />
+                            <br />\
+                            <b><u>Commands for experts only:</b></u><br />\
+                            <b>%{cc}internals</b> - See my internal commands.<br />"

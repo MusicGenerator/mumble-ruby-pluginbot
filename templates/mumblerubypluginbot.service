@@ -6,7 +6,8 @@ After=network.target
 Type=oneshot
 RemainAfterExit=yes
 User=botmaster
-ExecStart=/home/botmaster/src/mumble-ruby-pluginbot/scripts/start.sh &
+ExecStart=/home/botmaster/src/mumble-ruby-pluginbot/scripts/manage.sh start
+ExecStop=/home/botmaster/src/mumble-ruby-pluginbot/scripts/manage.sh stop
 
 [Install]
 WantedBy=multi-user.target

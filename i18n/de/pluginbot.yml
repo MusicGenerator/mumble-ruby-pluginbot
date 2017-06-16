@@ -1,0 +1,100 @@
+de:
+  about: "
+    <br />Hallo, ich bin der Mumble-Ruby-Bot.<br />
+      <ul>
+        <li><a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot'>Hier gibt es meinen Quellcode</a></li>
+        <li><a href='http://mumble-ruby-pluginbot.readthedocs.io/'>Anleitung</a></li>
+        <li>Ich wurde unter der <a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot/blob/master/LICENSE'>MIT license</a> lizenziert</li>
+        <li>Wenn Du Fehler findest oder Probleme mit mir hast, dann melde dich unter <a href='https://github.com/MusicGenerator/mumble-ruby-pluginbot/issues'>https://github.com/MusicGenerator/mumble-ruby-pluginbot/issues</a></li>
+      </ul>"
+
+  about_control: "Sende <b>%{controlstring}help</b> oder <b>%{controlstring}about</b> f&uuml;r mehr Informationen &uuml;ber mich."
+
+  command_blacklisted: "Mein Admin hat diesen Befehl gesperrt."
+
+  ban:
+    active: "Dieser Bann h&auml;lt nur bis zum Neustart. F&uuml;r einen permantenten Bann f&uuml;ge folgende Zeile in Deine Konfiguration ein:"
+
+  binding:
+    bind:
+      successfull: "Bindung erfolgreich."
+      unsuccessfull: "Bindung NICHT erfolgreich."
+    unbind:
+      successfull: "Entbindung erfolgreich."
+      unsuccessfull: "Entbindung NICHT erfolgreich."
+
+  user:
+    not:
+      found: "Benutzer %{user} wurde nicht gefunden."
+
+  ducking:
+    _on:                "Musik wird bei sprechenden Benutzern gesenkt."
+    _off:               "Musik nimmt keine R&uuml;cksicht auf sprechende Benutzer"
+    volume:
+      settings:         "Lautst&auml;rkeabsenkung ist auf %{volume_relative}% der Normallaust&auml;rke eingestellt."
+      set:              "Lautst&auml;rkeabsenkung wurde auf %{volume_relative}% der Normallaust&auml;rke eingestellt."
+      out_of_range:     "Lautst&auml;rkeabsenkung kann nur einen Wert von 0-100 annehmen!"
+
+  bitrate:
+    set:                "Audiobitrate ist %{bitrate} bit/s."
+    error:              "Hole Dir dafoxia's mumble-ruby um dieses Feature nutzen zu k&ouml;nnen"
+
+  bandwidth:
+    set:                "Berechnete Bandbreite ist %{bandwidth} bit/s."
+    max:                "Server erlaubt maximal %{bandwidth} bit/s."
+    settings:           "<br /><u>Bandbreiteneinstellungen:</u><br />Berechnete Gesamtbandbreite (audio + overhead): %{overall} bit/s<br />Audiobandbreite bandwidth: %{audio} bit/s<br />Sende pro %{framesize} ms ein Audiopaket."
+
+  framesize:
+    set:                "Sende in %{framesize} ms gro&szlig;en Audiopaketen."
+    error:              "Hole Dir dafoxia's mumble-ruby um dieses Feature nutzen zu k&ouml;nnen"
+
+  plugins:
+    loaded:
+      _shead:            "<br /><span style='color:red;'>Geladene Plugins:<br /><b>"
+      _ehead:            "</b></span>"
+    general_help:        "<br /><b>%{control}help <i>pluginname</i></b> Zeigt Hilfe f&uuml;r dieses Plugin an.<br /><br />Zum Beispiel <br /><b>%{control}help mpd</b> f&uuml;r die grundlegende Bedienung der Wiedergabe.<br />"
+
+  jobs:
+    status:              "%{process} ist im Status %{status} und geh&ouml;rt %{name}.<br>"
+
+  help:
+    internal:            "<br /><span style='color:red;'><b>Interne Befehle</b></span><br />
+                            <b>%{cc}about</b> Zeigt Informationen &uuml;ber den Bot.<br />
+                            <b>%{cc}settings</b> Zeigt momentanen Einstellungen. Nur SuperUser!<br />
+                            <b>%{cc}set <i>variable=value</i></b> Setzt einen Variablenwert. Nur SuperUser!<br />
+                            <b>%{cc}bind</b> Bindet den Bot an einen Benutzer. (Manche Befehle funktionieren nur wenn der Bot an den Benutzer gebunden ist.)<br />
+                            <b>%{cc}unbind</b> L&ouml;st die Benutzerbindung.<br />
+                            <b>%{cc}reset</b> Setzt alle Einstellungen zur&uuml;ck. Nur SuperUser!<br />
+                            <b>%{cc}blacklist <i>username</i></b> F&uuml;gt einen Benutzer zur Blacklist hinzu. Ben&ouml;tigt Benutzerbindung!<br />
+                            <b>%{cc}register</b> Der Bot registriert sich selbst auf dem Server. Funktioniert nur wenn es der Server zul&auml;sst. Der Botname kann danach nur mehr von einem Administrator ge&auml;ndert werden.<br />
+                            <b>%{cc}ducking</b> Schalte Lautst&auml;rkenabsenkung ein/aus <br />
+                            <b>%{cc}duckvol <i>volume</i></b> Setze Lautst&auml;rkenabsenkung auf volume % der Normallautst&auml;rke.<br />
+                            <b>%{cc}duckvol</b> Zeige eingestellte Lautst&auml;rkenabsenkung.<br />
+                            <b>%{cc}bitrate <i>rate in kbit/s</i></b> Stelle Audiobitrate. Beachte das der Bot zus&auml;tzliche Bandbreite zur Audiobandbreite verbraucht.<br />
+                            <b>%{cc}framesize</b> Zeigt die aktuelle framesize an.<br />
+                            <b>%{cc}framesize <i>size in msek</i></b> Stelle Framegr&ouml;&szlig;e in Millisekunden. Gr&ouml;ssere Werte verursachen kleineren Overhead. G&uuml;ltige Werte sind 10, 20, 40 und 60 msek.<br />
+                            <b>%{cc}bandwidth</b> Zeigt Informationen zur Gesammtbandbreite, Audiobandbreite und Paketgr&ouml;sse an.<br />
+                            <b>%{cc}jobs</b> Zeigt laufende Jobs des Bots an.<br />
+                            <b>%{cc}plugins</b> - Zeigt geladene Plugins an.<br />"
+
+    default:              "<br />\
+                            Hallo ich bin ein <a href='http://mumble-ruby-pluginbot.rtfd.org/'>Mumble-Ruby-Pluginbot</a> und DU kannst mich mit Textkommandos steuern.<br /><br />
+                            Eine Anleitung für meine Benutzung gibt es online, siehe <a href='http://mumble-ruby-pluginbot.readthedocs.io/en/master/usage.html'>hier</a>.<br /><br />
+                            Benutze folgende Kommandos um meine Bedienung kennenzulernen:<br />\
+                            <b>%{cc}help mpd</b><br />
+                            und <br />
+                            <b>%{cc}help control</b><br />
+                            <br />\
+                            N&auml;here Informationen &uuml;ber mich erh&auml;ltst Du mit:<br />\
+                            <b>%{cc}about</b><br />\
+                            <br />\
+                            <b><u>Kommandos f&uuml;r erfahrene Benutzer:</b></u><br />\
+                            <b>%{cc}plugins</b> - Zeigt geladene Plugins an.<br />\
+                            <br />\
+                            Beachte: Jedes Plugin hat seine eigene Hilfe. Um sie zu sehen sende folgendes Kommando:<br />\
+                            <b>%{cc}help Name_des_Plugins</b><br />\
+                            Zum Beispiel:<br />\
+                            <b>%{cc}help mpd</b><br />
+                            <br />\
+                            <b><u>Kommandos, die nur f&uuml;r Experten gedacht sind:</b></u><br />\
+                            <b>%{cc}internals</b> - Zeige meine internen Befehle.<br />"

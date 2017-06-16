@@ -1,0 +1,10 @@
+bar:
+  plugin_idle:
+    ideling:    "<br />Fadisier mi seit %{ideling} Sekunden.
+                  <br />Fadiesier mi maximal: %{idletime} Sekunden.
+                  <br />Aktion wann'd Zeit vorbei is: %{idleaction}."
+    working:    "<br />Fadisier me eh net.
+                  <br />Fadiesier mi maximal: %{idletime} Sekunden.
+                  <br />Aktion wann'd Zeit vorbei is: %{idleaction}."
+    help:
+      idletime: "Zoagt die Fadisier-Zeit va mir an."

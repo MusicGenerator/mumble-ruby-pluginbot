@@ -6,12 +6,8 @@ class Control < Plugin
       logger("INFO: INIT plugin #{self.class.name}.")
       @@bot[:control] = self
       @historysize = 20
-      @@bot["main"]["automute_if_alone"] = false if @@bot["main"]["automute_if_alone"].nil?
-      if @@bot[:control_historysize]
-        @historysize =  @@bot["main"]["control"]["historysize"]
-      else
-          @historysize = 20
-      end
+      Conf.svalue("main:automute_if_alone", false) if Conf.gvalue("main:automute_if_alone").nil?
+      Conf.svalue("main:control:historysize", 20) if Conf.gvalue("main:control:historysize").nil?
       @history = Array.new
       @muted = false
       #@@bot[:cli].mute false
@@ -58,16 +54,16 @@ class Control < Plugin
 
   def help(h)
     h << "<hr><span style='color:red;'>Plugin #{self.class.name}</span><br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}ch</b> - The bot will enter your channel if he has permission to.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}debug</b> - Probe command.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}gotobed</b> - Bot sleeps in less then 1 second :)<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}wakeup</b> - Bot is under adrenalin again.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}follow</b> - Bot will start to follow you.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}unfollow</b> - Bot transforms from a dog into a lazy cat :).<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}stick</b> - Jail bot into channel.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}unstick</b> - Free the bot.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}history</b> - Print last #{@historysize} commanding users with command given.<br>"
-    h << "<b>#{@@bot["main"]["control"]["string"]}automute</b> - Toggles auto muting system. If active and if the bot is alone in a channel it instantly mutes himself and pauses the current song until a user joins the channel. Then it unmutes and starts playing the paused song. This helps to save much bandwidth on your server :)"
+    h << "<b>#{Conf.gvalue("main:control:string")}ch</b> - #{I18n.t("plugin_control.help.ch")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}debug</b> - #{I18n.t("plugin_control.help.debug")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}gotobed</b> - #{I18n.t("plugin_control.help.gotobed")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}wakeup</b> - #{I18n.t("plugin_control.help.wakeup")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}follow</b> - #{I18n.t("plugin_control.help.follow")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}unfollow</b> - #{I18n.t("plugin_control.help.unfollow")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}stick</b> - #{I18n.t("plugin_control.help.stick")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}unstick</b> - #{I18n.t("plugin_control.help.unstick")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}history</b> - #{I18n.t("plugin_control.help.history", :historysize => @historysize)}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}automute</b> - #{I18n.t("plugin_control.help.automute")}<br>"
   end
 
   def nopermission(msg)
@@ -92,7 +88,7 @@ class Control < Plugin
       user_count += 1 if ( user.channel_id == me_in )
     end
     # if i'm alone
-    if ( user_count < 2 ) && ( @@bot["main"]["automute_if_alone"] == true )
+    if ( user_count < 2 ) && ( Conf.gvalue("main:automute_if_alone") == true )
       # if I'm playing then pause play and save that I've stopped myself
 
       #During bot start there is no mpd plugin loaded yet...
@@ -129,18 +125,18 @@ class Control < Plugin
       end
 
       # If user is in my channel and is unregistered then pause playing if stop_on_unregistered_users is enabled.
-      if ( me.current_channel.channel_id == msg_target.channel_id ) && ( @@bot["main"]["stop_on_unregistered"] == true ) && ( sender_is_registered == false )  && ( @@bot[:mpd].playing? == true )
+      if ( me.current_channel.channel_id == msg_target.channel_id ) && ( Conf.gvalue("main:stop_on_unregistered") == true ) && ( sender_is_registered == false )  && ( @@bot[:mpd].playing? == true )
         current = @@bot[:mpd].current_song
         if current.file.include? "://" #If yes, it is probably some kind of a stream.
           @@bot[:mpd].stop
-          action = "stopped"
+          action = I18n.t("plugin_control.status.stopped")
         else
           #if @@bot[:mpd].paused? == false
             @@bot[:mpd].pause = true
-            action = "paused"
+            action = I18n.t("plugin_control.status.paused")
           #end
         end
-        @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, "<span style='color:red;'>An unregistered user currently joined or is acting in our channel. I #{action} the music.</span>")
+        @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, "<span style='color:red;'>#{I18n.t("plugin_control.unreg_enter", :action => action)}</span>")
         @stopped_because_unregisterd = true
       end
 
@@ -151,17 +147,15 @@ class Control < Plugin
   def handle_chat(msg, message)
     super
     # Put message in Messagehistory and pop old's if size exceeds max. historysize.
-    msg.username = @@bot[:cli].users[msg.actor].name
     @history << msg
     @history.shift if @history.length > @historysize
 
     if message == 'ch'
-      channeluserisin = @@bot[:cli].users[msg.actor].channel_id
-      if @@bot[:cli].me.current_channel.channel_id.to_i == channeluserisin.to_i
-        privatemessage( "Hey superbrain, I am already in your channel :)")
+      if @@bot[:cli].me.current_channel.channel_id.to_i == msg.channel_id.to_i
+        privatemessage( I18n.t("plugin_control.ch.brain"))
       else
-        @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, "Hey, \"#{msg.username}\" asked me to make some music, going now. Bye :)")
-        @@bot[:cli].join_channel(channeluserisin)
+        @@bot[:cli].text_channel(@@bot[:cli].me.current_channel, I18n.t("plugin_control.ch.going", :user => msg.username))
+        @@bot[:cli].join_channel(msg.channel_id)
 
         #additionally do a "wakeup"
         @@bot[:mpd].pause = false
@@ -170,12 +164,12 @@ class Control < Plugin
       end
     end
     if message == 'debug'
-      privatemessage("<span style='color:red;font-size:30px;'>Stay out of here :)</span>")
+      privatemessage("<span style='color:red;font-size:30px;'>#{I18n.t("plugin_control.debug")}</span>")
     end
 
     if message == 'gotobed'
-      if @@bot["mumble"]["channel"]
-        @@bot[:cli].join_channel(@@bot["mumble"]["channel"])
+      if Conf.gvalue("mumble:channel")
+        @@bot[:cli].join_channel(Conf.gvalue("mumble:channel"))
         @@bot[:mpd].pause = true
         @@bot[:cli].me.deafen true
       begin
@@ -186,9 +180,7 @@ class Control < Plugin
       rescue
       end
     else
-      privatemessage( "Genius; you didn't define a bedroom for me :P
-                      See \"mumble -> channel\" in my configuration
-                      file and set a valid room name where I can go to sleep :)" )
+      privatemessage( I18n.t("plugin_control.gotobed.error") )
       end
     end
 
@@ -200,7 +192,7 @@ class Control < Plugin
 
     if message == 'follow'
       if @alreadyfollowing == true
-        privatemessage( "I am already following someone! But from now on I will follow you, master.")
+        privatemessage( I18n.t("plugin_control.follow.newuser"))
         @alreadyfollowing = false
         begin
           Thread.kill(@following)
@@ -209,7 +201,7 @@ class Control < Plugin
           logger "#{$!}"
         end
       else
-        privatemessage( "I am following your steps, master.")
+        privatemessage( I18n.t("plugin_control.follow.user"))
       end
       @follow = true
       @alreadyfollowing = true
@@ -235,9 +227,9 @@ class Control < Plugin
 
     if message == 'unfollow'
       if @follow == false
-        privatemessage( "I am not following anyone.")
+        privatemessage( I18n.t("plugin_control.unfollow.nok"))
       else
-        privatemessage( "I will stop following.")
+        privatemessage( I18n.t("plugin_control.unfollow.ok"))
         @follow = false
         @alreadyfollowing = false
         begin
@@ -245,14 +237,14 @@ class Control < Plugin
           @alreadyfollowing = false
         rescue TypeError
           logger "#{$!}"
-          privatemessage( "#{@controlstring}follow hasn't been executed yet.")
+          privatemessage( I18n.t("plugin_control.unfollow.error", :control => Conf.gvalue("main:control:string")))
         end
       end
     end
 
     if message == 'stick'
       if @alreadysticky == true
-        privatemessage( "I'm already sticked! Resetting...")
+        privatemessage( I18n.t("plugin_control.stick.sticked"))
         @alreadysticky = false
         begin
           Thread.kill(@sticked)
@@ -261,21 +253,20 @@ class Control < Plugin
           logger "#{$!}"
         end
       else
-        privatemessage( "I am now sticked to this channel.")
+        privatemessage( I18n.t("plugin_control.stick.sticking"))
       end
       @sticky = true
       @alreadysticky = true
-      channeluserisin = @@bot[:cli].users[msg.actor].channel_id
       @sticked = Thread.new {
-      Thread.current["user"]=msg.actor
-      Thread.current["process"]="bandcamp"
+      Thread.current["user"]=msg.username
+      Thread.current["process"]="control/sticking"
 
       while @sticky == true do
-        if @@bot[:cli].me.current_channel == channeluserisin
+        if @@bot[:cli].me.current_channel == msg.channel_id
           sleep(1)
         else
           begin
-            @@bot[:cli].join_channel(channeluserisin)
+            @@bot[:cli].join_channel(msg.channel_id)
             sleep(1)
           rescue
             @alreadysticky = false
@@ -290,9 +281,9 @@ class Control < Plugin
 
     if message == 'unstick'
       if @sticky == false
-        privatemessage( "I am currently not sticked to a channel.")
+        privatemessage( I18n.t("plugin_control.unstick.sticked"))
       else
-        privatemessage( "I am not sticked anymore")
+        privatemessage( I18n.t("plugin_control.unstick.free"))
         @sticky = false
         @alreadysticky = false
         begin
@@ -305,7 +296,7 @@ class Control < Plugin
 
     if message == 'history'
       history = @history.clone
-      out = "<table><tr><th>Command</th><th>by User</th></tr>"
+      out = "<table><tr><th>#{I18n.t("plugin_control.history.command")}</th><th>#{I18n.t("plugin_control.history.user")}</th></tr>"
       loop do
         break if history.empty?
         histmessage = history.shift
@@ -316,12 +307,12 @@ class Control < Plugin
     end
 
     if message == 'automute'
-      if @@bot["main"]["automute_if_alone"] == false
-        privatemessage( "Automute is now activated")
-        @@bot["main"]["automute_if_alone"] = true
+      if Conf.gvalue("main:automute_if_alone") == false
+        privatemessage( I18n.t("plugin_control.automute.enabled"))
+        Conf.svalue("main:automute_if_alone", true)
       else
-        privatemessage( "Automute is now deactivated")
-        @@bot["main"]["automute_if_alone"] = false
+        privatemessage( I18n.t("plugin_control.automute.disabled"))
+        Conf.svalue("main:automute_if_alone", false)
       end
     end
   end

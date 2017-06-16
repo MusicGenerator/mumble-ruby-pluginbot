@@ -49,7 +49,6 @@ read_config("config/config.yml")
 @config["main"]["certfolder"] = c[:certdirectory]
 @config["main"]["fifo"] = c[:mpd_fifopath]
 @config["main"]["logo"] = c[:logo]
-@config["main"]["superpassword"] = @superpassword
 @config["mumble"]["use_vbr"] = c[:use_vbr]
 @config["mumble"]["host"] = c[:mumbleserver_host]
 @config["mumble"]["port"] = c[:mumbleserver_port]
