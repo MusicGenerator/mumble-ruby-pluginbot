@@ -1,3 +1,4 @@
+require 'open-uri'
 require_relative '../helpers/StreamCheck.rb'
 
 class Radiostream < Plugin
@@ -158,7 +159,6 @@ class Radiostream < Plugin
       @radiolist.each do |key, values|
         if key.to_s.downcase.include?(message.split[1].downcase)
           values.each do |value|
-            nr += 1
             if nr == message.split[2].to_i
               messageto(msg.actor, value)
               @radiofeed.each do |item|
