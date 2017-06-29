@@ -192,7 +192,7 @@ class Mpd < Plugin
     h << "<b>#{Conf.gvalue("main:control:string")}where <i>searchstring</i></b> - #{I18n.t("plugin_mpd.help.where")}<br>"
     h << "<b>#{Conf.gvalue("main:control:string")}queue</b> - #{I18n.t("plugin_mpd.help.queue")}<br>"
     h << "<b>#{Conf.gvalue("main:control:string")}stats</b> - #{I18n.t("plugin_mpd.help.stats")}<br>"
-    h << "<b>#{Conf.gvalue("main:control:string")}shuffle</b> – #{I18n.t("plugin_mpd.help.shuffle")}<br>"
+    h << "<b>#{Conf.gvalue("main:control:string")}shuffle</b> - #{I18n.t("plugin_mpd.help.shuffle")}<br>"
     h << "<b>#{Conf.gvalue("main:control:string")}file</b> - #{I18n.t("plugin_mpd.help.file", :controlstring => Conf.gvalue("main:control:string"))}<br>"
     h << "<b>#{Conf.gvalue("main:control:string")}v++++</b> - #{I18n.t("plugin_mpd.help.vplus")}"
     h << "<b>#{Conf.gvalue("main:control:string")}v-</b> - #{I18n.t("plugin_mpd.help.vminus")}"
