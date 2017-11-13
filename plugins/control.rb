@@ -106,14 +106,15 @@ class Control < Plugin
           end
         end
       end
-      # mute myself and save that I've done it myself
+      # Mute myself and save that I've done it myself
       selfmute true
     else
-      # only unmute me if I've muted myself before
+      # Only unmute me if I've muted myself before
       selfmute false
-      # start playing only I've stopped myself
+      # Start playing only I've stopped myself; in case of a stream played unpause does not apply.
       if @playing == false
         @@bot[:mpd].pause = false
+        @@bot[:mpd].play #This line is a quick and ugly fix to start a stream that was stopped instead of paused.
         @playing = true
       end
     end
