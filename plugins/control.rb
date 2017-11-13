@@ -87,15 +87,23 @@ class Control < Plugin
     @@bot[:cli].users.values.select do |user|
       user_count += 1 if ( user.channel_id == me_in )
     end
+
     # if i'm alone
     if ( user_count < 2 ) && ( Conf.gvalue("main:automute_if_alone") == true )
       # if I'm playing then pause play and save that I've stopped myself
 
       #During bot start there is no mpd plugin loaded yet...
       if @@bot[:mpd]
-        if @@bot[:mpd].paused? == false
-          @@bot[:mpd].pause = true
+        current = @@bot[:mpd].current_song
+
+        if current.file.include? "://" #If yes, it is probably some kind of a stream.
+          @@bot[:mpd].stop
           @playing = false
+        else
+          if @@bot[:mpd].paused? == false
+            @@bot[:mpd].pause = true
+            @playing = false
+          end
         end
       end
       # mute myself and save that I've done it myself
