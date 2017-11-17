@@ -57,7 +57,7 @@ class Youtube < Plugin
 
     if message.start_with?("ytlink <a href=") || message.start_with?("<a href=") then
       link = msg.message.match(/http[s]?:\/\/(.+?)\"/).to_s.chop
-      if ( link.include? "www.youtube.com/" ) || ( link.include? "www.youtu.be/" ) || ( link.include? "m.youtube.com/" ) then
+      if ( link.include? "www.youtube.com/" ) || ( link.include? "youtu.be/" ) || ( link.include? "m.youtube.com/" ) then
         Thread.new do
           #local variables for this thread!
           actor = msg.actor
