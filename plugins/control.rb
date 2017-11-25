@@ -96,13 +96,15 @@ class Control < Plugin
       if @@bot[:mpd]
         current = @@bot[:mpd].current_song
 
-        if current.file.include? "://" #If yes, it is probably some kind of a stream.
-          @@bot[:mpd].stop
-          @playing = false
-        else
-          if @@bot[:mpd].paused? == false
-            @@bot[:mpd].pause = true
+        if ! current.nil?
+          if current.file.include? "://" #If yes, it is probably some kind of a stream.
+            @@bot[:mpd].stop
             @playing = false
+          else
+            if @@bot[:mpd].paused? == false
+              @@bot[:mpd].pause = true
+              @playing = false
+            end
           end
         end
       end
