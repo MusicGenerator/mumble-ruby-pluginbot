@@ -54,7 +54,9 @@ function start_bot_mpd() {
 }
 function stop_bot_mpd() {
   local botid=${1}
-  local mpdpid=$(ps ax | grep -i mpd | grep -v grep | grep -E "mpd.*mpd${botid}" | cut -d" " -f1)
+  #local mpdpid=$(ps ax | grep -i mpd | grep -v grep | grep -E "mpd.*mpd${botid}" | cut -d" " -f1)
+  local mpdpid=$(ps ax | grep -i mpd | grep -v grep | sed 's/^\ *//g' | grep -E "mpd.*mpd1" | cut -d" " -f1)
+
   kill ${mpdpid} > /dev/null 2>&1
 }
 
