@@ -343,8 +343,8 @@ class Mpd < Plugin
       end
     end
 
-    if message.match(/^play [0-9]{1,3}$/)
-      tracknumber = message.match(/^play ([0-9]{1,3})$/)[1].to_i
+    if message.match(/^play [0-9]{1,4}$/)
+      tracknumber = message.match(/^play ([0-9]{1,4})$/)[1].to_i
       begin
         @@bot[:mpd].play tracknumber
       rescue
