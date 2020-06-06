@@ -57,11 +57,17 @@ function update_opus-gem() {
 }
 
 function update_mumble-ruby-gem() {
-    cd ~/src/mumble-ruby
-    git pull origin master
-    rvm use @bots
-    gem build mumble-ruby.gemspec
-    rvm @bots do gem install mumble-ruby-*.gem
+    dialog --clear --title "WARNING! READ!" --yesno "This update will change to stereo transmission and still need some work! If you update it will break your bots audio transmission until you change some settingsat this time. MPD has to stream _stereo_, the actual settings are _mono_!" 0 0 
+    aw=$?
+    clear
+    if [ $aw = 0 ]
+    then 
+      cd ~/src/mumble-ruby
+      git pull origin master
+      rvm use @bots
+      gem build mumble-ruby.gemspec
+      rvm @bots do gem install mumble-ruby-*.gem
+    fi
     return 0
 }
 
