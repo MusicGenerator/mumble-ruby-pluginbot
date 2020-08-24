@@ -39,6 +39,7 @@ plugin:
     volume: 65
     host: localhost
     port: 7701
+    password: ''
   idle:
     maxidletime: 600
     idleaction: 'channel'

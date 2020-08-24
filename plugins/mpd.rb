@@ -13,7 +13,11 @@ class Mpd < Plugin
 
     if ( @@bot[:messages] ) && ( @@bot[:mpd].nil? ) then
       logger("INFO: INIT plugin #{self.class.name}.")
-      @@bot[:mpd] = MPD.new Conf.gvalue("plugin:mpd:host"), Conf.gvalue("plugin:mpd:port").to_i
+      if Conf.gvalue("plugin:mpd:password") != ''
+        @@bot[:mpd] = MPD.new Conf.gvalue("plugin:mpd:host"), Conf.gvalue("plugin:mpd:port").to_i, {password: Conf.gvalue("plugin:mpd:password")}
+      else
+        @@bot[:mpd] = MPD.new Conf.gvalue("plugin:mpd:host"), Conf.gvalue("plugin:mpd:port").to_i
+      end
 
       @@bot[:mpd].on :volume do |volume|
         @@bot[:messages].sendmessage("Volume was set to: #{volume}%." , 0x01)
