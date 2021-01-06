@@ -22,6 +22,10 @@ class Control < Plugin
       @@bot[:cli].on_user_state do |msg|
         userstate(msg)
       end
+      # Register for user disconnections
+      @@bot[:cli].on_user_remove do |msg|
+        state_handling_if_alone
+      end
     end
 
     state_handling_if_alone
