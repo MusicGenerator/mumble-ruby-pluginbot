@@ -1,4 +1,4 @@
-Read the documentation [here](https://files.natenom.com/nidx/mrpb/mumble-ruby-pluginbot-readthedocs-io-en-master.pdf).
+Read the documentation [here](https://f.natenom.de/nidx/mrpb/mumble-ruby-pluginbot-readthedocs-io-en-master.pdf).
 
 
 The bot is translated in following languages:<br><a href="https://hosted.weblate.org/engage/mumble-ruby-pluginbot/en/?utm_source=widget">
